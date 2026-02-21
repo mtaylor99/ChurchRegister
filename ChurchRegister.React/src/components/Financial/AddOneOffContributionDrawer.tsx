@@ -49,6 +49,8 @@ export const AddOneOffContributionDrawer: React.FC<
         pageSize: 100,
         statusFilter: 1, // Active members only
         searchTerm: searchTerm || undefined,
+        sortBy: 'lastName',
+        sortDirection: 'asc',
       });
       return response.items;
     },
