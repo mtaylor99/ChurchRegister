@@ -1,0 +1,65 @@
+# Git
+.git
+.github
+.gitignore
+.gitattributes
+
+# CI/CD
+*.yml
+*.yaml
+.github/
+
+# Documentation
+*.md
+docs/
+plan/
+spec/
+
+# Test results
+TestResults/
+test-results/
+playwright-report/
+coverage/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.userprefs
+.idea/
+
+# Build outputs
+**/bin/
+**/obj/
+**/dist/
+**/build/
+**/out/
+
+# Node modules
+**/node_modules/
+
+# React specific
+ChurchRegister.React/node_modules/
+ChurchRegister.React/.env
+ChurchRegister.React/.env.local
+ChurchRegister.React/coverage/
+
+# .NET specific
+**/*.docx
+**/*.xlsx
+**/*.pdf
+**/logs/
+
+# SQL Scripts (not needed in container)
+SQL Scripts/
+*.sql
+
+# Misc
+*.log
+*.cache
+*.bak
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db

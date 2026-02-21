@@ -1,0 +1,98 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build API Service with Clean Architecture",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.ApiService/ChurchRegister.ApiService.csproj",
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Add Initial Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add InitialCreate --project ChurchRegister.Database --startup-project ChurchRegister.ApiService",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Add Initial Migration (From Database Project)",
+			"type": "shell",
+			"command": "cd ChurchRegister.Database && dotnet ef migrations add InitialCreate --startup-project ../ChurchRegister.ApiService",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Add Initial Migration Verbose",
+			"type": "shell",
+			"command": "dotnet ef migrations add InitialCreate --context ChurchRegisterWebContext --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --verbose",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Update Database",
+			"type": "shell",
+			"command": "dotnet ef database update --project ChurchRegister.Database --startup-project ChurchRegister.ApiService",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Test Application Startup",
+			"type": "shell",
+			"command": "dotnet run --project ChurchRegister.ApiService",
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Drop Database",
+			"type": "shell",
+			"command": "dotnet ef database drop --force --project ChurchRegister.Database --startup-project ChurchRegister.ApiService",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Create Initial Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add InitialChurchRegisterMigration --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --context ChurchRegisterWebContext --output-dir Migrations",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Add Envelope Contribution Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add AddEnvelopeContributionBatch --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --context ChurchRegisterWebContext",
+			"group": "build"
+		},
+		{
+			"label": "Add Envelope Contribution Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add AddEnvelopeContributionBatch --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --context ChurchRegisterWebContext",
+			"group": "build"
+		},
+		{
+			"label": "Add Pastoral Care Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add AddPastoralCareRequired --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --context ChurchRegisterWebContext",
+			"group": "build"
+		},
+		{
+			"label": "Update Database - Pastoral Care",
+			"type": "shell",
+			"command": "dotnet ef database update --project ChurchRegister.Database --startup-project ChurchRegister.ApiService",
+			"group": "build"
+		},
+		{
+			"label": "Remove All Migrations",
+			"type": "shell",
+			"command": "cd ChurchRegister.Database && dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService && dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService && dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService"
+		},
+		{
+			"label": "Remove All Migrations",
+			"type": "shell",
+			"command": "cd ChurchRegister.Database; dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService; dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService; dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService"
+		}
+	]
+}

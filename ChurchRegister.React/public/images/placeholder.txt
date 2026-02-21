@@ -1,0 +1,2 @@
+# Images Directory
+Background images and assets for the React application

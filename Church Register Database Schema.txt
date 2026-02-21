@@ -1,0 +1,130 @@
+TODO
+====
+
+ChurchMemberDataProtection
+    Id
+    AllowNameInCommunications
+    AllowHealthStatusInCommunications
+    AllowPhotoInCommunications
+    AllowPhotoInSocialMedia
+    GroupPhotos
+    PermissionForMyChildren
+  ChurchMember.DataProtectionId
+Reminders
+
+ChurchMember
+  Id
+  FirstName
+  LastName
+  PhoneNumber
+  EmailAddress
+  ChurchMemberTypeId
+  AddressId
+  MemberSince
+  ChurchMemberStatusId
+  DistrictId
+  Baptised
+  GiftAid
+  
+ChurchMemberStatus
+   Id
+   Name -- Active, Expired, In Glory, InActive
+  
+Address
+  Id
+  NameNumber
+  AddressLineOne
+  AddressLineTwo
+  Town
+  County
+  Postcode
+ 
+ChurchMemberRegisterNumber
+  Id
+  ChurchMemberId
+  Number
+  Year
+  
+ChurchMemberContributions
+  Id
+  ChurchMemberId
+  Amount
+  Date
+  TranscationRef
+  ContributionTypeId
+  Deleted
+  
+ContributionType
+  Id
+  Type -- Cash, Transfer
+  
+ChurchMemberRoles
+  Id
+  ChurchMemberId
+  ChurchMemberRoleTypeId
+ 
+ChurchMemberRoleTypes
+   Id
+   Type     --Non-Member, Member, Deacon, Auditor, Secretary, Treasurer, Minister, Junior Church Leader
+   
+Districts
+  Id
+  Name --A, B, C, D, E, F, G, H, I, J, K, L
+  CreatedBy
+  CreatedDateTime
+  ModifiedBy
+  ModifiedDateTime
+  
+ChurchMemberDataProtection
+  Id
+  ChurchMemberId
+  AllowPhotographs
+  AllowNewsletter
+	  
+ChurchMemberTrainingCertificates
+  Id
+  ChurchMemberId
+  Expires
+  TrainingCertificateTypeId
+  
+TrainingCertificateTypes
+  Id
+  Type -- DBS, Safeguarding Level 2, Safeguarding Level 3, Food Hygiene, First Aid, Fire Marshal
+  
+EventAttendance
+  Id 
+  EventTypeId
+  Date
+  Attendance
+  
+Events
+  Id
+  Name -- Sunday Morning Service, Sunday Evening Service, Sunday Morning Online, Bible Study, Tuesday Morning Service, Junior Church, Soup Station, Youth Meeting, Choir, Men's Fellowship, Just A Thought, Sunday Evening Call, Open Door, Torch, Coffee Corner
+  
+  
+  
+AspNetRoles - FinancialViewer, FinanicalContributor, FinanicalAdministrator,  AttendanceViewer, AttendanceContributor, AttendanceAdministrator
+      ChurchMembersViewer, ChurchMembersContributor, ChurchMembersAdministrator, TrainingCertificatesViewer, TrainingCertificatesContributor, TrainingCertificatesAdmin,
+      RiskAssessmentsViewer, RiskAssessmentsContributor, RiskAssessmentsAdmin, MonthlyReportPack
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+EventAttendance
+  Id 
+  EventTypeId
+  Date
+  Attendance
+  
+  
+ HSBCBankCreditTransaction
+   Id
+   Date
+   Description
+   Reference
+   MoneyIn
+   
