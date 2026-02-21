@@ -45,9 +45,15 @@ COPY --from=dotnet-build /app/publish .
 # Copy React build to wwwroot
 COPY --from=react-build /app/react/dist ./wwwroot
 
-# Copy startup script
-COPY docker/docker-entrypoint.sh /app/
-RUN chmod +x /app/docker-entrypoint.sh
+# Copy startup script and fix line endings
+COPY docker/docker-entrypoint.sh /app/docker-entrypoint.sh
+# Install dos2unix to convert line endings, then remove it to keep image small
+RUN apt-get update && apt-get install -y dos2unix && \
+    dos2unix /app/docker-entrypoint.sh && \
+    chmod +x /app/docker-entrypoint.sh && \
+    apt-get remove -y dos2unix && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
 EXPOSE 5000
 
