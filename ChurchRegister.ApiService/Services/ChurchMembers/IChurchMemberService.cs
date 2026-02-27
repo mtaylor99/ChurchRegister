@@ -40,6 +40,11 @@ public interface IChurchMemberService
     Task<ChurchMemberDetailDto> UpdateChurchMemberStatusAsync(int memberId, UpdateChurchMemberStatusRequest request, string modifiedBy, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Delete church member (hard delete - for members entered in error)
+    /// </summary>
+    Task DeleteChurchMemberAsync(int memberId, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Get all available church member role types
     /// </summary>
     Task<IEnumerable<ChurchMemberRoleDto>> GetRolesAsync(CancellationToken cancellationToken = default);

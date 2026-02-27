@@ -61,6 +61,7 @@ export interface ChurchMemberDetailDto {
   email?: string;
   phone?: string;
   bankReference?: string;
+  memberNumber?: string;
   memberSince?: string; // ISO date string
   status: string;
   statusId?: number;
@@ -103,6 +104,7 @@ export interface CreateChurchMemberRequest {
   email?: string;
   phone?: string;
   bankReference?: string;
+  memberNumber?: string;
   memberSince: string; // ISO date string
   statusId: number;
   baptised: boolean;
@@ -121,6 +123,7 @@ export interface UpdateChurchMemberRequest {
   email?: string;
   phone?: string;
   bankReference?: string;
+  memberNumber?: string;
   memberSince: string; // ISO date string
   statusId: number;
   baptised: boolean;
@@ -175,6 +178,7 @@ export interface ChurchMemberFormData {
   email?: string;
   phone?: string;
   bankReference?: string;
+  memberNumber?: string;
   memberSince: Date | null;
   statusId: number;
   baptised: boolean;

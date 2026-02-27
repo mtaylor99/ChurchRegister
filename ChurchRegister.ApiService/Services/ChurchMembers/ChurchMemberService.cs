@@ -7,6 +7,7 @@ using ChurchRegister.ApiService.Models.Dashboard;
 using ChurchRegister.ApiService.Models.DataProtection;
 using ChurchRegister.ApiService.Models.PastoralCare;
 using ChurchRegister.ApiService.Services.DataProtection;
+using ChurchRegister.ApiService.Exceptions;
 using ChurchRegister.Database.Data;
 using ChurchRegister.Database.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -163,6 +164,7 @@ public class ChurchMemberService : IChurchMemberService
             .Include(m => m.ChurchMemberStatus)
             .Include(m => m.Roles)
                 .ThenInclude(r => r.ChurchMemberRoleType)
+            .Include(m => m.RegisterNumbers)
             .Include(m => m.District)
             .Include(m => m.DataProtection)
             .FirstOrDefaultAsync(m => m.Id == memberId, cancellationToken);
@@ -184,7 +186,18 @@ public class ChurchMemberService : IChurchMemberService
                         cancellationToken);
 
             if (duplicateBankReference)
-                throw new InvalidOperationException($"Bank reference '{request.BankReference}' is already in use by another active member");
+                throw new ValidationException($"The bank reference '{request.BankReference}' is already in use. Please enter a unique bank reference.");
+        }
+
+        // Validate MemberNumber uniqueness if provided
+        if (!string.IsNullOrWhiteSpace(request.MemberNumber))
+        {
+            var currentYear = DateTime.UtcNow.Year;
+            var numberExists = await _context.ChurchMemberRegisterNumbers
+                .AnyAsync(r => r.Number == request.MemberNumber && r.Year == currentYear, cancellationToken);
+
+            if (numberExists)
+                throw new ValidationException($"Member number '{request.MemberNumber}' is already assigned for {currentYear}. Please choose a different number or leave blank to auto-generate.");
         }
 
         // Validate status exists
@@ -290,18 +303,33 @@ public class ChurchMemberService : IChurchMemberService
                 await transaction.CommitAsync(cancellationToken);
             }
 
-            // Automatically assign member number for current year if member is Active (StatusId = 1)
+            // Assign member number for current year if member is Active (StatusId = 1)
             if (member.ChurchMemberStatusId == 1)
             {
                 try
                 {
                     var currentYear = DateTime.UtcNow.Year;
-                    var nextNumber = await _registerNumberService.GetNextAvailableNumberAsync(currentYear, cancellationToken);
+                    string memberNumber;
+
+                    // Use provided member number or generate next available
+                    if (!string.IsNullOrWhiteSpace(request.MemberNumber))
+                    {
+                        memberNumber = request.MemberNumber.Trim();
+                        _logger.LogInformation("Using manually provided member number {Number} for year {Year} for new active member {MemberId}",
+                            memberNumber, currentYear, member.Id);
+                    }
+                    else
+                    {
+                        var nextNumber = await _registerNumberService.GetNextAvailableNumberAsync(currentYear, cancellationToken);
+                        memberNumber = nextNumber.ToString();
+                        _logger.LogInformation("Auto-generated member number {Number} for year {Year} for new active member {MemberId}",
+                            memberNumber, currentYear, member.Id);
+                    }
                     
                     var registerNumber = new ChurchMemberRegisterNumber
                     {
                         ChurchMemberId = member.Id,
-                        Number = nextNumber.ToString(),
+                        Number = memberNumber,
                         Year = currentYear,
                         CreatedBy = createdBy,
                         CreatedDateTime = DateTime.UtcNow
@@ -309,9 +337,6 @@ public class ChurchMemberService : IChurchMemberService
                     
                     _context.ChurchMemberRegisterNumbers.Add(registerNumber);
                     await _context.SaveChangesAsync(cancellationToken);
-                    
-                    _logger.LogInformation("Assigned register number {Number} for year {Year} to new active member {MemberId}", 
-                        nextNumber, currentYear, member.Id);
                 }
                 catch (Exception ex)
                 {
@@ -368,7 +393,20 @@ public class ChurchMemberService : IChurchMemberService
                         cancellationToken);
 
             if (duplicateBankReference)
-                throw new InvalidOperationException($"Bank reference '{request.BankReference}' is already in use by another active member");
+                throw new ValidationException($"The bank reference '{request.BankReference}' is already in use. Please enter a unique bank reference.");
+        }
+
+        // Validate MemberNumber uniqueness if provided
+        if (!string.IsNullOrWhiteSpace(request.MemberNumber))
+        {
+            var currentYear = DateTime.UtcNow.Year;
+            var numberExists = await _context.ChurchMemberRegisterNumbers
+                .AnyAsync(r => r.ChurchMemberId != request.Id && 
+                              r.Number == request.MemberNumber && 
+                              r.Year == currentYear, cancellationToken);
+
+            if (numberExists)
+                throw new ValidationException($"Member number '{request.MemberNumber}' is already assigned for {currentYear}. Please choose a different number or leave blank to auto-generate.");
         }
 
         // Validate status exists
@@ -462,6 +500,39 @@ public class ChurchMemberService : IChurchMemberService
             }
         }
 
+        // Handle member number update if provided and member is active
+        if (member.ChurchMemberStatusId == 1 && !string.IsNullOrWhiteSpace(request.MemberNumber))
+        {
+            var currentYear = DateTime.UtcNow.Year;
+            var existingNumber = await _context.ChurchMemberRegisterNumbers
+                .FirstOrDefaultAsync(r => r.ChurchMemberId == member.Id && r.Year == currentYear, cancellationToken);
+
+            if (existingNumber != null)
+            {
+                // Update existing number
+                existingNumber.Number = request.MemberNumber.Trim();
+                existingNumber.ModifiedBy = modifiedBy;
+                existingNumber.ModifiedDateTime = DateTime.UtcNow;
+                _logger.LogInformation("Updated member number to {Number} for year {Year} for member {MemberId}",
+                    request.MemberNumber, currentYear, member.Id);
+            }
+            else
+            {
+                // Create new number
+                var registerNumber = new ChurchMemberRegisterNumber
+                {
+                    ChurchMemberId = member.Id,
+                    Number = request.MemberNumber.Trim(),
+                    Year = currentYear,
+                    CreatedBy = modifiedBy,
+                    CreatedDateTime = DateTime.UtcNow
+                };
+                _context.ChurchMemberRegisterNumbers.Add(registerNumber);
+                _logger.LogInformation("Assigned member number {Number} for year {Year} to member {MemberId}",
+                    request.MemberNumber, currentYear, member.Id);
+            }
+        }
+
         try
         {
             await _context.SaveChangesAsync(cancellationToken);
@@ -510,6 +581,56 @@ public class ChurchMemberService : IChurchMemberService
         var updatedMember = await GetChurchMemberByIdAsync(memberId, cancellationToken);
 
         return updatedMember!;
+    }
+
+    public async Task DeleteChurchMemberAsync(int memberId, CancellationToken cancellationToken = default)
+    {
+        var member = await _context.ChurchMembers
+            .Include(m => m.Roles)
+            .Include(m => m.RegisterNumbers)
+            .Include(m => m.Address)
+            .Include(m => m.DataProtection)
+            .FirstOrDefaultAsync(m => m.Id == memberId, cancellationToken);
+
+        if (member == null)
+            throw new NotFoundException($"Church member with ID {memberId} not found");
+
+        _logger.LogWarning(
+            "Deleting church member {MemberId} ({FullName}) - this is a permanent deletion",
+            memberId, $"{member.FirstName} {member.LastName}");
+
+        // Remove related entities first
+        if (member.Roles.Any())
+        {
+            _context.ChurchMemberRoles.RemoveRange(member.Roles);
+        }
+
+        if (member.RegisterNumbers.Any())
+        {
+            _context.ChurchMemberRegisterNumbers.RemoveRange(member.RegisterNumbers);
+        }
+
+        if (member.Address != null)
+        {
+            _context.Addresses.Remove(member.Address);
+        }
+
+
+        // Do NOT explicitly remove DataProtection; let cascade delete handle it
+
+
+        // Break the 1:1 relationship to avoid circular dependency
+        if (member.DataProtectionId != null)
+        {
+            member.DataProtectionId = null;
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        // Remove the member itself
+        _context.ChurchMembers.Remove(member);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("Successfully deleted church member {MemberId}", memberId);
     }
 
     public async Task<IEnumerable<ChurchMemberRoleDto>> GetRolesAsync(CancellationToken cancellationToken = default)
@@ -597,6 +718,11 @@ public class ChurchMemberService : IChurchMemberService
 
     private static ChurchMemberDetailDto MapToChurchMemberDetailDto(ChurchMember member)
     {
+        // Get current year member number if exists
+        var currentYear = DateTime.UtcNow.Year;
+        var memberNumber = member.RegisterNumbers
+            .FirstOrDefault(r => r.Year == currentYear)?.Number;
+
         return new ChurchMemberDetailDto
         {
             Id = member.Id,
@@ -606,6 +732,7 @@ public class ChurchMemberService : IChurchMemberService
             Email = member.EmailAddress,
             Phone = member.PhoneNumber,
             BankReference = member.BankReference,
+            MemberNumber = memberNumber,
             MemberSince = member.MemberSince,
             Status = member.ChurchMemberStatus?.Name ?? "Unknown",
             StatusId = member.ChurchMemberStatusId,

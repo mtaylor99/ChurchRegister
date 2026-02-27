@@ -22,6 +22,10 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import {
   Edit as EditIcon,
@@ -35,7 +39,9 @@ import {
   Security as SecurityIcon,
   Favorite as FavoriteIcon,
   FavoriteBorder as FavoriteBorderIcon,
+  Delete as DeleteIcon,
 } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { churchMembersApi } from '../../services/api/churchMembersApi';
 import type {
@@ -222,6 +228,10 @@ export const ChurchMemberGrid: React.FC<ChurchMemberGridProps> = React.memo(
       open: boolean;
       member: ChurchMemberDetailDto | null;
     }>({ open: false, member: null });
+
+    // Delete confirmation dialog state
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [memberToDelete, setMemberToDelete] = useState<ChurchMemberDto | null>(null);
 
     const [searchQuery, setSearchQuery] = useState<ChurchMemberGridQuery>({
       page: paginationModel.page + 1,
@@ -467,6 +477,37 @@ export const ChurchMemberGrid: React.FC<ChurchMemberGridProps> = React.memo(
       },
       [handleActionMenuClose, updatePastoralCareStatusMutation]
     );
+
+    // Handle delete member (hard delete - permanent deletion for members entered in error)
+    const deleteMemberMutation = useMutation({
+      mutationFn: (memberId: number) =>
+        churchMembersApi.deleteChurchMember(memberId),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['churchMembers'] });
+      },
+    });
+
+    const handleDeleteMember = useCallback(
+      (member: ChurchMemberDto) => {
+        handleActionMenuClose();
+        setMemberToDelete(member);
+        setDeleteDialogOpen(true);
+      },
+      [handleActionMenuClose]
+    );
+
+    const handleDeleteConfirm = useCallback(() => {
+      if (memberToDelete) {
+        deleteMemberMutation.mutate(memberToDelete.id);
+        setDeleteDialogOpen(false);
+        setMemberToDelete(null);
+      }
+    }, [memberToDelete, deleteMemberMutation]);
+
+    const handleDeleteCancel = useCallback(() => {
+      setDeleteDialogOpen(false);
+      setMemberToDelete(null);
+    }, []);
 
     // Define grid columns
     const columns: GridColDef[] = useMemo(
@@ -865,6 +906,17 @@ export const ChurchMemberGrid: React.FC<ChurchMemberGridProps> = React.memo(
 
           {canManageChurchMembers && (
             <MenuItem
+              onClick={() => selectedMember && handleDeleteMember(selectedMember)}
+            >
+              <ListItemIcon>
+                <DeleteIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Delete Member</ListItemText>
+            </MenuItem>
+          )}
+
+          {canManageChurchMembers && (
+            <MenuItem
               onClick={() =>
                 selectedMember && handleManageDataProtection(selectedMember)
               }
@@ -891,29 +943,29 @@ export const ChurchMemberGrid: React.FC<ChurchMemberGridProps> = React.memo(
 
           {canManageChurchMembers && (
             <>
-              <MenuItem
-                onClick={() =>
-                  selectedMember && handleMarkPastoralCareRequired(selectedMember, true)
-                }
-                disabled={selectedMember?.pastoralCareRequired}
-              >
-                <ListItemIcon>
-                  <FavoriteIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Mark Pastoral Care Required</ListItemText>
-              </MenuItem>
-
-              <MenuItem
-                onClick={() =>
-                  selectedMember && handleMarkPastoralCareRequired(selectedMember, false)
-                }
-                disabled={!selectedMember?.pastoralCareRequired}
-              >
-                <ListItemIcon>
-                  <FavoriteBorderIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Mark Pastoral Care Not Required</ListItemText>
-              </MenuItem>
+              {!selectedMember?.pastoralCareRequired ? (
+                <MenuItem
+                  onClick={() =>
+                    selectedMember && handleMarkPastoralCareRequired(selectedMember, true)
+                  }
+                >
+                  <ListItemIcon>
+                    <FavoriteIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Mark Pastoral Care Required</ListItemText>
+                </MenuItem>
+              ) : (
+                <MenuItem
+                  onClick={() =>
+                    selectedMember && handleMarkPastoralCareRequired(selectedMember, false)
+                  }
+                >
+                  <ListItemIcon>
+                    <FavoriteBorderIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Mark Pastoral Care Not Required</ListItemText>
+                </MenuItem>
+              )}
             </>
           )}
         </Menu>
@@ -941,6 +993,37 @@ export const ChurchMemberGrid: React.FC<ChurchMemberGridProps> = React.memo(
             onSuccess={handleAssignDistrictSuccess}
           />
         )}
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={handleDeleteCancel}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>Delete Member</DialogTitle>
+          <DialogContent>
+            <Box>
+              Are you sure you want to delete{' '}
+              <strong>{memberToDelete?.fullName}</strong>?
+              <br />
+              <br />
+              This action cannot be undone. This is a permanent deletion for
+              members entered in error.
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteCancel}>Cancel</Button>
+            <LoadingButton
+              onClick={handleDeleteConfirm}
+              variant="contained"
+              color="error"
+              loading={deleteMemberMutation.isPending}
+            >
+              Delete
+            </LoadingButton>
+          </DialogActions>
+        </Dialog>
       </Paper>
     );
   }

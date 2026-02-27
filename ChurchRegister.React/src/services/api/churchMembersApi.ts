@@ -113,6 +113,13 @@ export class ChurchMembersApi {
   }
 
   /**
+   * Delete church member (hard delete - for members entered in error)
+   */
+  async deleteChurchMember(memberId: number): Promise<void> {
+    return apiClient.delete(`${this.basePath}/${memberId}`);
+  }
+
+  /**
    * Get all available church member roles
    */
   async getRoles(): Promise<ChurchMemberRoleDto[]> {

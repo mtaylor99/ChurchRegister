@@ -1,4 +1,5 @@
 using ChurchRegister.ApiService.Models.Attendance;
+using ChurchRegister.ApiService.Exceptions;
 using ChurchRegister.Database.Data;
 using ChurchRegister.Database.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +33,7 @@ public class CreateAttendanceUseCase : ICreateAttendanceUseCase
 
         if (existingEntry)
         {
-            throw new InvalidOperationException("An attendance record for this event and date already exists.");
+            throw new ValidationException("An attendance record for this event and date already exists. Please use the edit function to update the existing record.");
         }
 
         // Verify event exists and is active

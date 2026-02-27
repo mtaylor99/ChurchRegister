@@ -50,6 +50,13 @@ public class CreateChurchMemberRequest
     public string? BankReference { get; set; }
 
     /// <summary>
+    /// Member number/envelope number (optional - will be auto-generated if not provided for active members)
+    /// </summary>
+    [StringLength(20, ErrorMessage = "Member number cannot exceed 20 characters")]
+    [RegularExpression(@"^\d+$", ErrorMessage = "Member number must contain only digits")]
+    public string? MemberNumber { get; set; }
+
+    /// <summary>
     /// Date when the member joined (required)
     /// </summary>
     [Required(ErrorMessage = "Member since date is required")]

@@ -48,6 +48,11 @@ public class ChurchMemberDetailDto
     public string? BankReference { get; set; }
 
     /// <summary>
+    /// Current year member/envelope number (optional)
+    /// </summary>
+    public string? MemberNumber { get; set; }
+
+    /// <summary>
     /// Date when the member joined
     /// </summary>
     public DateTime? MemberSince { get; set; }

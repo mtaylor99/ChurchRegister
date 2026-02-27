@@ -67,6 +67,7 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
       email: undefined,
       phone: undefined,
       bankReference: undefined,
+      memberNumber: undefined,
       memberSince: null,
       statusId: 1, // Default to Active
       baptised: false,
@@ -122,6 +123,7 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
       email: formData.email || undefined,
       phone: formData.phone || undefined,
       bankReference: formData.bankReference || undefined,
+      memberNumber: formData.memberNumber || undefined,
       memberSince: formData.memberSince
         ? formData.memberSince.toISOString()
         : new Date().toISOString(),
@@ -371,6 +373,35 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
                   )}
                 />
               </Stack>
+
+              <Controller
+                name="memberNumber"
+                control={control}
+                rules={{
+                  pattern: {
+                    value: /^\d+$/,
+                    message: 'Member number must contain only digits',
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: 'Member number cannot exceed 20 characters',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Member Number (Optional)"
+                    placeholder="Leave blank to auto-generate"
+                    error={!!errors.memberNumber}
+                    helperText={
+                      errors.memberNumber?.message ||
+                      'Enter a custom member number or leave blank to auto-generate for active members'
+                    }
+                    disabled={isLoading}
+                    fullWidth
+                  />
+                )}
+              />
 
               <Stack direction="row" spacing={3}>
                 <Controller

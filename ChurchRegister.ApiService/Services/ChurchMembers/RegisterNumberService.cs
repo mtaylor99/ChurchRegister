@@ -1,6 +1,7 @@
 using ChurchRegister.Database.Data;
 using ChurchRegister.Database.Entities;
 using ChurchRegister.ApiService.Models.ChurchMembers;
+using ChurchRegister.ApiService.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -150,7 +151,7 @@ public class RegisterNumberService : IRegisterNumberService
         // Check if already generated
         if (await HasBeenGeneratedForYearAsync(targetYear, cancellationToken))
         {
-            throw new InvalidOperationException($"Register numbers for year {targetYear} have already been generated");
+            throw new ValidationException($"Register numbers for year {targetYear} have already been generated. Please use the existing numbers or contact an administrator.");
         }
 
         // Get all active members ordered by MemberSince then LastName
@@ -164,7 +165,7 @@ public class RegisterNumberService : IRegisterNumberService
         if (activeMembers.Count == 0)
         {
             _logger.LogWarning("No active members found for register number generation");
-            throw new InvalidOperationException("No active members to assign register numbers");
+            throw new ValidationException("No active members found to assign register numbers. Please ensure there are active members before generating numbers.");
         }
 
         // Create register number entities

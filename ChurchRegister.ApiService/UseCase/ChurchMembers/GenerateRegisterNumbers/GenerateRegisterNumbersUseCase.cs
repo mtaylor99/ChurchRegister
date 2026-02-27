@@ -1,5 +1,6 @@
 using ChurchRegister.ApiService.Models.ChurchMembers;
 using ChurchRegister.ApiService.Services.ChurchMembers;
+using ChurchRegister.ApiService.Exceptions;
 
 namespace ChurchRegister.ApiService.UseCase.ChurchMembers.GenerateRegisterNumbers;
 
@@ -26,7 +27,7 @@ public class GenerateRegisterNumbersUseCase : IGenerateRegisterNumbersUseCase
         
         if (await _registerNumberService.HasBeenGeneratedForYearAsync(request.TargetYear, cancellationToken))
         {
-            throw new InvalidOperationException($"Register numbers for year {request.TargetYear} have already been generated");
+            throw new ValidationException($"Register numbers for year {request.TargetYear} have already been generated. Please use the existing numbers or contact an administrator.");
         }
 
         var result = await _registerNumberService.GenerateForYearAsync(request.TargetYear, cancellationToken);

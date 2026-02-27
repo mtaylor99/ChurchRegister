@@ -83,6 +83,7 @@ class ApiClient {
 
   /**
    * Handle error responses and show toast notifications
+   * Note: HTTP 400 validation errors are NOT shown as toasts - they should be handled by forms
    */
   private handleErrorResponse(error: any): void {
     if (!error.response) {
@@ -95,16 +96,20 @@ class ApiClient {
 
     const { status, data } = error.response;
 
-    // Handle validation errors with the specific format: { message: string, errors: string[] }
-    if (data?.errors && Array.isArray(data.errors) && data.errors.length > 0) {
-      // Show each validation error as a separate toast
-      data.errors.forEach((errorMsg: string) => {
-        notificationManager.showError(errorMsg);
-      });
+    // SKIP toast notifications for HTTP 400 validation errors
+    // These should be handled inline by form components
+    if (status === 400) {
+      // Don't show toasts for validation errors - let forms handle them
       return;
     }
 
-    // Handle other error formats
+    // Handle conflict errors (409) - show as warning
+    if (status === 409 && data?.message) {
+      notificationManager.showWarning(data.message);
+      return;
+    }
+
+    // Handle other error messages
     if (data?.message) {
       notificationManager.showError(data.message);
       return;
@@ -112,11 +117,6 @@ class ApiClient {
 
     // Fallback error messages based on status code
     switch (status) {
-      case 400:
-        notificationManager.showError(
-          'Invalid request. Please check your input.'
-        );
-        break;
       case 403:
         notificationManager.showError(
           'You do not have permission to perform this action.'

@@ -258,6 +258,8 @@ builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.Updat
                            ChurchRegister.ApiService.UseCase.ChurchMembers.UpdateChurchMember.UpdateChurchMemberUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.UpdateChurchMemberStatus.IUpdateChurchMemberStatusUseCase,
                            ChurchRegister.ApiService.UseCase.ChurchMembers.UpdateChurchMemberStatus.UpdateChurchMemberStatusUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.DeleteChurchMember.IDeleteChurchMemberUseCase,
+                           ChurchRegister.ApiService.UseCase.ChurchMembers.DeleteChurchMember.DeleteChurchMemberUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.GetChurchMembers.IGetChurchMembersUseCase,
                            ChurchRegister.ApiService.UseCase.ChurchMembers.GetChurchMembers.GetChurchMembersUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.GetChurchMemberById.IGetChurchMemberByIdUseCase,

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -12,12 +12,12 @@ import {
   AccordionSummary,
   AccordionDetails,
   FormControl,
+  FormGroup,
+  FormHelperText,
+  Chip,
   InputLabel,
   Select,
   MenuItem,
-  FormHelperText,
-  ListItemText,
-  Chip,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckIcon from '@mui/icons-material/Check';
@@ -65,6 +65,7 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors, isValid, isDirty },
   } = useForm<UpdateChurchMemberRequest>({
     mode: 'onChange',
@@ -76,6 +77,7 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
       email: member.email || '',
       phone: member.phone || '',
       bankReference: member.bankReference || '',
+      memberNumber: member.memberNumber || '',
       memberSince: member.memberSince?.split('T')[0] || '',
       statusId: member.statusId || 1,
       baptised: member.baptised,
@@ -94,6 +96,36 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
         : undefined,
     },
   });
+
+  // Reset form when member prop changes
+  useEffect(() => {
+    reset({
+      id: member.id,
+      title: member.title || '',
+      firstName: member.firstName,
+      lastName: member.lastName,
+      email: member.email || '',
+      phone: member.phone || '',
+      bankReference: member.bankReference || '',
+      memberNumber: member.memberNumber || '',
+      memberSince: member.memberSince?.split('T')[0] || '',
+      statusId: member.statusId || 1,
+      baptised: member.baptised,
+      giftAid: member.giftAid,
+      pastoralCareRequired: member.pastoralCareRequired,
+      roleIds: member.roles?.map((role) => role.id) || [],
+      address: member.address
+        ? {
+            nameNumber: member.address.nameNumber || '',
+            addressLineOne: member.address.addressLineOne || '',
+            addressLineTwo: member.address.addressLineTwo || '',
+            town: member.address.town || '',
+            county: member.address.county || '',
+            postcode: member.address.postcode || '',
+          }
+        : undefined,
+    });
+  }, [member, reset]);
 
   // Fetch roles
   const { data: roles = [], isLoading: isLoadingRoles } = useQuery({
@@ -372,6 +404,35 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
               />
             </Stack>
 
+            <Controller
+              name="memberNumber"
+              control={control}
+              rules={{
+                pattern: {
+                  value: /^\d+$/,
+                  message: 'Member number must contain only digits',
+                },
+                maxLength: {
+                  value: 20,
+                  message: 'Member number cannot exceed 20 characters',
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Member Number"
+                  placeholder="Leave blank to auto-generate"
+                  error={!!errors.memberNumber}
+                  helperText={
+                    errors.memberNumber?.message ||
+                    'Enter a custom member number or leave blank to auto-generate for active members'
+                  }
+                  disabled={isLoading || isViewMode}
+                  fullWidth
+                />
+              )}
+            />
+
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <Controller
                 name="baptised"
@@ -436,40 +497,35 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
             name="roleIds"
             control={control}
             render={({ field }) => (
-              <FormControl fullWidth disabled={isLoading || isViewMode}>
-                <InputLabel>Roles</InputLabel>
-                <Select
-                  {...field}
-                  multiple
-                  value={field.value || []}
-                  onChange={(e) => {
-                    field.onChange(e.target.value);
-                  }}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {(selected as number[]).map((roleId) => {
-                        const role = roles.find((r) => r.id === roleId);
-                        return role ? (
-                          <Chip key={roleId} label={role.type} size="small" />
-                        ) : null;
-                      })}
-                    </Box>
-                  )}
-                >
-                  {roles.map((role) => (
-                    <MenuItem key={role.id} value={role.id}>
-                      <Checkbox
-                        checked={(field.value || []).indexOf(role.id) > -1}
+              <Box>
+                <FormGroup>
+                  <Stack direction="row" flexWrap="wrap" spacing={1}>
+                    {roles.map((role) => (
+                      <FormControlLabel
+                        key={role.id}
+                        control={
+                          <Checkbox
+                            checked={field.value.includes(role.id)}
+                            onChange={(e) => {
+                              const newValue = e.target.checked
+                                ? [...field.value, role.id]
+                                : field.value.filter((id) => id !== role.id);
+                              field.onChange(newValue);
+                            }}
+                            disabled={isLoading || isViewMode}
+                          />
+                        }
+                        label={role.type}
+                        sx={{ minWidth: '200px', mr: 2 }}
                       />
-                      <ListItemText primary={role.type} />
-                    </MenuItem>
-                  ))}
-                </Select>
+                    ))}
+                  </Stack>
+                </FormGroup>
                 <FormHelperText>
                   Select the roles for this member. Members can have multiple
                   roles.
                 </FormHelperText>
-              </FormControl>
+              </Box>
             )}
           />
         </Box>
