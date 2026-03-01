@@ -48,7 +48,7 @@ public class UploadHsbcStatementEndpoint : EndpointWithoutRequest<UploadHsbcStat
         try
         {
             var file = Files.FirstOrDefault();
-            
+
             if (file == null)
             {
                 await SendAsync(new UploadHsbcStatementResponse
@@ -170,9 +170,9 @@ public class GetEnvelopeBatchListEndpoint : EndpointWithoutRequest<GetBatchListR
     {
         Get("/api/financial/envelope-contributions/batches");
         Policies("Bearer");
-        Roles(SystemRoles.SystemAdministration, 
-              SystemRoles.FinancialAdministrator, 
-              SystemRoles.FinancialContributor, 
+        Roles(SystemRoles.SystemAdministration,
+              SystemRoles.FinancialAdministrator,
+              SystemRoles.FinancialContributor,
               SystemRoles.FinancialViewer);
         Description(x => x
             .WithName("GetEnvelopeBatchList")

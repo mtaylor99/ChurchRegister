@@ -27,7 +27,7 @@ public class DistrictPdfService
                 {
                     page.Size(PageSizes.A4);
                     page.Margin(40);
-                    
+
                     page.Header().Element(c => ComposeHeader(c, district));
                     page.Content().Element(c => ComposeContent(c, district));
                     page.Footer().AlignCenter().Text(text =>
@@ -47,20 +47,20 @@ public class DistrictPdfService
         container.Column(column =>
         {
             column.Spacing(5);
-            
+
             column.Item().Text(district.DistrictName)
                 .FontSize(24)
                 .Bold()
                 .FontColor(Colors.Blue.Darken2);
-            
+
             column.Item().Text($"Deacon: {district.DeaconName}")
                 .FontSize(14)
                 .SemiBold();
-            
+
             column.Item().Text($"District Officer: {district.DistrictOfficerName}")
                 .FontSize(14)
                 .SemiBold();
-            
+
             column.Item().PaddingTop(10).LineHorizontal(1).LineColor(Colors.Grey.Lighten1);
         });
     }

@@ -58,7 +58,7 @@ public class GlobalExceptionHandlerMiddleware
     }
 
     private (HttpStatusCode statusCode, ErrorResponse response) MapExceptionToResponse(
-        Exception exception, 
+        Exception exception,
         string correlationId)
     {
         return exception switch

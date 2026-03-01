@@ -20,9 +20,9 @@ public class GetSystemRolesUseCase : IGetSystemRolesUseCase
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Getting system roles");
-        
+
         var result = await _userManagementService.GetSystemRolesAsync(cancellationToken);
-        
+
         _logger.LogInformation("Retrieved {Count} system roles", result.Count());
         return result;
     }

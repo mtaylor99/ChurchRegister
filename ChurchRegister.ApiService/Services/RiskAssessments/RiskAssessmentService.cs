@@ -17,7 +17,7 @@ public class RiskAssessmentService : IRiskAssessmentService
     private readonly ILogger<RiskAssessmentService> _logger;
 
     public RiskAssessmentService(
-        ChurchRegisterWebContext context, 
+        ChurchRegisterWebContext context,
         UserManager<ChurchRegisterWebUser> userManager,
         IOptions<RiskAssessmentConfiguration> configuration,
         ILogger<RiskAssessmentService> logger)
@@ -115,7 +115,7 @@ public class RiskAssessmentService : IRiskAssessmentService
                 .Where(m => m.Id == approval.ApprovedByChurchMemberId)
                 .Select(m => new { m.FirstName, m.LastName })
                 .FirstOrDefaultAsync();
-                
+
             detailDto.Approvals.Add(new RiskAssessmentApprovalDto
             {
                 Id = approval.Id,
@@ -140,7 +140,7 @@ public class RiskAssessmentService : IRiskAssessmentService
         }
 
         // Validate review interval
-        if (request.ReviewInterval != 1 && request.ReviewInterval != 2 && 
+        if (request.ReviewInterval != 1 && request.ReviewInterval != 2 &&
             request.ReviewInterval != 3 && request.ReviewInterval != 5)
         {
             throw new ValidationException("Review interval must be 1, 2, 3, or 5 years.");
@@ -168,7 +168,7 @@ public class RiskAssessmentService : IRiskAssessmentService
         // Reload with category
         await _context.Entry(assessment).Reference(r => r.Category).LoadAsync();
 
-        _logger.LogInformation("Created risk assessment {Id} ({Title}) by {CreatedBy}", 
+        _logger.LogInformation("Created risk assessment {Id} ({Title}) by {CreatedBy}",
             assessment.Id, assessment.Title, createdBy);
 
         return MapToDto(assessment, 0);
@@ -187,7 +187,7 @@ public class RiskAssessmentService : IRiskAssessmentService
         }
 
         // Validate review interval
-        if (request.ReviewInterval != 1 && request.ReviewInterval != 2 && 
+        if (request.ReviewInterval != 1 && request.ReviewInterval != 2 &&
             request.ReviewInterval != 3 && request.ReviewInterval != 5)
         {
             throw new ValidationException("Review interval must be 1, 2, 3, or 5 years.");
@@ -234,7 +234,7 @@ public class RiskAssessmentService : IRiskAssessmentService
 
         await _context.SaveChangesAsync();
 
-        _logger.LogInformation("Started review for risk assessment {Id}, cleared {ApprovalCount} approvals", 
+        _logger.LogInformation("Started review for risk assessment {Id}, cleared {ApprovalCount} approvals",
             id, assessment.Approvals.Count);
 
         // Reload to get fresh data
@@ -311,12 +311,12 @@ public class RiskAssessmentService : IRiskAssessmentService
             assessmentApproved = true;
             nextReviewDate = assessment.NextReviewDate;
 
-            _logger.LogInformation("Risk assessment {Id} approved with {Count} approvals, next review: {NextReview}", 
+            _logger.LogInformation("Risk assessment {Id} approved with {Count} approvals, next review: {NextReview}",
                 id, totalApprovals, nextReviewDate);
         }
         else
         {
-            _logger.LogInformation("Approval recorded for risk assessment {Id}, {Current} of {Required} approvals received", 
+            _logger.LogInformation("Approval recorded for risk assessment {Id}, {Current} of {Required} approvals received",
                 id, totalApprovals, minimumRequired);
         }
 
@@ -387,8 +387,8 @@ public class RiskAssessmentService : IRiskAssessmentService
                         Id = a.Id,
                         RiskAssessmentId = a.RiskAssessmentId,
                         ApprovedByChurchMemberId = a.ApprovedByChurchMemberId,
-                        ApprovedByMemberName = a.ApprovedByChurchMember != null 
-                            ? $"{a.ApprovedByChurchMember.FirstName} {a.ApprovedByChurchMember.LastName}" 
+                        ApprovedByMemberName = a.ApprovedByChurchMember != null
+                            ? $"{a.ApprovedByChurchMember.FirstName} {a.ApprovedByChurchMember.LastName}"
                             : "Unknown",
                         ApprovedDate = a.ApprovedDate,
                         Notes = a.Notes

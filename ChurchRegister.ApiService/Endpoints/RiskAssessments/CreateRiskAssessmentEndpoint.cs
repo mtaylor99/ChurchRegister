@@ -1,6 +1,6 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.RiskAssessments;
-using ChurchRegister.ApiService.Services.RiskAssessments;
+using ChurchRegister.ApiService.UseCase.RiskAssessments.CreateRiskAssessment;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
@@ -10,11 +10,11 @@ namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
 /// </summary>
 public class CreateRiskAssessmentEndpoint : Endpoint<CreateRiskAssessmentRequest, RiskAssessmentDto>
 {
-    private readonly IRiskAssessmentService _service;
+    private readonly ICreateRiskAssessmentUseCase _useCase;
 
-    public CreateRiskAssessmentEndpoint(IRiskAssessmentService service)
+    public CreateRiskAssessmentEndpoint(ICreateRiskAssessmentUseCase useCase)
     {
-        _service = service;
+        _useCase = useCase;
     }
 
     public override void Configure()
@@ -32,11 +32,11 @@ public class CreateRiskAssessmentEndpoint : Endpoint<CreateRiskAssessmentRequest
     public override async Task HandleAsync(CreateRiskAssessmentRequest req, CancellationToken ct)
     {
         var createdBy = User.Identity?.Name ?? "System";
-        var result = await _service.CreateRiskAssessmentAsync(req, createdBy);
-        
+        var result = await _useCase.ExecuteAsync(req, createdBy, ct);
+
         await SendCreatedAtAsync<GetRiskAssessmentByIdEndpoint>(
-            new { id = result.Id }, 
-            result, 
+            new { id = result.Id },
+            result,
             cancellation: ct);
     }
 }

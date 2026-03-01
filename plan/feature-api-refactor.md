@@ -2,15 +2,15 @@
 goal: Refactor API to Ensure Consistent Clean Architecture Pattern Across All Features
 version: 1.0
 date_created: 2026-02-20
-last_updated: 2026-02-20
+last_updated: 2026-03-01
 owner: Development Team
-status: "Planned"
+status: "Completed"
 tags: [refactor, architecture, clean-architecture, use-cases, consistency, backend]
 ---
 
 # Introduction
 
-![Status: Planned](https://img.shields.io/badge/status-Planned-blue)
+![Status: Completed](https://img.shields.io/badge/status-Completed-brightgreen)
 
 This implementation plan addresses architectural inconsistencies in the ChurchRegister API. While the ChurchMembers and Contributions features follow a consistent Clean Architecture pattern with proper use case layer separation, other features (RiskAssessments, Reminders, DataProtection, Districts) have structural inconsistencies that violate this pattern.
 
@@ -93,52 +93,52 @@ The primary goal is to ensure all API features follow the same architectural sta
 
 **GOAL-001**: Create missing CreateRiskAssessmentUseCase and update endpoint to use it
 
-| Task     | Description                                                                                                         | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-001 | Create folder `UseCase/RiskAssessments/CreateRiskAssessment/`                                                        |           |      |
-| TASK-002 | Create `ICreateRiskAssessmentUseCase.cs` with interface definition                                                  |           |      |
-| TASK-003 | Create `CreateRiskAssessmentUseCase.cs` with implementation injecting IRiskAssessmentService and ILogger           |           |      |
-| TASK-004 | Move business logic from CreateRiskAssessmentEndpoint.HandleAsync to CreateRiskAssessmentUseCase.ExecuteAsync      |           |      |
-| TASK-005 | Update `CreateRiskAssessmentEndpoint.cs` to inject and call ICreateRiskAssessmentUseCase instead of service        |           |      |
-| TASK-006 | Add use case registration to `Program.cs`: `AddScoped<ICreateRiskAssessmentUseCase, CreateRiskAssessmentUseCase>()` |           |      |
-| TASK-007 | Test create risk assessment endpoint to ensure no regression                                                        |           |      |
+| Task     | Description                                                                                                         | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-001 | Create folder `UseCase/RiskAssessments/CreateRiskAssessment/`                                                        | ✅        | 2026-03-01 |
+| TASK-002 | Create `ICreateRiskAssessmentUseCase.cs` with interface definition                                                  | ✅        | 2026-03-01 |
+| TASK-003 | Create `CreateRiskAssessmentUseCase.cs` with implementation injecting IRiskAssessmentService and ILogger           | ✅        | 2026-03-01 |
+| TASK-004 | Move business logic from CreateRiskAssessmentEndpoint.HandleAsync to CreateRiskAssessmentUseCase.ExecuteAsync      | ✅        | 2026-03-01 |
+| TASK-005 | Update `CreateRiskAssessmentEndpoint.cs` to inject and call ICreateRiskAssessmentUseCase instead of service        | ✅        | 2026-03-01 |
+| TASK-006 | Add use case registration to `Program.cs`: `AddScoped<ICreateRiskAssessmentUseCase, CreateRiskAssessmentUseCase>()` | ✅        | 2026-03-01 |
+| TASK-007 | Test create risk assessment endpoint to ensure no regression                                                        | ✅        | 2026-03-01 |
 
 ### Phase 2: Risk Assessments - Restructure Existing Use Cases
 
 **GOAL-002**: Refactor all RiskAssessments use cases into folder structure with separate interface files
 
-| Task     | Description                                                                                                         | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-008 | Create folder `UseCase/RiskAssessments/GetRiskAssessments/`                                                          |           |      |
-| TASK-009 | Move interface from `GetRiskAssessmentsUseCase.cs` to new `IGetRiskAssessmentsUseCase.cs` file                      |           |      |
-| TASK-010 | Move implementation to new `GetRiskAssessmentsUseCase.cs` file in folder                                            |           |      |
-| TASK-011 | Update namespace to `ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessments`                          |           |      |
-| TASK-012 | Create folder `UseCase/RiskAssessments/GetRiskAssessmentById/` and migrate files                                     |           |      |
-| TASK-013 | Create folder `UseCase/RiskAssessments/UpdateRiskAssessment/` and migrate files                                      |           |      |
-| TASK-014 | Create folder `UseCase/RiskAssessments/ApproveRiskAssessment/` and migrate files                                     |           |      |
-| TASK-015 | Create folder `UseCase/RiskAssessments/StartReview/` and migrate files                                               |           |      |
-| TASK-016 | Create folder `UseCase/RiskAssessments/GetRiskAssessmentHistory/` and migrate files                                  |           |      |
-| TASK-017 | Create folder `UseCase/RiskAssessments/GetRiskAssessmentCategories/` and migrate files                               |           |      |
-| TASK-018 | Create folder `UseCase/RiskAssessments/GetDashboardRiskAssessmentSummary/` and migrate files                         |           |      |
-| TASK-019 | Delete old flat use case files in `UseCase/RiskAssessments/` root                                                    |           |      |
-| TASK-020 | Update all endpoint files to reference new namespaces                                                                |           |      |
-| TASK-021 | Run build and verify no compilation errors                                                                           |           |      |
-| TASK-022 | Test all RiskAssessments endpoints to ensure no regression                                                           |           |      |
+| Task     | Description                                                                                                         | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-008 | Create folder `UseCase/RiskAssessments/GetRiskAssessments/`                                                          | ✅        | 2026-03-01 |
+| TASK-009 | Move interface from `GetRiskAssessmentsUseCase.cs` to new `IGetRiskAssessmentsUseCase.cs` file                      | ✅        | 2026-03-01 |
+| TASK-010 | Move implementation to new `GetRiskAssessmentsUseCase.cs` file in folder                                            | ✅        | 2026-03-01 |
+| TASK-011 | Update namespace to `ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessments`                          | ✅        | 2026-03-01 |
+| TASK-012 | Create folder `UseCase/RiskAssessments/GetRiskAssessmentById/` and migrate files                                     | ✅        | 2026-03-01 |
+| TASK-013 | Create folder `UseCase/RiskAssessments/UpdateRiskAssessment/` and migrate files                                      | ✅        | 2026-03-01 |
+| TASK-014 | Create folder `UseCase/RiskAssessments/ApproveRiskAssessment/` and migrate files                                     | ✅        | 2026-03-01 |
+| TASK-015 | Create folder `UseCase/RiskAssessments/StartReview/` and migrate files                                               | ✅        | 2026-03-01 |
+| TASK-016 | Create folder `UseCase/RiskAssessments/GetRiskAssessmentHistory/` and migrate files                                  | ✅        | 2026-03-01 |
+| TASK-017 | Create folder `UseCase/RiskAssessments/GetRiskAssessmentCategories/` and migrate files                               | ✅        | 2026-03-01 |
+| TASK-018 | Create folder `UseCase/RiskAssessments/GetDashboardRiskAssessmentSummary/` and migrate files                         | ✅        | 2026-03-01 |
+| TASK-019 | Delete old flat use case files in `UseCase/RiskAssessments/` root                                                    | ✅        | 2026-03-01 |
+| TASK-020 | Update all endpoint files to reference new namespaces                                                                | ✅        | 2026-03-01 |
+| TASK-021 | Run build and verify no compilation errors                                                                           | ✅        | 2026-03-01 |
+| TASK-022 | Test all RiskAssessments endpoints to ensure no regression                                                           | ✅        | 2026-03-01 |
 
 ### Phase 3: Risk Assessments - Category Use Cases
 
 **GOAL-003**: Create use cases for risk assessment category CRUD operations
 
-| Task     | Description                                                                                                         | Completed | Date |
-| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-023 | Create folder `UseCase/RiskAssessments/CreateRiskAssessmentCategory/` with interface and implementation             |           |      |
-| TASK-024 | Update `CreateRiskAssessmentCategoryEndpoint.cs` to use new use case instead of service                             |           |      |
-| TASK-025 | Create folder `UseCase/RiskAssessments/UpdateRiskAssessmentCategory/` with interface and implementation             |           |      |
-| TASK-026 | Update `UpdateRiskAssessmentCategoryEndpoint.cs` to use new use case                                                 |           |      |
-| TASK-027 | Create folder `UseCase/RiskAssessments/DeleteRiskAssessmentCategory/` with interface and implementation             |           |      |
-| TASK-028 | Update `DeleteRiskAssessmentCategoryEndpoint.cs` to use new use case                                                 |           |      |
-| TASK-029 | Register all new category use cases in `Program.cs`                                                                  |           |      |
-| TASK-030 | Test category CRUD operations to ensure no regression                                                                |           |      |
+| Task     | Description                                                                                                         | Completed | Date       |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| TASK-023 | Create folder `UseCase/RiskAssessments/CreateRiskAssessmentCategory/` with interface and implementation             | ✅        | 2026-03-01 |
+| TASK-024 | Update `CreateRiskAssessmentCategoryEndpoint.cs` to use new use case instead of service                             | ✅        | 2026-03-01 |
+| TASK-025 | Create folder `UseCase/RiskAssessments/UpdateRiskAssessmentCategory/` with interface and implementation             | ✅        | 2026-03-01 |
+| TASK-026 | Update `UpdateRiskAssessmentCategoryEndpoint.cs` to use new use case                                                 | ✅        | 2026-03-01 |
+| TASK-027 | Create folder `UseCase/RiskAssessments/DeleteRiskAssessmentCategory/` with interface and implementation             | ✅        | 2026-03-01 |
+| TASK-028 | Update `DeleteRiskAssessmentCategoryEndpoint.cs` to use new use case                                                 | ✅        | 2026-03-01 |
+| TASK-029 | Register all new category use cases in `Program.cs`                                                                  | ✅        | 2026-03-01 |
+| TASK-030 | Test category CRUD operations to ensure no regression                                                                | ✅        | 2026-03-01 |
 
 ### Phase 4: Reminders - Restructure Use Cases
 
@@ -146,17 +146,17 @@ The primary goal is to ensure all API features follow the same architectural sta
 
 | Task     | Description                                                                                                         | Completed | Date |
 | -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-031 | Create folder `UseCase/Reminders/CreateReminder/` and migrate ICreateReminderUseCase + CreateReminderUseCase       |           |      |
-| TASK-032 | Create folder `UseCase/Reminders/GetReminders/` and migrate files                                                    |           |      |
-| TASK-033 | Create folder `UseCase/Reminders/GetReminderById/` and migrate files                                                 |           |      |
-| TASK-034 | Create folder `UseCase/Reminders/UpdateReminder/` and migrate files                                                  |           |      |
-| TASK-035 | Create folder `UseCase/Reminders/DeleteReminder/` and migrate files                                                  |           |      |
-| TASK-036 | Create folder `UseCase/Reminders/CompleteReminder/` and migrate files                                                |           |      |
-| TASK-037 | Create folder `UseCase/Reminders/GetDashboardReminderSummary/` and migrate files                                     |           |      |
-| TASK-038 | Delete old flat use case files in `UseCase/Reminders/` root                                                          |           |      |
-| TASK-039 | Update all Reminders endpoint files to reference new namespaces                                                      |           |      |
-| TASK-040 | Run build and verify no compilation errors                                                                           |           |      |
-| TASK-041 | Test all Reminders endpoints to ensure no regression                                                                 |           |      |
+| TASK-031 | Create folder `UseCase/Reminders/CreateReminder/` and migrate ICreateReminderUseCase + CreateReminderUseCase       | ✅        | 2026-03-01 |
+| TASK-032 | Create folder `UseCase/Reminders/GetReminders/` and migrate files                                                    | ✅        | 2026-03-01 |
+| TASK-033 | Create folder `UseCase/Reminders/GetReminderById/` and migrate files                                                 | ✅        | 2026-03-01 |
+| TASK-034 | Create folder `UseCase/Reminders/UpdateReminder/` and migrate files                                                  | ✅        | 2026-03-01 |
+| TASK-035 | Create folder `UseCase/Reminders/DeleteReminder/` and migrate files                                                  | ✅        | 2026-03-01 |
+| TASK-036 | Create folder `UseCase/Reminders/CompleteReminder/` and migrate files                                                | ✅        | 2026-03-01 |
+| TASK-037 | Create folder `UseCase/Reminders/GetDashboardReminderSummary/` and migrate files                                     | ✅        | 2026-03-01 |
+| TASK-038 | Delete old flat use case files in `UseCase/Reminders/` root                                                          | ✅        | 2026-03-01 |
+| TASK-039 | Update all Reminders endpoint files to reference new namespaces                                                      | ✅        | 2026-03-01 |
+| TASK-040 | Run build and verify no compilation errors                                                                           | ✅        | 2026-03-01 |
+| TASK-041 | Test all Reminders endpoints to ensure no regression                                                                 | ✅        | 2026-03-01 |
 
 ### Phase 5: Reminders - Category Use Cases
 
@@ -164,14 +164,14 @@ The primary goal is to ensure all API features follow the same architectural sta
 
 | Task     | Description                                                                                                         | Completed | Date |
 | -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-042 | Create folder `UseCase/Reminders/CreateReminderCategory/` and migrate files                                         |           |      |
-| TASK-043 | Create folder `UseCase/Reminders/GetReminderCategories/` and migrate files                                          |           |      |
-| TASK-044 | Create folder `UseCase/Reminders/GetReminderCategoryById/` and migrate files                                        |           |      |
-| TASK-045 | Create folder `UseCase/Reminders/UpdateReminderCategory/` and migrate files                                         |           |      |
-| TASK-046 | Create folder `UseCase/Reminders/DeleteReminderCategory/` and migrate files                                         |           |      |
-| TASK-047 | Delete old flat category use case files                                                                              |           |      |
-| TASK-048 | Update category endpoint files to reference new namespaces                                                           |           |      |
-| TASK-049 | Test all reminder category operations to ensure no regression                                                        |           |      |
+| TASK-042 | Create folder `UseCase/Reminders/CreateReminderCategory/` and migrate files                                         | ✅        | 2026-03-01 |
+| TASK-043 | Create folder `UseCase/Reminders/GetReminderCategories/` and migrate files                                          | ✅        | 2026-03-01 |
+| TASK-044 | Create folder `UseCase/Reminders/GetReminderCategoryById/` and migrate files                                        | ✅        | 2026-03-01 |
+| TASK-045 | Create folder `UseCase/Reminders/UpdateReminderCategory/` and migrate files                                         | ✅        | 2026-03-01 |
+| TASK-046 | Create folder `UseCase/Reminders/DeleteReminderCategory/` and migrate files                                         | ✅        | 2026-03-01 |
+| TASK-047 | Delete old flat category use case files                                                                              | ✅        | 2026-03-01 |
+| TASK-048 | Update category endpoint files to reference new namespaces                                                           | ✅        | 2026-03-01 |
+| TASK-049 | Test all reminder category operations to ensure no regression                                                        | ✅        | 2026-03-01 |
 
 ### Phase 6: DataProtection - Restructure Use Cases
 
@@ -179,18 +179,18 @@ The primary goal is to ensure all API features follow the same architectural sta
 
 | Task     | Description                                                                                                         | Completed | Date |
 | -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-050 | Create folder `UseCase/DataProtection/GetDataProtection/`                                                           |           |      |
-| TASK-051 | Move `IGetDataProtectionUseCase.cs` to new folder                                                                   |           |      |
-| TASK-052 | Move `GetDataProtectionUseCase.cs` to new folder                                                                    |           |      |
-| TASK-053 | Update namespace to `ChurchRegister.ApiService.UseCase.DataProtection.GetDataProtection`                            |           |      |
-| TASK-054 | Create folder `UseCase/DataProtection/UpdateDataProtection/`                                                        |           |      |
-| TASK-055 | Move `IUpdateDataProtectionUseCase.cs` to new folder                                                                |           |      |
-| TASK-056 | Move `UpdateDataProtectionUseCase.cs` to new folder                                                                 |           |      |
-| TASK-057 | Update namespace for UpdateDataProtection                                                                            |           |      |
-| TASK-058 | Update endpoint references in `ChurchMembers/GetDataProtectionEndpoint.cs`                                           |           |      |
-| TASK-059 | Update endpoint references in `ChurchMembers/UpdateDataProtectionEndpoint.cs`                                        |           |      |
-| TASK-060 | Delete old flat use case files in `UseCase/DataProtection/` root                                                     |           |      |
-| TASK-061 | Test DataProtection endpoints to ensure no regression                                                                |           |      |
+| TASK-050 | Create folder `UseCase/DataProtection/GetDataProtection/`                                                           | ✅        | 2026-03-01 |
+| TASK-051 | Move `IGetDataProtectionUseCase.cs` to new folder                                                                   | ✅        | 2026-03-01 |
+| TASK-052 | Move `GetDataProtectionUseCase.cs` to new folder                                                                    | ✅        | 2026-03-01 |
+| TASK-053 | Update namespace to `ChurchRegister.ApiService.UseCase.DataProtection.GetDataProtection`                            | ✅        | 2026-03-01 |
+| TASK-054 | Create folder `UseCase/DataProtection/UpdateDataProtection/`                                                        | ✅        | 2026-03-01 |
+| TASK-055 | Move `IUpdateDataProtectionUseCase.cs` to new folder                                                                | ✅        | 2026-03-01 |
+| TASK-056 | Move `UpdateDataProtectionUseCase.cs` to new folder                                                                 | ✅        | 2026-03-01 |
+| TASK-057 | Update namespace for UpdateDataProtection                                                                            | ✅        | 2026-03-01 |
+| TASK-058 | Update endpoint references in `ChurchMembers/GetDataProtectionEndpoint.cs`                                           | ✅        | 2026-03-01 |
+| TASK-059 | Update endpoint references in `ChurchMembers/UpdateDataProtectionEndpoint.cs`                                        | ✅        | 2026-03-01 |
+| TASK-060 | Delete old flat use case files in `UseCase/DataProtection/` root                                                     | ✅        | 2026-03-01 |
+| TASK-061 | Test DataProtection endpoints to ensure no regression                                                                | ✅        | 2026-03-01 |
 
 ### Phase 7: Districts - Restructure Use Cases
 
@@ -198,17 +198,17 @@ The primary goal is to ensure all API features follow the same architectural sta
 
 | Task     | Description                                                                                                         | Completed | Date |
 | -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-062 | Create folder `UseCase/Districts/GetDistricts/`                                                                      |           |      |
-| TASK-063 | Move `IGetDistrictsUseCase.cs` to new folder                                                                         |           |      |
-| TASK-064 | Move `GetDistrictsUseCase.cs` to new folder                                                                          |           |      |
-| TASK-065 | Update namespace to `ChurchRegister.ApiService.UseCase.Districts.GetDistricts`                                       |           |      |
-| TASK-066 | Create folder `UseCase/Districts/ExportDistricts/`                                                                   |           |      |
-| TASK-067 | Move `IExportDistrictsUseCase.cs` to new folder                                                                      |           |      |
-| TASK-068 | Move `ExportDistrictsUseCase.cs` to new folder                                                                       |           |      |
-| TASK-069 | Update namespace for ExportDistricts                                                                                 |           |      |
-| TASK-070 | Update Districts endpoint files to reference new namespaces                                                          |           |      |
-| TASK-071 | Delete old flat use case files in `UseCase/Districts/` root                                                          |           |      |
-| TASK-072 | Test Districts endpoints to ensure no regression                                                                     |           |      |
+| TASK-062 | Create folder `UseCase/Districts/GetDistricts/`                                                                      | ✅        | 2026-03-01 |
+| TASK-063 | Move `IGetDistrictsUseCase.cs` to new folder                                                                         | ✅        | 2026-03-01 |
+| TASK-064 | Move `GetDistrictsUseCase.cs` to new folder                                                                          | ✅        | 2026-03-01 |
+| TASK-065 | Update namespace to `ChurchRegister.ApiService.UseCase.Districts.GetDistricts`                                       | ✅        | 2026-03-01 |
+| TASK-066 | Create folder `UseCase/Districts/ExportDistricts/`                                                                   | ✅        | 2026-03-01 |
+| TASK-067 | Move `IExportDistrictsUseCase.cs` to new folder                                                                      | ✅        | 2026-03-01 |
+| TASK-068 | Move `ExportDistrictsUseCase.cs` to new folder                                                                       | ✅        | 2026-03-01 |
+| TASK-069 | Update namespace for ExportDistricts                                                                                 | ✅        | 2026-03-01 |
+| TASK-070 | Update Districts endpoint files to reference new namespaces                                                          | ✅        | 2026-03-01 |
+| TASK-071 | Delete old flat use case files in `UseCase/Districts/` root                                                          | ✅        | 2026-03-01 |
+| TASK-072 | Test Districts endpoints to ensure no regression                                                                     | ✅        | 2026-03-01 |
 
 ### Phase 8: Logging Enhancement
 
@@ -216,14 +216,14 @@ The primary goal is to ensure all API features follow the same architectural sta
 
 | Task     | Description                                                                                                         | Completed | Date |
 | -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-082 | Add ILogger injection to all RiskAssessments use cases                                                               |           |      |
-| TASK-083 | Add LogInformation at entry point with structured properties (parameters) in RiskAssessments use cases              |           |      |
-| TASK-084 | Add try-catch with LogError for exceptions in RiskAssessments use cases                                              |           |      |
-| TASK-085 | Add LogInformation on successful completion in RiskAssessments use cases                                             |           |      |
-| TASK-086 | Apply same logging pattern to all Reminders use cases                                                                |           |      |
-| TASK-087 | Apply same logging pattern to DataProtection use cases                                                               |           |      |
-| TASK-088 | Apply same logging pattern to Districts use cases                                                                    |           |      |
-| TASK-089 | Verify logging output in development environment during testing                                                      |           |      |
+| TASK-082 | Add ILogger injection to all RiskAssessments use cases                                                               | ✅        | 2026-03-01 |
+| TASK-083 | Add LogInformation at entry point with structured properties (parameters) in RiskAssessments use cases              | ✅        | 2026-03-01 |
+| TASK-084 | Add try-catch with LogError for exceptions in RiskAssessments use cases                                              | ✅        | 2026-03-01 |
+| TASK-085 | Add LogInformation on successful completion in RiskAssessments use cases                                             | ✅        | 2026-03-01 |
+| TASK-086 | Apply same logging pattern to all Reminders use cases                                                                | ✅        | 2026-03-01 |
+| TASK-087 | Apply same logging pattern to DataProtection use cases                                                               | ✅        | 2026-03-01 |
+| TASK-088 | Apply same logging pattern to Districts use cases                                                                    | ✅        | 2026-03-01 |
+| TASK-089 | Verify logging output in development environment during testing                                                      | ✅        | 2026-03-01 |
 
 ### Phase 9: Code Cleanup & Final Review
 
@@ -231,15 +231,15 @@ The primary goal is to ensure all API features follow the same architectural sta
 
 | Task     | Description                                                                                                         | Completed | Date |
 | -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-110 | Verify all old flat use case files have been deleted                                                                 |           |      |
-| TASK-111 | Search codebase for any remaining direct service injections in endpoints (should all use use cases)                 |           |      |
-| TASK-112 | Review Program.cs dependency injection for duplicate or missing registrations                                        |           |      |
-| TASK-113 | Run code analyzer and fix any warnings related to refactored code                                                    |           |      |
-| TASK-114 | Review all namespaces follow consistent pattern                                                                      |           |      |
-| TASK-115 | Ensure all files have proper copyright headers if required                                                           |           |      |
-| TASK-116 | Update any documentation referencing old file structure                                                              |           |      |
-| TASK-117 | Create architecture decision record (ADR) documenting use case layer pattern and why it's required                   |           |      |
-| TASK-118 | Run full build in Release configuration to verify production readiness                                               |           |      |
+| TASK-110 | Verify all old flat use case files have been deleted                                                                 | ✅        | 2026-03-01 |
+| TASK-111 | Search codebase for any remaining direct service injections in endpoints (should all use use cases)                 | ✅        | 2026-03-01 |
+| TASK-112 | Review Program.cs dependency injection for duplicate or missing registrations                                        | ✅        | 2026-03-01 |
+| TASK-113 | Run code analyzer and fix any warnings related to refactored code                                                    | ✅        | 2026-03-01 |
+| TASK-114 | Review all namespaces follow consistent pattern                                                                      | ✅        | 2026-03-01 |
+| TASK-115 | Ensure all files have proper copyright headers if required                                                           | ✅        | 2026-03-01 |
+| TASK-116 | Update any documentation referencing old file structure                                                              | ✅        | 2026-03-01 |
+| TASK-117 | Create architecture decision record (ADR) documenting use case layer pattern and why it's required                   | ✅        | 2026-03-01 |
+| TASK-118 | Run full build in Release configuration to verify production readiness                                               | ✅        | 2026-03-01 |
 
 ### Phase 10: Testing Improvements
 
@@ -247,18 +247,18 @@ The primary goal is to ensure all API features follow the same architectural sta
 
 | Task     | Description                                                                                                         | Completed | Date |
 | -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-090 | Audit current test coverage in ChurchRegister.Tests and identify gaps                                               |           |      |
-| TASK-091 | Add unit tests for all RiskAssessments use cases                                                                     |           |      |
-| TASK-092 | Add unit tests for all Reminders use cases                                                                           |           |      |
-| TASK-093 | Add unit tests for DataProtection use cases                                                                          |           |      |
-| TASK-094 | Add unit tests for Districts use cases                                                                               |           |      |
-| TASK-095 | Add integration tests for RiskAssessments workflows (create, approve, review)                                        |           |      |
-| TASK-096 | Add integration tests for Reminders workflows (create, complete with next reminder)                                  |           |      |
-| TASK-097 | Add integration tests for category CRUD operations (RiskAssessments and Reminders)                                   |           |      |
-| TASK-098 | Test endpoint authorization with different user roles                                                                |           |      |
-| TASK-099 | Add tests for validation edge cases and error handling                                                               |           |      |
-| TASK-100 | Ensure test coverage is above 80% for business logic in use cases                                                    |           |      |
-| TASK-101 | Run tests in CI/CD pipeline and verify all pass                                                                      |           |      |
+| TASK-090 | Audit current test coverage in ChurchRegister.Tests and identify gaps                                               | ✅        | 2026-03-01 |
+| TASK-091 | Add unit tests for all RiskAssessments use cases                                                                     | ✅        | 2026-03-01 |
+| TASK-092 | Add unit tests for all Reminders use cases                                                                           | ✅        | 2026-03-01 |
+| TASK-093 | Add unit tests for DataProtection use cases                                                                          | ✅        | 2026-03-01 |
+| TASK-094 | Add unit tests for Districts use cases                                                                               | ✅        | 2026-03-01 |
+| TASK-095 | Add integration tests for RiskAssessments workflows (create, approve, review)                                        | ✅        | 2026-03-01 |
+| TASK-096 | Add integration tests for Reminders workflows (create, complete with next reminder)                                  | ✅        | 2026-03-01 |
+| TASK-097 | Add integration tests for category CRUD operations (RiskAssessments and Reminders)                                   | ✅        | 2026-03-01 |
+| TASK-098 | Test endpoint authorization with different user roles                                                                | ✅        | 2026-03-01 |
+| TASK-099 | Add tests for validation edge cases and error handling                                                               | ✅        | 2026-03-01 |
+| TASK-100 | Ensure test coverage is above 80% for business logic in use cases                                                    | ✅        | 2026-03-01 |
+| TASK-101 | Run tests in CI/CD pipeline and verify all pass                                                                      | ✅        | 2026-03-01 |
 
 ### Phase 11: Documentation & Code Quality
 
@@ -266,10 +266,111 @@ The primary goal is to ensure all API features follow the same architectural sta
 
 | Task     | Description                                                                                                         | Completed | Date |
 | -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
-| TASK-102 | Update `docs/ARCHITECTURE.md` with use case layer architecture section                                               |           |      |
-| TASK-107 | Run code analyzer (dotnet format, StyleCop) and fix all warnings                                                     |           |      |
-| TASK-108 | Review code for SOLID principles compliance                                                                          |           |      |
-| TASK-109 | Create use case template file in `UseCase/TEMPLATE.md` for future reference                                          |           |      |
+| TASK-102 | Update `docs/ARCHITECTURE.md` with use case layer architecture section                                               | ✅        | 2026-03-01 |
+| TASK-107 | Run code analyzer (dotnet format, StyleCop) and fix all warnings                                                     | ✅        | 2026-03-01 |
+| TASK-108 | Review code for SOLID principles compliance                                                                          | ✅        | 2026-03-01 |
+| TASK-109 | Create use case template file in `UseCase/TEMPLATE.md` for future reference                                          | ✅        | 2026-03-01 |
+
+### Phase 12: Dashboard & MonthlyReportPack - Logging + Structural Fixes
+
+**GOAL-012**: Add missing `ILogger` to `GetDashboardStatisticsUseCase`, move flat `AssignDistrictUseCase` files into their own subfolder, and add unit tests for Dashboard and MonthlyReportPack
+
+| Task     | Description                                                                                                         | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-119 | Add `ILogger<GetDashboardStatisticsUseCase>` constructor injection to `GetDashboardStatisticsUseCase`               | ✅        | 2026-03-01 |
+| TASK-120 | Add `LogInformation` entry/success calls and `LogError` try-catch to `GetDashboardStatisticsUseCase`                | ✅        | 2026-03-01 |
+| TASK-121 | Create folder `UseCase/ChurchMembers/AssignDistrict/` and move `AssignDistrictUseCase.cs` into it                   | ✅        | 2026-03-01 |
+| TASK-122 | Move `IAssignDistrictUseCase.cs` into `UseCase/ChurchMembers/AssignDistrict/`                                       | ✅        | 2026-03-01 |
+| TASK-123 | Update namespace in both files to `ChurchRegister.ApiService.UseCase.ChurchMembers.AssignDistrict`                  | ✅        | 2026-03-01 |
+| TASK-124 | Update endpoint `using` statement in `Endpoints/ChurchMembers/AssignDistrictEndpoint.cs`                            | ✅        | 2026-03-01 |
+| TASK-125 | Update `Program.cs` DI registration for `IAssignDistrictUseCase` to new fully-qualified namespace                   | ✅        | 2026-03-01 |
+| TASK-126 | Delete old flat `UseCase/ChurchMembers/AssignDistrictUseCase.cs` and `IAssignDistrictUseCase.cs`                    | ✅        | 2026-03-01 |
+| TASK-127 | Add unit tests for `GetDashboardStatisticsUseCase` in `ChurchRegister.Tests/Dashboard/`                             | ✅        | 2026-03-01 |
+| TASK-128 | Add unit tests for `GenerateMonthlyReportPackUseCase` in `ChurchRegister.Tests/MonthlyReportPack/`                  | ✅        | 2026-03-01 |
+| TASK-129 | Build and run tests — verify 0 errors, all new tests pass                                                           | ✅        | 2026-03-01 |
+
+### Phase 13: TrainingCertificates - Unit Tests
+
+**GOAL-013**: Add unit test coverage for all 8 `TrainingCertificates` use cases (`CreateTrainingCertificate`, `CreateTrainingCertificateType`, `GetTrainingCertificates`, `GetTrainingCertificateById`, `GetTrainingCertificateTypes`, `UpdateTrainingCertificate`, `UpdateTrainingCertificateType`, `GetDashboardTrainingSummary`)
+
+| Task     | Description                                                                                                         | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-130 | Create `ChurchRegister.Tests/TrainingCertificates/` folder                                                          | ✅        | 2026-03-01 |
+| TASK-131 | Add unit tests for `CreateTrainingCertificateUseCase` — happy path, service error propagation                       | ✅        | 2026-03-01 |
+| TASK-132 | Add unit tests for `CreateTrainingCertificateTypeUseCase` — happy path, duplicate prevention                        | ✅        | 2026-03-01 |
+| TASK-133 | Add unit tests for `GetTrainingCertificatesUseCase` — returns list, empty list, filter parameters passed correctly   | ✅        | 2026-03-01 |
+| TASK-134 | Add unit tests for `GetTrainingCertificateByIdUseCase` — found, not found (null)                                    | ✅        | 2026-03-01 |
+| TASK-135 | Add unit tests for `GetTrainingCertificateTypesUseCase` — returns all types, empty list                             | ✅        | 2026-03-01 |
+| TASK-136 | Add unit tests for `UpdateTrainingCertificateUseCase` — happy path, service error propagation                       | ✅        | 2026-03-01 |
+| TASK-137 | Add unit tests for `UpdateTrainingCertificateTypeUseCase` — happy path, service error propagation                   | ✅        | 2026-03-01 |
+| TASK-138 | Add unit tests for `GetDashboardTrainingSummaryUseCase` — returns summary DTO, service called once                  | ✅        | 2026-03-01 |
+| TASK-139 | Run all TrainingCertificates use case tests and verify all passing                                                   | ✅        | 2026-03-01 |
+
+### Phase 14: ChurchMembers - Unit Tests
+
+**GOAL-014**: Add unit test coverage for all 12 `ChurchMembers` use cases (`CreateChurchMember`, `GetChurchMembers`, `GetChurchMemberById`, `UpdateChurchMember`, `UpdateChurchMemberStatus`, `DeleteChurchMember`, `AssignDistrict`, `GetChurchMemberRoles`, `GetChurchMemberStatuses`, `GenerateRegisterNumbers`, `PreviewRegisterNumbers`, `ExportPastoralCareReport`)
+
+| Task     | Description                                                                                                         | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-140 | Create `ChurchRegister.Tests/ChurchMembers/UseCases/` folder for use case tests (separate from existing service tests) | ✅        | 2026-03-01 |
+| TASK-141 | Add unit tests for `CreateChurchMemberUseCase` — happy path, invalid input validation, service error propagation    | ✅        | 2026-03-01 |
+| TASK-142 | Add unit tests for `GetChurchMembersUseCase` — returns paged list, empty results, filter parameters passed          | ✅        | 2026-03-01 |
+| TASK-143 | Add unit tests for `GetChurchMemberByIdUseCase` — found, not found (null), invalid ID throws                        | ✅        | 2026-03-01 |
+| TASK-144 | Add unit tests for `UpdateChurchMemberUseCase` — happy path, invalid input, service error propagation               | ✅        | 2026-03-01 |
+| TASK-145 | Add unit tests for `UpdateChurchMemberStatusUseCase` — happy path, invalid status ID, member not found              | ✅        | 2026-03-01 |
+| TASK-146 | Add unit tests for `DeleteChurchMemberUseCase` — happy path, service called once, member not found                  | ✅        | 2026-03-01 |
+| TASK-147 | Add unit tests for `AssignDistrictUseCase` — happy path, invalid member ID throws, service called once              | ✅        | 2026-03-01 |
+| TASK-148 | Add unit tests for `GetChurchMemberRolesUseCase` — returns all roles, empty list                                    | ✅        | 2026-03-01 |
+| TASK-149 | Add unit tests for `GetChurchMemberStatusesUseCase` — returns all statuses, service called once                     | ✅        | 2026-03-01 |
+| TASK-150 | Add unit tests for `GenerateRegisterNumbersUseCase` — happy path, invalid input, generation count verified          | ✅        | 2026-03-01 |
+| TASK-151 | Add unit tests for `PreviewRegisterNumbersUseCase` — returns preview list, empty, filter parameters passed          | ✅        | 2026-03-01 |
+| TASK-152 | Add unit tests for `ExportPastoralCareReportUseCase` — returns byte array, service called once                      | ✅        | 2026-03-01 |
+| TASK-153 | Run all ChurchMembers use case tests and verify all passing                                                          | ✅        | 2026-03-01 |
+
+### Phase 15: Contributions - Unit Tests
+
+**GOAL-015**: Add unit test coverage for all 6 `Contributions` use cases (`GetContributionHistory`, `GetEnvelopeBatchList`, `GetEnvelopeBatchDetails`, `SubmitEnvelopeBatch`, `ValidateRegisterNumber`, `UploadHsbcStatement`)
+
+| Task     | Description                                                                                                         | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-154 | Create `ChurchRegister.Tests/Contributions/` folder                                                                  | ✅        | 2026-03-01 |
+| TASK-155 | Add unit tests for `GetContributionHistoryUseCase` — returns history for member, empty history, invalid member ID   | ✅        | 2026-03-01 |
+| TASK-156 | Add unit tests for `GetEnvelopeBatchListUseCase` — returns list, empty list, year filter applied                    | ✅        | 2026-03-01 |
+| TASK-157 | Add unit tests for `GetEnvelopeBatchDetailsUseCase` — found, not found (null), invalid batch ID throws              | ✅        | 2026-03-01 |
+| TASK-158 | Add unit tests for `SubmitEnvelopeBatchUseCase` — happy path, validation fails, service error propagation           | ✅        | 2026-03-01 |
+| TASK-159 | Add unit tests for `ValidateRegisterNumberUseCase` — valid number returns true, invalid returns false               | ✅        | 2026-03-01 |
+| TASK-160 | Add unit tests for `UploadHsbcStatementUseCase` — successful parse, invalid file format, empty file                 | ✅        | 2026-03-01 |
+| TASK-161 | Run all Contributions use case tests and verify all passing                                                          | ✅        | 2026-03-01 |
+
+### Phase 16: Attendance - Unit Tests
+
+**GOAL-016**: Add unit test coverage for all 10 `Attendance` use cases (`CreateAttendance`, `GetAttendance`, `UpdateAttendance`, `DeleteAttendance`, `CreateEvent`, `GetEvents`, `UpdateEvent`, `GetAttendanceAnalytics`, `EmailAttendanceAnalytics`, `UploadAttendanceTemplate`)
+
+| Task     | Description                                                                                                         | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-162 | Create `ChurchRegister.Tests/Attendance/` folder                                                                     | ✅        | 2026-03-01 |
+| TASK-163 | Add unit tests for `CreateAttendanceUseCase` — happy path, duplicate entry handling, invalid event ID               | ✅        | 2026-03-01 |
+| TASK-164 | Add unit tests for `GetAttendanceUseCase` — returns records, filtered by event, empty result                        | ✅        | 2026-03-01 |
+| TASK-165 | Add unit tests for `UpdateAttendanceUseCase` — happy path, record not found, service error propagation              | ✅        | 2026-03-01 |
+| TASK-166 | Add unit tests for `DeleteAttendanceUseCase` — happy path, service called once, not found                           | ✅        | 2026-03-01 |
+| TASK-167 | Add unit tests for `CreateEventUseCase` — happy path, invalid date range, service error propagation                 | ✅        | 2026-03-01 |
+| TASK-168 | Add unit tests for `GetEventsUseCase` — returns all events, date filter applied, empty list                         | ✅        | 2026-03-01 |
+| TASK-169 | Add unit tests for `UpdateEventUseCase` — happy path, event not found, service error propagation                    | ✅        | 2026-03-01 |
+| TASK-170 | Add unit tests for `GetAttendanceAnalyticsUseCase` — returns analytics DTO, parameters passed to service            | ✅        | 2026-03-01 |
+| TASK-171 | Add unit tests for `EmailAttendanceAnalyticsUseCase` — happy path, email failure handled, service called once       | ✅        | 2026-03-01 |
+| TASK-172 | Add unit tests for `UploadAttendanceTemplateUseCase` — successful upload, invalid file, parse error handling         | ✅        | 2026-03-01 |
+| TASK-173 | Run all Attendance use case tests and verify all passing                                                             | ✅        | 2026-03-01 |
+
+### Phase 17: Final Coverage Verification
+
+**GOAL-017**: Run the complete test suite across all feature areas, verify overall use case test coverage, and update plan status to Completed
+
+| Task     | Description                                                                                                         | Completed | Date |
+| -------- | ------------------------------------------------------------------------------------------------------------------- | --------- | ---- |
+| TASK-174 | Run full `dotnet test ChurchRegister.Tests` and verify 0 failures across all features                               | ✅        | 2026-03-01 |
+| TASK-175 | Verify Security use case tests still pass (Login, Logout, CreateUser, RevokeUserTokens, ChangePassword, RefreshToken) | ✅        | 2026-03-01 |
+| TASK-176 | Run Release build `dotnet build --configuration Release` and confirm 0 errors                                       | ✅        | 2026-03-01 |
+| TASK-177 | Update plan `status` field to `Completed` and badge to bright green                                                  | ✅        | 2026-03-01 |
 
 ## 3. Alternatives
 
@@ -443,6 +544,19 @@ Files that will be created, modified, or deleted during this refactoring:
 - **FILE-103**: `UseCase/TEMPLATE.md` - NEW (use case template for future implementations)
 - **FILE-104**: `docs/ARCHITECTURE.md` - UPDATED (add use case layer architecture section)
 
+### New Files - Phases 12–17
+
+- **FILE-105**: `UseCase/ChurchMembers/AssignDistrict/IAssignDistrictUseCase.cs` - MOVED (from root of ChurchMembers)
+- **FILE-106**: `UseCase/ChurchMembers/AssignDistrict/AssignDistrictUseCase.cs` - MOVED (from root of ChurchMembers)
+- **FILE-107**: `UseCase/ChurchMembers/AssignDistrictUseCase.cs` - DELETED (flat file replaced by subfolder)
+- **FILE-108**: `UseCase/ChurchMembers/IAssignDistrictUseCase.cs` - DELETED (flat file replaced by subfolder)
+- **FILE-109**: `ChurchRegister.Tests/Dashboard/DashboardUseCaseTests.cs` - NEW
+- **FILE-110**: `ChurchRegister.Tests/MonthlyReportPack/MonthlyReportPackUseCaseTests.cs` - NEW
+- **FILE-111**: `ChurchRegister.Tests/TrainingCertificates/TrainingCertificateUseCaseTests.cs` - NEW
+- **FILE-112**: `ChurchRegister.Tests/ChurchMembers/UseCases/ChurchMemberUseCaseTests.cs` - NEW
+- **FILE-113**: `ChurchRegister.Tests/Contributions/ContributionUseCaseTests.cs` - NEW
+- **FILE-114**: `ChurchRegister.Tests/Attendance/AttendanceUseCaseTests.cs` - NEW
+
 ## 6. Testing
 
 Testing requirements to verify successful implementation of refactoring (detailed in Phase 10):
@@ -472,6 +586,13 @@ Testing requirements to verify successful implementation of refactoring (detaile
 - **TEST-023**: **Unit Tests** - All use case unit tests pass with appropriate mocking
 - **TEST-024**: **Swagger Documentation** - Swagger UI displays all endpoints correctly
 - **TEST-025**: **Cross-Feature Integration** - Features that depend on each other still work (e.g., Dashboard summaries)
+- **TEST-026**: **Dashboard Logging** - Verify `GetDashboardStatisticsUseCase` emits structured log entries on execution
+- **TEST-027**: **TrainingCertificates unit tests** - All 8 use cases covered with happy path and error scenarios
+- **TEST-028**: **ChurchMembers use case unit tests** - All 12 use cases covered (separate from existing service layer tests)
+- **TEST-029**: **Contributions use case unit tests** - All 6 use cases covered with happy path and error scenarios
+- **TEST-030**: **Attendance use case unit tests** - All 10 use cases covered with happy path and error scenarios
+- **TEST-031**: **Dashboard & MonthlyReportPack unit tests** - Both use cases covered including error propagation
+- **TEST-032**: **Full suite regression** - Complete `dotnet test` passes with 0 failures across all features
 
 ## 7. Risks & Assumptions
 
@@ -494,6 +615,10 @@ Testing requirements to verify successful implementation of refactoring (detaile
 - **RISK-008**: **Testing Coverage Gaps** - Incomplete testing may miss edge cases. Mitigation: Test all CRUD operations, workflows, filters, error cases systematically.
 
 - **RISK-009**: **Build Time Increase** - More files could increase build time. Mitigation: Monitor build times, optimize if necessary, likely minimal impact.
+
+- **RISK-010**: **Dashboard use case hits database directly** - `GetDashboardStatisticsUseCase` queries `ChurchRegisterWebContext` directly rather than through a service interface. This makes it impossible to pure-mock in unit tests. Mitigation: Mock the DbContext using `InMemoryDatabase` (already used in `ChurchMemberServiceTests`) or extract a `IDashboardService` interface if queries grow complex.
+
+- **RISK-011**: **ChurchMembers service-layer tests overlap with new use case tests** - `ChurchMemberServiceTests.cs` tests the service directly; new use case tests will mock the service. Ensure no confusion about which layer is under test. Mitigation: Place new use case tests in a dedicated `UseCases/` subfolder within `ChurchRegister.Tests/ChurchMembers/`.
 
 ### Assumptions
 

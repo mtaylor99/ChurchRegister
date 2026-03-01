@@ -1,6 +1,6 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.Districts;
-using ChurchRegister.ApiService.UseCase.Districts;
+using ChurchRegister.ApiService.UseCase.Districts.GetDistricts;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.Districts;

@@ -5,7 +5,7 @@ namespace ChurchRegister.ApiService.Services.Contributions;
 /// </summary>
 public static class HsbcReferenceExtractor
 {
-    private static readonly string[] TrailingTokens = 
+    private static readonly string[] TrailingTokens =
     {
         " VIA ",
         " ONLINE BANKING",

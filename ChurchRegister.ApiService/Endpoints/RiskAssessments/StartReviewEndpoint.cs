@@ -1,6 +1,6 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.RiskAssessments;
-using ChurchRegister.ApiService.UseCase.RiskAssessments;
+using ChurchRegister.ApiService.UseCase.RiskAssessments.StartReview;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
@@ -44,13 +44,13 @@ public class StartReviewEndpoint : Endpoint<StartReviewRequest, RiskAssessmentDt
     {
         var modifiedBy = User.Identity?.Name ?? "System";
         var result = await _useCase.ExecuteAsync(req.Id, modifiedBy);
-        
+
         if (result == null)
         {
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         await SendOkAsync(result, ct);
     }
 }

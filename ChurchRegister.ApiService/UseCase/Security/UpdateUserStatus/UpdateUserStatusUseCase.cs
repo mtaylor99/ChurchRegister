@@ -21,12 +21,12 @@ public class UpdateUserStatusUseCase : IUpdateUserStatusUseCase
         string modifiedBy,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Updating user status for {UserId} to {Action}", 
+        _logger.LogInformation("Updating user status for {UserId} to {Action}",
             request.UserId, request.Action);
-        
+
         ValidateRequest(request, modifiedBy);
         var result = await _userManagementService.UpdateUserStatusAsync(request, modifiedBy, cancellationToken);
-        
+
         _logger.LogInformation("Successfully updated status for user {UserId}", request.UserId);
         return result;
     }

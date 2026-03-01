@@ -40,13 +40,13 @@ public class GetTrainingCertificateByIdEndpoint : Endpoint<GetTrainingCertificat
     public override async Task HandleAsync(GetTrainingCertificateByIdRequest req, CancellationToken ct)
     {
         var result = await _useCase.ExecuteAsync(req.Id, ct);
-        
+
         if (result == null)
         {
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         await SendOkAsync(result, ct);
     }
 }

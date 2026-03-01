@@ -38,7 +38,7 @@ public class UserManagementService : IUserManagementService
         // Validate pagination parameters (validation also exists at model level via [Range] attribute)
         Helpers.ValidationHelpers.RequireValidPageNumber(query.Page);
         Helpers.ValidationHelpers.RequireValidPageSize(query.PageSize);
-        
+
         var usersQuery = _context.Users.AsQueryable();
 
         // Apply search filter
@@ -142,7 +142,7 @@ public class UserManagementService : IUserManagementService
         }
 
         // Log the action
-        await LogUserManagementActionAsync(user.Id, "CreateUser", createdBy, 
+        await LogUserManagementActionAsync(user.Id, "CreateUser", createdBy,
             $"Created user with roles: {string.Join(", ", validatedRoles)}", cancellationToken);
 
         var roles = await _userManager.GetRolesAsync(user);
@@ -182,13 +182,13 @@ public class UserManagementService : IUserManagementService
         {
             var currentRoles = await _userManager.GetRolesAsync(user);
             var validatedRoles = await ValidateAndExpandRolesAsync(request.Roles, cancellationToken);
-            
+
             await _userManager.RemoveFromRolesAsync(user, currentRoles);
             await _userManager.AddToRolesAsync(user, validatedRoles);
         }
 
         // Log the action
-        await LogUserManagementActionAsync(user.Id, "UpdateUser", modifiedBy, 
+        await LogUserManagementActionAsync(user.Id, "UpdateUser", modifiedBy,
             $"Updated user information", cancellationToken);
 
         var roles = await _userManager.GetRolesAsync(user);
@@ -223,7 +223,7 @@ public class UserManagementService : IUserManagementService
         }
 
         // Log the action
-        await LogUserManagementActionAsync(user.Id, $"UpdateStatus_{request.Action}", modifiedBy, 
+        await LogUserManagementActionAsync(user.Id, $"UpdateStatus_{request.Action}", modifiedBy,
             $"Changed status from {previousStatus} to {user.AccountStatus}. Reason: {request.Reason}", cancellationToken);
 
         var roles = await _userManager.GetRolesAsync(user);
@@ -245,7 +245,7 @@ public class UserManagementService : IUserManagementService
         await _userManager.AddToRolesAsync(user, validatedRoles);
 
         // Log the action
-        await LogUserManagementActionAsync(user.Id, "AssignRoles", modifiedBy, 
+        await LogUserManagementActionAsync(user.Id, "AssignRoles", modifiedBy,
             $"Changed roles from [{string.Join(", ", currentRoles)}] to [{string.Join(", ", validatedRoles)}]", cancellationToken);
 
         var updatedRoles = await _userManager.GetRolesAsync(user);
@@ -282,7 +282,7 @@ public class UserManagementService : IUserManagementService
             if (allRoles.Contains(role))
             {
                 validRoles.Add(role);
-                
+
                 // Add hierarchy rules - SystemAdministration includes all roles
                 if (role == "SystemAdministration")
                 {
@@ -335,14 +335,14 @@ public class UserManagementService : IUserManagementService
         {
             // Generate invitation token that combines email confirmation with setup
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            
+
             // In a real implementation, you would:
             // 1. Create invitation URL with token and user ID
             // 2. Send email with personalized invitation message
             // 3. Include link to setup page where user verifies email and sets password
-            
+
             var invitationUrl = $"https://yourapp.com/setup-account?userId={user.Id}&token={Uri.EscapeDataString(token)}";
-            
+
             _logger.LogInformation("Invitation email sent to {Email} with setup URL", user.Email);
             return true;
         }
@@ -372,7 +372,7 @@ public class UserManagementService : IUserManagementService
 
             // Resend the invitation email
             var emailSent = await SendInvitationEmailAsync(user, cancellationToken);
-            
+
             if (emailSent)
             {
                 _logger.LogInformation("Invitation email resent successfully to user {UserId} ({Email})", userId, user.Email);
@@ -390,9 +390,9 @@ public class UserManagementService : IUserManagementService
     public async Task LogUserManagementActionAsync(string userId, string action, string performedBy, string? details = null, CancellationToken cancellationToken = default)
     {
         // In a real implementation, you would save to an audit log table
-        _logger.LogInformation("User Management Action - User: {UserId}, Action: {Action}, Performed By: {PerformedBy}, Details: {Details}", 
+        _logger.LogInformation("User Management Action - User: {UserId}, Action: {Action}, Performed By: {PerformedBy}, Details: {Details}",
             userId, action, performedBy, details);
-        
+
         await Task.CompletedTask; // Placeholder for actual audit logging
     }
 
@@ -451,19 +451,19 @@ public class UserManagementService : IUserManagementService
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
         var random = new Random();
         var password = new StringBuilder();
-        
+
         // Ensure at least one of each character type
         password.Append(chars[random.Next(0, 26)]); // Uppercase
         password.Append(chars[random.Next(26, 52)]); // Lowercase
         password.Append(chars[random.Next(52, 62)]); // Number
         password.Append(chars[random.Next(62, chars.Length)]); // Special char
-        
+
         // Fill remaining positions
         for (int i = 4; i < 12; i++)
         {
             password.Append(chars[random.Next(chars.Length)]);
         }
-        
+
         return password.ToString();
     }
 

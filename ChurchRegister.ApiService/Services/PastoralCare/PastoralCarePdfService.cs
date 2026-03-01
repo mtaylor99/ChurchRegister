@@ -15,7 +15,7 @@ public class PastoralCarePdfService : IPastoralCarePdfService
     public PastoralCarePdfService(ILogger<PastoralCarePdfService> logger)
     {
         _logger = logger;
-        
+
         // Configure QuestPDF license (Community License for open-source projects)
         QuestPDF.Settings.License = LicenseType.Community;
     }
@@ -48,9 +48,9 @@ public class PastoralCarePdfService : IPastoralCarePdfService
             });
 
             var pdfBytes = document.GeneratePdf();
-            
+
             _logger.LogInformation("Successfully generated pastoral care PDF report ({Size} bytes)", pdfBytes.Length);
-            
+
             return Task.FromResult(pdfBytes);
         }
         catch (Exception ex)

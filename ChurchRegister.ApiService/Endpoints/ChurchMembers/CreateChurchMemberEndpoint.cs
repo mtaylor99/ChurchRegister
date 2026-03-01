@@ -34,7 +34,7 @@ public class CreateChurchMemberEndpoint : Endpoint<CreateChurchMemberRequest, Cr
     public override async Task HandleAsync(CreateChurchMemberRequest req, CancellationToken ct)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
+
         if (string.IsNullOrEmpty(userId))
         {
             await SendUnauthorizedAsync(ct);
@@ -75,8 +75,8 @@ public class GetNextAvailableMemberNumberEndpoint : EndpointWithoutRequest<NextA
     {
         Get("/api/administration/church-members/next-member-number");
         Policies("Bearer");
-        Roles(SystemRoles.SystemAdministration, 
-              SystemRoles.ChurchMembersAdministrator, 
+        Roles(SystemRoles.SystemAdministration,
+              SystemRoles.ChurchMembersAdministrator,
               SystemRoles.ChurchMembersContributor);
         Description(x => x
             .WithName("GetNextAvailableMemberNumber")
@@ -89,7 +89,7 @@ public class GetNextAvailableMemberNumberEndpoint : EndpointWithoutRequest<NextA
     {
         var currentYear = DateTime.UtcNow.Year;
         var nextNumber = await _registerNumberService.GetNextAvailableNumberAsync(currentYear, ct);
-        
+
         await SendOkAsync(new NextAvailableMemberNumberResponse
         {
             NextNumber = nextNumber,

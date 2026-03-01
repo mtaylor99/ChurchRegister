@@ -80,7 +80,7 @@ public class UploadAttendanceTemplateEndpoint : Endpoint<UploadAttendanceTemplat
                     "Upload attempt with oversized file ({Size} bytes) by user {User}",
                     req.File.Length,
                     userName);
-                
+
                 await SendAsync(new UploadAttendanceTemplateResponse
                 {
                     Success = false,
@@ -104,7 +104,7 @@ public class UploadAttendanceTemplateEndpoint : Endpoint<UploadAttendanceTemplat
                     "Upload attempt with invalid file type '{Extension}' by user {User}",
                     fileExtension,
                     userName);
-                
+
                 await SendAsync(new UploadAttendanceTemplateResponse
                 {
                     Success = false,
@@ -133,7 +133,7 @@ public class UploadAttendanceTemplateEndpoint : Endpoint<UploadAttendanceTemplat
                     response.Summary.RecordsUpdated,
                     response.Summary.RecordsSkipped,
                     response.Summary.RecordsFailed);
-                
+
                 await SendOkAsync(response, ct);
             }
             else
@@ -142,7 +142,7 @@ public class UploadAttendanceTemplateEndpoint : Endpoint<UploadAttendanceTemplat
                     "Upload completed with errors for user {User}: {ErrorCount} errors",
                     userName,
                     response.Errors.Count);
-                
+
                 // Return 200 with success=false if processing completed but had errors
                 await SendOkAsync(response, ct);
             }
@@ -150,7 +150,7 @@ public class UploadAttendanceTemplateEndpoint : Endpoint<UploadAttendanceTemplat
         catch (InvalidOperationException ex)
         {
             _logger.LogWarning(ex, "Validation error during upload by user {User}", userName);
-            
+
             await SendAsync(new UploadAttendanceTemplateResponse
             {
                 Success = false,
@@ -167,7 +167,7 @@ public class UploadAttendanceTemplateEndpoint : Endpoint<UploadAttendanceTemplat
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unexpected error during upload by user {User}", userName);
-            
+
             await SendAsync(new UploadAttendanceTemplateResponse
             {
                 Success = false,

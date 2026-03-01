@@ -17,15 +17,15 @@ public class CreateTrainingCertificateTypeUseCase : ICreateTrainingCertificateTy
     }
 
     public async Task<TrainingCertificateTypeDto> ExecuteAsync(
-        CreateTrainingCertificateTypeRequest request, 
-        string userId, 
+        CreateTrainingCertificateTypeRequest request,
+        string userId,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Creating training certificate type '{Type}' by user {UserId}", 
+        _logger.LogInformation("Creating training certificate type '{Type}' by user {UserId}",
             request.Type, userId);
-        
+
         var result = await _trainingCertificateService.CreateTrainingCertificateTypeAsync(request, userId, cancellationToken);
-        
+
         _logger.LogInformation("Created training certificate type {TypeId}", result.Id);
         return result;
     }

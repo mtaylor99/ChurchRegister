@@ -30,7 +30,7 @@ public class RegisterNumberService : IRegisterNumberService
     {
         var currentYear = DateTime.UtcNow.Year;
         var validYear = currentYear + 1;
-        
+
         if (targetYear != validYear)
         {
             throw new ArgumentException($"Cannot generate for year {targetYear}. Only year {validYear} is valid.", nameof(targetYear));
@@ -94,7 +94,7 @@ public class RegisterNumberService : IRegisterNumberService
     }
 
     public async Task<PreviewRegisterNumbersResponse> PreviewForYearAsync(
-        int targetYear, 
+        int targetYear,
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Previewing register numbers for year {Year}", targetYear);
@@ -140,7 +140,7 @@ public class RegisterNumberService : IRegisterNumberService
     }
 
     public async Task<GenerateRegisterNumbersResponse> GenerateForYearAsync(
-        int targetYear, 
+        int targetYear,
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Generating register numbers for year {Year}", targetYear);
@@ -182,7 +182,7 @@ public class RegisterNumberService : IRegisterNumberService
         await _context.ChurchMemberRegisterNumbers.AddRangeAsync(registerNumbers, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation("Successfully generated {Count} register numbers for year {Year}", 
+        _logger.LogInformation("Successfully generated {Count} register numbers for year {Year}",
             registerNumbers.Count, targetYear);
 
         // Create response with preview of first 10

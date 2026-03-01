@@ -22,17 +22,17 @@ public class GetChurchMemberByIdUseCase : IGetChurchMemberByIdUseCase
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Getting church member by ID: {MemberId}", memberId);
-        
+
         if (memberId <= 0)
             throw new ArgumentException("Valid member ID is required");
-        
+
         var result = await _churchMemberService.GetChurchMemberByIdAsync(memberId, cancellationToken);
-        
+
         if (result == null)
             _logger.LogWarning("Church member {MemberId} not found", memberId);
         else
             _logger.LogInformation("Successfully retrieved church member {MemberId}", memberId);
-        
+
         return result;
     }
 }

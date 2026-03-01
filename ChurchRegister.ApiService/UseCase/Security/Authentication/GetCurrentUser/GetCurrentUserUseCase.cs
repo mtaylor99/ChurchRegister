@@ -20,17 +20,17 @@ public class GetCurrentUserUseCase : IGetCurrentUserUseCase
         {
             throw new UnauthorizedAccessException("User is not authenticated");
         }
-        
+
         var currentUser = await _userManager.GetUserAsync(user);
         if (currentUser == null)
         {
             throw new UnauthorizedAccessException("User not found");
         }
-        
+
         var roles = await _userManager.GetRolesAsync(currentUser);
         var claims = await _userManager.GetClaimsAsync(currentUser);
         var permissions = claims.Where(c => c.Type == "permission").Select(c => c.Value).ToArray();
-        
+
         return new UserDto
         {
             Id = currentUser.Id,
@@ -40,8 +40,8 @@ public class GetCurrentUserUseCase : IGetCurrentUserUseCase
             LastName = currentUser.UserName?.Contains(' ') == true ? currentUser.UserName.Split(' ').LastOrDefault() ?? "" : "",
             Roles = roles.ToArray(),
             Permissions = permissions,
-            Avatar = !string.IsNullOrWhiteSpace(currentUser.FirstName) && !string.IsNullOrWhiteSpace(currentUser.LastName) 
-                ? $"{currentUser.FirstName[0]}{currentUser.LastName[0]}".ToUpper() 
+            Avatar = !string.IsNullOrWhiteSpace(currentUser.FirstName) && !string.IsNullOrWhiteSpace(currentUser.LastName)
+                ? $"{currentUser.FirstName[0]}{currentUser.LastName[0]}".ToUpper()
                 : null,
             IsActive = true,
             EmailConfirmed = currentUser.EmailConfirmed,

@@ -47,11 +47,11 @@ public class ResendInvitationEndpoint : Endpoint<ResendInvitationRequest, Resend
     public override async Task HandleAsync(ResendInvitationRequest req, CancellationToken ct)
     {
         var emailSent = await _useCase.ExecuteAsync(req.UserId, ct);
-        
+
         var response = new ResendInvitationResponse
         {
-            Message = emailSent 
-                ? "Invitation email sent successfully" 
+            Message = emailSent
+                ? "Invitation email sent successfully"
                 : "Invitation processed but email may not have been sent",
             EmailSent = emailSent
         };

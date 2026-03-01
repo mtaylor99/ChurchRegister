@@ -1,7 +1,7 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models;
 using ChurchRegister.ApiService.Models.DataProtection;
-using ChurchRegister.ApiService.UseCase.DataProtection;
+using ChurchRegister.ApiService.UseCase.DataProtection.GetDataProtection;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.ChurchMembers;
@@ -31,8 +31,8 @@ public class GetDataProtectionEndpoint : Endpoint<GetDataProtectionRequest, Data
         Get("/api/church-members/{id}/data-protection");
         Policies("Bearer");
         Roles(
-            SystemRoles.ChurchMembersViewer, 
-            SystemRoles.ChurchMembersContributor, 
+            SystemRoles.ChurchMembersViewer,
+            SystemRoles.ChurchMembersContributor,
             SystemRoles.ChurchMembersAdministrator,
             SystemRoles.SystemAdministration);
         Description(x => x

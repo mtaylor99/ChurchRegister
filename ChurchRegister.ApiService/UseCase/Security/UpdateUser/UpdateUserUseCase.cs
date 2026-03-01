@@ -22,10 +22,10 @@ public class UpdateUserUseCase : IUpdateUserUseCase
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Updating user {UserId}", request.UserId);
-        
+
         ValidateRequest(request, modifiedBy);
         var result = await _userManagementService.UpdateUserAsync(request, modifiedBy, cancellationToken);
-        
+
         _logger.LogInformation("Successfully updated user {UserId}", request.UserId);
         return result;
     }

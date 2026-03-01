@@ -30,7 +30,7 @@ public class RefreshTokenUseCase : IRefreshTokenUseCase
     {
         // Validate refresh token
         var refreshToken = await _refreshTokenRepository.GetByTokenAsync(request.RefreshToken, cancellationToken);
-        
+
         if (refreshToken == null || !refreshToken.IsActive)
         {
             throw new UnauthorizedAccessException("Invalid or expired refresh token");
@@ -63,13 +63,13 @@ public class RefreshTokenUseCase : IRefreshTokenUseCase
 
         // Revoke old refresh token (token rotation)
         await _refreshTokenRepository.RevokeAsync(
-            refreshToken.Token, 
-            ipAddress, 
-            newRefreshToken, 
+            refreshToken.Token,
+            ipAddress,
+            newRefreshToken,
             cancellationToken);
 
         var accessTokenExpirationMinutes = int.TryParse(_configuration["Jwt:AccessTokenExpirationMinutes"], out var minutes) ? minutes : 60;
-        
+
         return new RefreshTokenResponse
         {
             Message = "Token refreshed successfully",
@@ -87,14 +87,14 @@ public class RefreshTokenUseCase : IRefreshTokenUseCase
     private async Task<string> GenerateJwtTokenAsync(ChurchRegisterWebUser user)
     {
         var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT key not configured"));
-        
+
         // Get user roles
         var userRoles = await _userManager.GetRolesAsync(user);
-        
+
         var now = DateTime.UtcNow;
         var expirationMinutes = int.TryParse(_configuration["Jwt:AccessTokenExpirationMinutes"], out var minutes) ? minutes : 60;
         var expires = now.AddMinutes(expirationMinutes);
-        
+
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -103,12 +103,12 @@ public class RefreshTokenUseCase : IRefreshTokenUseCase
             new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-        
+
         foreach (var role in userRoles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
-        
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),

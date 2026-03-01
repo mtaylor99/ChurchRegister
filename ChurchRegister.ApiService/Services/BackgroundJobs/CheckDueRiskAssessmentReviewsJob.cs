@@ -34,7 +34,7 @@ public class CheckDueRiskAssessmentReviewsJob : IHostedService
         {
             using var scope = _serviceScopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ChurchRegisterWebContext>();
-            
+
             var today = DateTime.UtcNow.Date;
             var lookaheadDate = today.AddDays(_config.ReviewLookaheadDays);
 
@@ -43,7 +43,7 @@ public class CheckDueRiskAssessmentReviewsJob : IHostedService
                 .Where(ra => ra.Status == "Approved" && ra.NextReviewDate <= lookaheadDate)
                 .ToListAsync(cancellationToken);
 
-            _logger.LogInformation("Risk Assessment Review Check: Found {Count} assessments due within {Days} days", 
+            _logger.LogInformation("Risk Assessment Review Check: Found {Count} assessments due within {Days} days",
                 dueAssessments.Count, _config.ReviewLookaheadDays);
 
             if (!dueAssessments.Any())
@@ -69,7 +69,7 @@ public class CheckDueRiskAssessmentReviewsJob : IHostedService
             foreach (var assessment in dueAssessments)
             {
                 var reminderDescription = $"Risk Assessment Review: {assessment.Title}";
-                
+
                 // Check if a reminder already exists for this assessment
                 var existingReminder = await context.Reminders
                     .FirstOrDefaultAsync(r => r.Description == reminderDescription, cancellationToken);
@@ -82,8 +82,8 @@ public class CheckDueRiskAssessmentReviewsJob : IHostedService
                         CategoryId = riskAssessmentCategory.Id,
                         Description = reminderDescription,
                         DueDate = assessment.NextReviewDate,
-                        AssignedToUserId = !string.IsNullOrEmpty(_config.DefaultReminderAssigneeUserId) 
-                            ? _config.DefaultReminderAssigneeUserId 
+                        AssignedToUserId = !string.IsNullOrEmpty(_config.DefaultReminderAssigneeUserId)
+                            ? _config.DefaultReminderAssigneeUserId
                             : null,
                         Priority = assessment.NextReviewDate < today, // High priority if overdue
                         Status = "Pending",
@@ -93,7 +93,7 @@ public class CheckDueRiskAssessmentReviewsJob : IHostedService
 
                     context.Reminders.Add(newReminder);
                     created++;
-                    
+
                     _logger.LogInformation("Risk Assessment Review Check: Created reminder for '{Title}'", assessment.Title);
                 }
                 else if (existingReminder.DueDate != assessment.NextReviewDate)
@@ -103,9 +103,9 @@ public class CheckDueRiskAssessmentReviewsJob : IHostedService
                     existingReminder.Priority = assessment.NextReviewDate < today;
                     existingReminder.ModifiedBy = "System";
                     existingReminder.ModifiedDateTime = DateTime.UtcNow;
-                    
+
                     updated++;
-                    
+
                     _logger.LogInformation("Risk Assessment Review Check: Updated reminder due date for '{Title}'", assessment.Title);
                 }
                 else
@@ -120,7 +120,7 @@ public class CheckDueRiskAssessmentReviewsJob : IHostedService
                 await context.SaveChangesAsync(cancellationToken);
             }
 
-            _logger.LogInformation("Risk Assessment Review Check: Created {Created}, Updated {Updated}, Skipped {Skipped} reminders", 
+            _logger.LogInformation("Risk Assessment Review Check: Created {Created}, Updated {Updated}, Skipped {Skipped} reminders",
                 created, updated, skipped);
         }
         catch (Exception ex)

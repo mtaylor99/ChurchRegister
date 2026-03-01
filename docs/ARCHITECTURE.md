@@ -467,3 +467,70 @@ For more information, see:
 - [local-development-setup.md](./local-development-setup.md)
 - [error-handling-patterns.md](./error-handling-patterns.md)
 - [routing-navigation-conventions.md](./routing-navigation-conventions.md)
+
+---
+
+## Backend API Architecture (ChurchRegister.ApiService)
+
+The backend API is built with **ASP.NET Core (.NET 9)** using **FastEndpoints** and follows **Clean Architecture** principles.
+
+### API Layer Pattern
+
+```
+Endpoint (HTTP concern)
+    ↓ calls
+Use Case (orchestration & business logic)
+    ↓ calls
+Service (data access & infrastructure)
+    ↓ calls
+Database (Entity Framework Core / PostgreSQL)
+```
+
+### Use Case Layer
+
+Each API operation has a dedicated use case in `UseCase/{Feature}/{Operation}/`:
+
+```
+UseCase/
+├── RiskAssessments/
+│   ├── CreateRiskAssessment/
+│   │   ├── ICreateRiskAssessmentUseCase.cs
+│   │   └── CreateRiskAssessmentUseCase.cs
+│   └── ApproveRiskAssessment/
+│       ├── IApproveRiskAssessmentUseCase.cs
+│       └── ApproveRiskAssessmentUseCase.cs
+├── Reminders/
+├── DataProtection/
+└── Districts/
+```
+
+**Why a Use Case layer?**
+- Endpoints stay thin (HTTP concerns only)
+- Business logic is testable in isolation
+- Consistent structured logging across all operations
+- Enforces single responsibility per operation
+
+For full details, see [ADR-001-use-case-layer.md](./ADR-001-use-case-layer.md).
+
+### Endpoint Pattern
+
+Endpoints use FastEndpoints and inject use case interfaces:
+
+```csharp
+public class CreateRiskAssessmentEndpoint : Endpoint<CreateRiskAssessmentRequest, RiskAssessmentDto>
+{
+    private readonly ICreateRiskAssessmentUseCase _useCase;
+
+    public override void Configure() { /* route, auth */ }
+
+    public override async Task HandleAsync(CreateRiskAssessmentRequest req, CancellationToken ct)
+    {
+        var result = await _useCase.ExecuteAsync(req, User.Identity!.Name!, ct);
+        await SendOkAsync(result, ct);
+    }
+}
+```
+
+### Use Case Template
+
+For a new use case, see [UseCase/TEMPLATE.md](../ChurchRegister.ApiService/UseCase/TEMPLATE.md).

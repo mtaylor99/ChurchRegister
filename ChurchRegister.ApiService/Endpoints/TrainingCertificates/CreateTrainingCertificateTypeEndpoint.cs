@@ -33,7 +33,7 @@ public class CreateTrainingCertificateTypeEndpoint : Endpoint<CreateTrainingCert
     public override async Task HandleAsync(CreateTrainingCertificateTypeRequest req, CancellationToken ct)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
+
         if (string.IsNullOrEmpty(userId))
         {
             await SendUnauthorizedAsync(ct);

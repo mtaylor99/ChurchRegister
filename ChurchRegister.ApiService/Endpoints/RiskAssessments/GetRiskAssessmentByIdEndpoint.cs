@@ -1,6 +1,6 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.RiskAssessments;
-using ChurchRegister.ApiService.UseCase.RiskAssessments;
+using ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentById;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
@@ -43,13 +43,13 @@ public class GetRiskAssessmentByIdEndpoint : Endpoint<GetRiskAssessmentByIdReque
     public override async Task HandleAsync(GetRiskAssessmentByIdRequest req, CancellationToken ct)
     {
         var result = await _useCase.ExecuteAsync(req.Id);
-        
+
         if (result == null)
         {
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         await SendOkAsync(result, ct);
     }
 }

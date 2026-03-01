@@ -20,7 +20,7 @@ public class AttendancePdfService : IAttendancePdfService
     {
         _context = context;
         _logger = logger;
-        
+
         QuestPDF.Settings.License = LicenseType.Community;
     }
 

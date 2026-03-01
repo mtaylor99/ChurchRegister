@@ -21,12 +21,12 @@ public class GetTrainingCertificatesUseCase : IGetTrainingCertificatesUseCase
         TrainingCertificateGridQuery request,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Getting training certificates - Page: {Page}, PageSize: {PageSize}, Status: {Status}, TypeId: {TypeId}", 
+        _logger.LogInformation("Getting training certificates - Page: {Page}, PageSize: {PageSize}, Status: {Status}, TypeId: {TypeId}",
             request.Page, request.PageSize, request.Status, request.TypeId);
-        
+
         var result = await _trainingCertificateService.GetTrainingCertificatesAsync(request, cancellationToken);
-        
-        _logger.LogInformation("Retrieved {Count} training certificates out of {Total}", 
+
+        _logger.LogInformation("Retrieved {Count} training certificates out of {Total}",
             result.Items.Count(), result.TotalCount);
         return result;
     }

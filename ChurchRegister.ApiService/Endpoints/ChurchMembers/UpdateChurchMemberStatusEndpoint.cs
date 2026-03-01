@@ -43,7 +43,7 @@ public class UpdateChurchMemberStatusEndpoint : Endpoint<UpdateChurchMemberStatu
     public override async Task HandleAsync(UpdateChurchMemberStatusRequestWithId req, CancellationToken ct)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
+
         if (string.IsNullOrEmpty(userId))
         {
             await SendUnauthorizedAsync(ct);

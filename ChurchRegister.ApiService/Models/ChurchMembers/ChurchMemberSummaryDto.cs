@@ -9,7 +9,7 @@ public class ChurchMemberSummaryDto
     /// Unique church member identifier
     /// </summary>
     public int Id { get; set; }
-    
+
     /// <summary>
     /// Full display name (FirstName + LastName)
     /// </summary>

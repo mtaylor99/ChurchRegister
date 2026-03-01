@@ -21,7 +21,7 @@ public class TrainingCertificatePdfService : ITrainingCertificatePdfService
     {
         _context = context;
         _logger = logger;
-        
+
         //Configure QuestPDF license (Community License for open-source projects)
         QuestPDF.Settings.License = LicenseType.Community;
     }
@@ -34,13 +34,13 @@ public class TrainingCertificatePdfService : ITrainingCertificatePdfService
 
             var expiringDate = DateTime.UtcNow.AddDays(daysAhead);
             var now = DateTime.UtcNow;
-            
+
             // Fetch expiring certificates
             var certificates = await _context.ChurchMemberTrainingCertificates
                 .Include(c => c.TrainingCertificateType)
                 .Include(c => c.ChurchMember)
-                .Where(c => c.Expires.HasValue && 
-                           c.Expires.Value <= expiringDate && 
+                .Where(c => c.Expires.HasValue &&
+                           c.Expires.Value <= expiringDate &&
                            c.Expires.Value >= now)
                 .OrderBy(c => c.Expires)
                 .Select(c => new ExpiringCertificate
@@ -78,9 +78,9 @@ public class TrainingCertificatePdfService : ITrainingCertificatePdfService
             });
 
             var pdfBytes = document.GeneratePdf();
-            
+
             _logger.LogInformation("Successfully generated training certificates PDF report ({Size} bytes)", pdfBytes.Length);
-            
+
             return pdfBytes;
         }
         catch (Exception ex)
@@ -160,10 +160,10 @@ public class TrainingCertificatePdfService : ITrainingCertificatePdfService
                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(cert.MemberName);
                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(cert.CertificateType);
                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(cert.ExpiryDate?.ToString("dd/MM/yyyy") ?? "N/A");
-                    
+
                     var daysColor = cert.DaysUntilExpiry <= 30 ? Colors.Red.Medium : Colors.Orange.Medium;
                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(cert.DaysUntilExpiry.ToString()).FontColor(daysColor);
-                    
+
                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(cert.Status);
                 }
             });

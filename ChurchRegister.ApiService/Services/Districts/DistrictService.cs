@@ -266,8 +266,8 @@ public class DistrictService : IDistrictService
             {
                 DistrictName = $"District {district.Name}",
                 DeaconName = $"{district.Deacon!.FirstName} {district.Deacon.LastName}",
-                DistrictOfficerName = district.DistrictOfficer != null 
-                    ? $"{district.DistrictOfficer.FirstName} {district.DistrictOfficer.LastName}" 
+                DistrictOfficerName = district.DistrictOfficer != null
+                    ? $"{district.DistrictOfficer.FirstName} {district.DistrictOfficer.LastName}"
                     : "Not assigned",
                 Members = memberDtos
             });

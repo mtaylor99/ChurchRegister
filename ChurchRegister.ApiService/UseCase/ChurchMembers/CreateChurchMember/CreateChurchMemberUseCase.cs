@@ -27,7 +27,7 @@ public class CreateChurchMemberUseCase : ICreateChurchMemberUseCase
     {
         try
         {
-            _logger.LogInformation("Creating church member: {FirstName} {LastName}", 
+            _logger.LogInformation("Creating church member: {FirstName} {LastName}",
                 request.FirstName, request.LastName);
 
             // Validate input

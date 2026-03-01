@@ -1,5 +1,5 @@
 using FastEndpoints;
-using ChurchRegister.ApiService.Services.RiskAssessments;
+using ChurchRegister.ApiService.UseCase.RiskAssessments.DeleteRiskAssessmentCategory;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
@@ -17,11 +17,11 @@ public class DeleteRiskAssessmentCategoryEndpointRequest
 /// </summary>
 public class DeleteRiskAssessmentCategoryEndpoint : Endpoint<DeleteRiskAssessmentCategoryEndpointRequest>
 {
-    private readonly IRiskAssessmentCategoryService _service;
+    private readonly IDeleteRiskAssessmentCategoryUseCase _useCase;
 
-    public DeleteRiskAssessmentCategoryEndpoint(IRiskAssessmentCategoryService service)
+    public DeleteRiskAssessmentCategoryEndpoint(IDeleteRiskAssessmentCategoryUseCase useCase)
     {
-        _service = service;
+        _useCase = useCase;
     }
 
     public override void Configure()
@@ -38,7 +38,7 @@ public class DeleteRiskAssessmentCategoryEndpoint : Endpoint<DeleteRiskAssessmen
 
     public override async Task HandleAsync(DeleteRiskAssessmentCategoryEndpointRequest req, CancellationToken ct)
     {
-        await _service.DeleteCategoryAsync(req.Id);
+        await _useCase.ExecuteAsync(req.Id, ct);
         await SendNoContentAsync(ct);
     }
 }

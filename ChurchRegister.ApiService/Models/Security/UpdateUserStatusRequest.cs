@@ -36,22 +36,22 @@ public enum UserStatusAction
     /// Activate the user account
     /// </summary>
     Activate,
-    
+
     /// <summary>
     /// Deactivate the user account
     /// </summary>
     Deactivate,
-    
+
     /// <summary>
     /// Lock the user account
     /// </summary>
     Lock,
-    
+
     /// <summary>
     /// Unlock the user account
     /// </summary>
     Unlock,
-    
+
     /// <summary>
     /// Resend invitation email to user
     /// </summary>

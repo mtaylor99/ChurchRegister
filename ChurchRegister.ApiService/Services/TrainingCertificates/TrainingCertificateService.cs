@@ -23,7 +23,7 @@ public class TrainingCertificateService : ITrainingCertificateService
     }
 
     public async Task<PagedResult<TrainingCertificateDto>> GetTrainingCertificatesAsync(
-        TrainingCertificateGridQuery query, 
+        TrainingCertificateGridQuery query,
         CancellationToken cancellationToken = default)
     {
         // Validate pagination parameters

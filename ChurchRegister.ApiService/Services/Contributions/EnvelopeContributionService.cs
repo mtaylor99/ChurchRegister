@@ -24,8 +24,8 @@ public class EnvelopeContributionService : IEnvelopeContributionService
     }
 
     public async Task<ValidateRegisterNumberResponse> ValidateRegisterNumberAsync(
-        int registerNumber, 
-        int year, 
+        int registerNumber,
+        int year,
         CancellationToken cancellationToken = default)
     {
         var registerEntry = await _context.ChurchMemberRegisterNumbers
@@ -73,10 +73,10 @@ public class EnvelopeContributionService : IEnvelopeContributionService
     }
 
     public async Task<SubmitEnvelopeBatchResponse> SubmitBatchAsync(
-        SubmitEnvelopeBatchRequest request, 
+        SubmitEnvelopeBatchRequest request,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Submitting envelope batch for date {Date} with {Count} envelopes", 
+        _logger.LogInformation("Submitting envelope batch for date {Date} with {Count} envelopes",
             request.CollectionDate, request.Envelopes.Count);
 
         // Validate collection date is Sunday
@@ -179,7 +179,7 @@ public class EnvelopeContributionService : IEnvelopeContributionService
 
             await transaction.CommitAsync(cancellationToken);
 
-            _logger.LogInformation("Successfully submitted batch {BatchId} with {Count} contributions", 
+            _logger.LogInformation("Successfully submitted batch {BatchId} with {Count} contributions",
                 batch.Id, contributions.Count);
 
             return new SubmitEnvelopeBatchResponse
@@ -200,16 +200,16 @@ public class EnvelopeContributionService : IEnvelopeContributionService
     }
 
     public async Task<GetBatchListResponse> GetBatchListAsync(
-        DateOnly? startDate, 
-        DateOnly? endDate, 
-        int pageNumber, 
-        int pageSize, 
+        DateOnly? startDate,
+        DateOnly? endDate,
+        int pageNumber,
+        int pageSize,
         CancellationToken cancellationToken = default)
     {
         // Validate pagination parameters
         Helpers.ValidationHelpers.RequireValidPageNumber(pageNumber);
         Helpers.ValidationHelpers.RequireValidPageSize(pageSize);
-        
+
         var query = _context.EnvelopeContributionBatches.AsQueryable();
 
         if (startDate.HasValue)
@@ -255,7 +255,7 @@ public class EnvelopeContributionService : IEnvelopeContributionService
     }
 
     public async Task<GetBatchDetailsResponse> GetBatchDetailsAsync(
-        int batchId, 
+        int batchId,
         CancellationToken cancellationToken = default)
     {
         var batch = await _context.EnvelopeContributionBatches

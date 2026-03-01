@@ -21,10 +21,10 @@ public record CreateAttendanceRequest
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "Event ID must be a positive number")]
     public int EventId { get; init; }
-    
+
     [Required]
     public DateTime Date { get; init; }
-    
+
     [Required]
     [Range(0, int.MaxValue, ErrorMessage = "Attendance must be zero or positive")]
     public int Attendance { get; init; }
@@ -35,14 +35,14 @@ public record UpdateAttendanceRequest
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "ID must be a positive number")]
     public int Id { get; init; }
-    
+
     [Required]
     [Range(1, int.MaxValue, ErrorMessage = "Event ID must be a positive number")]
     public int EventId { get; init; }
-    
+
     [Required]
     public DateTime Date { get; init; }
-    
+
     [Required]
     [Range(0, int.MaxValue, ErrorMessage = "Attendance must be zero or positive")]
     public int Attendance { get; init; }

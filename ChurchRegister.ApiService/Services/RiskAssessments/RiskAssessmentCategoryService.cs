@@ -144,7 +144,7 @@ public class RiskAssessmentCategoryService : IRiskAssessmentCategoryService
         // Check if category has associated risk assessments
         var assessmentCount = await _context.RiskAssessments
             .CountAsync(r => r.CategoryId == id);
-            
+
         if (assessmentCount > 0)
         {
             throw new ValidationException($"Cannot delete category '{category.Name}' because it has {assessmentCount} associated risk assessment(s). Please reassign or delete them first.");

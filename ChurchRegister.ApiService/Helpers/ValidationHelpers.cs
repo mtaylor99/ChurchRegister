@@ -85,7 +85,7 @@ public static class ValidationHelpers
 
         var phoneRegex = new Regex(@"^(\+44\s?|0)(\d\s?){9,10}$");
         var cleanPhone = phone.Replace(" ", "");
-        
+
         if (!phoneRegex.IsMatch(cleanPhone))
         {
             throw new ValidationException($"{fieldName} must be a valid UK phone number.");
@@ -147,7 +147,7 @@ public static class ValidationHelpers
         }
 
         var postcodeRegex = new Regex(@"^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$", RegexOptions.IgnoreCase);
-        
+
         if (!postcodeRegex.IsMatch(postcode))
         {
             throw new ValidationException($"{fieldName} must be a valid UK postcode.");
@@ -165,7 +165,7 @@ public static class ValidationHelpers
         }
 
         var referenceRegex = new Regex(@"^[A-Za-z0-9-]+$");
-        
+
         if (!referenceRegex.IsMatch(reference))
         {
             throw new ValidationException($"{fieldName} must contain only letters, numbers, and hyphens.");

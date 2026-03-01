@@ -1,6 +1,6 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.RiskAssessments;
-using ChurchRegister.ApiService.Services.RiskAssessments;
+using ChurchRegister.ApiService.UseCase.RiskAssessments.UpdateRiskAssessmentCategory;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
@@ -18,11 +18,11 @@ public class UpdateRiskAssessmentCategoryEndpointRequest : UpdateCategoryRequest
 /// </summary>
 public class UpdateRiskAssessmentCategoryEndpoint : Endpoint<UpdateRiskAssessmentCategoryEndpointRequest, RiskAssessmentCategoryDto>
 {
-    private readonly IRiskAssessmentCategoryService _service;
+    private readonly IUpdateRiskAssessmentCategoryUseCase _useCase;
 
-    public UpdateRiskAssessmentCategoryEndpoint(IRiskAssessmentCategoryService service)
+    public UpdateRiskAssessmentCategoryEndpoint(IUpdateRiskAssessmentCategoryUseCase useCase)
     {
-        _service = service;
+        _useCase = useCase;
     }
 
     public override void Configure()
@@ -45,14 +45,14 @@ public class UpdateRiskAssessmentCategoryEndpoint : Endpoint<UpdateRiskAssessmen
             Name = req.Name,
             Description = req.Description
         };
-        var result = await _service.UpdateCategoryAsync(req.Id, request, modifiedBy);
-        
+        var result = await _useCase.ExecuteAsync(req.Id, request, modifiedBy, ct);
+
         if (result == null)
         {
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         await SendOkAsync(result, ct);
     }
 }

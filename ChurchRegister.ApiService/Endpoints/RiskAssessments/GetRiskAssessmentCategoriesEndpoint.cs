@@ -1,6 +1,6 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.RiskAssessments;
-using ChurchRegister.ApiService.UseCase.RiskAssessments;
+using ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentCategories;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;

@@ -20,10 +20,10 @@ public class DeleteChurchMemberUseCase : IDeleteChurchMemberUseCase
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Deleting church member {MemberId}", memberId);
-        
+
         ValidateRequest(memberId);
         await _churchMemberService.DeleteChurchMemberAsync(memberId, cancellationToken);
-        
+
         _logger.LogInformation("Successfully deleted church member {MemberId}", memberId);
     }
 

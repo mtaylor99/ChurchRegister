@@ -32,9 +32,9 @@ public class ExportPastoralCareReportEndpoint : EndpointWithoutRequest
     public override async Task HandleAsync(CancellationToken ct)
     {
         var pdfBytes = await _useCase.ExecuteAsync(ct);
-        
+
         var fileName = $"Pastoral-Care-Report-{DateTime.Now:yyyy-MM-dd}.pdf";
-        
+
         await SendBytesAsync(
             bytes: pdfBytes,
             fileName: fileName,

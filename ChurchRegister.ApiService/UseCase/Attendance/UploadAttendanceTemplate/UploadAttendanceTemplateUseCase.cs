@@ -102,7 +102,7 @@ public class UploadAttendanceTemplateUseCase : IUploadAttendanceTemplateUseCase
 
             // Step 4: Process data rows with merge logic
             await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-            
+
             try
             {
                 await ProcessDataRows(
@@ -116,7 +116,7 @@ public class UploadAttendanceTemplateUseCase : IUploadAttendanceTemplateUseCase
                 await transaction.CommitAsync(cancellationToken);
 
                 response.Success = true;
-                
+
                 _logger.LogInformation(
                     "Template upload completed: {Created} created, {Updated} updated, {Skipped} skipped, {Failed} failed",
                     response.Summary.RecordsCreated,
@@ -153,7 +153,7 @@ public class UploadAttendanceTemplateUseCase : IUploadAttendanceTemplateUseCase
         CancellationToken cancellationToken)
     {
         var eventMapping = new Dictionary<string, int>(); // Key: column name (template), Value: EventId (database)
-        
+
         // Get all events from database
         var allEvents = await _context.Events
             .Where(e => e.IsActive)
@@ -163,7 +163,7 @@ public class UploadAttendanceTemplateUseCase : IUploadAttendanceTemplateUseCase
         foreach (var columnName in columnNames)
         {
             // Case-insensitive match
-            var matchedEvent = allEvents.FirstOrDefault(e => 
+            var matchedEvent = allEvents.FirstOrDefault(e =>
                 e.Name.Equals(columnName, StringComparison.OrdinalIgnoreCase));
 
             if (matchedEvent != null)
@@ -267,10 +267,10 @@ public class UploadAttendanceTemplateUseCase : IUploadAttendanceTemplateUseCase
                             existingRecord.Attendance = attendance.Value;
                             existingRecord.ModifiedBy = uploadedBy;
                             existingRecord.ModifiedDateTime = DateTime.UtcNow;
-                            
+
                             recordsToUpdate.Add(existingRecord);
                             response.Summary.RecordsUpdated++;
-                            
+
                             _logger.LogDebug(
                                 "Updating record: Event {EventId}, Date {Date}, Old: {Old}, New: {New}",
                                 eventId, date, existingRecord.Attendance, attendance.Value);
@@ -295,7 +295,7 @@ public class UploadAttendanceTemplateUseCase : IUploadAttendanceTemplateUseCase
 
                         recordsToCreate.Add(newRecord);
                         response.Summary.RecordsCreated++;
-                        
+
                         _logger.LogDebug(
                             "Creating record: Event {EventId}, Date {Date}, Attendance {Attendance}",
                             eventId, date, attendance.Value);
@@ -311,8 +311,8 @@ public class UploadAttendanceTemplateUseCase : IUploadAttendanceTemplateUseCase
                         Date = date.ToString("yyyy-MM-dd"),
                         Message = $"Error processing record: {ex.Message}"
                     });
-                    
-                    _logger.LogError(ex, 
+
+                    _logger.LogError(ex,
                         "Error processing row {Row}, event {Event}, date {Date}",
                         dataRow.RowNumber, columnName, date);
                 }

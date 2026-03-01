@@ -17,15 +17,15 @@ public class UpdateTrainingCertificateUseCase : IUpdateTrainingCertificateUseCas
     }
 
     public async Task<TrainingCertificateDto> ExecuteAsync(
-        UpdateTrainingCertificateRequest request, 
-        string userId, 
+        UpdateTrainingCertificateRequest request,
+        string userId,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Updating training certificate {CertificateId} by user {UserId}", 
+        _logger.LogInformation("Updating training certificate {CertificateId} by user {UserId}",
             request.Id, userId);
-        
+
         var result = await _trainingCertificateService.UpdateTrainingCertificateAsync(request, userId, cancellationToken);
-        
+
         _logger.LogInformation("Updated training certificate {CertificateId}", result.Id);
         return result;
     }

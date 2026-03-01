@@ -1,6 +1,6 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.Reminders;
-using ChurchRegister.ApiService.UseCase.Reminders;
+using ChurchRegister.ApiService.UseCase.Reminders.GetReminderCategories;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.Reminders;

@@ -56,13 +56,13 @@ public class MonthlyReportPackService : IMonthlyReportPackService
         var tasks = new Dictionary<string, Task<byte[]>>
         {
             ["Attendance.pdf"] = GenerateReportSafe(_attendancePdfService.GenerateAttendanceReportAsync, "Attendance", linkedCts.Token),
-            ["Pastoral Care.pdf"] = GenerateReportSafe(async ct => 
+            ["Pastoral Care.pdf"] = GenerateReportSafe(async ct =>
             {
                 // For pastoral care, we need to get the report data first
                 // This is a simplified version - you may need to inject the church member service
                 return await _pastoralCarePdfService.GeneratePastoralCareReportAsync(
-                    new Models.PastoralCare.PastoralCareReportDto 
-                    { 
+                    new Models.PastoralCare.PastoralCareReportDto
+                    {
                         Districts = Array.Empty<Models.PastoralCare.PastoralCareDistrictDto>(),
                         TotalMembers = 0,
                         GeneratedDate = DateTime.UtcNow
@@ -88,7 +88,7 @@ public class MonthlyReportPackService : IMonthlyReportPackService
                     FileData = pdfBytes,
                     MimeType = "application/pdf"
                 });
-                
+
                 _logger.LogInformation("Successfully generated {FileName} ({Size} bytes)", fileName, pdfBytes.Length);
             }
             catch (Exception ex)
@@ -99,7 +99,7 @@ public class MonthlyReportPackService : IMonthlyReportPackService
                     ReportName = reportName,
                     ErrorMessage = ex.Message
                 });
-                
+
                 _logger.LogError(ex, "Failed to generate {ReportName} report", reportName);
             }
         }

@@ -22,20 +22,20 @@ public class PreviewRegisterNumbersUseCase : IPreviewRegisterNumbersUseCase
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Previewing register numbers for year {Year}", year);
-        
+
         if (year < 2000 || year > 2100)
             throw new ArgumentException("Invalid year");
-        
+
         if (await _registerNumberService.HasBeenGeneratedForYearAsync(year, cancellationToken))
         {
             throw new ValidationException($"Register numbers for year {year} have already been generated. Please use the existing numbers or contact an administrator.");
         }
 
         var result = await _registerNumberService.PreviewForYearAsync(year, cancellationToken);
-        
-        _logger.LogInformation("Preview generated for {Count} members for year {Year}", 
+
+        _logger.LogInformation("Preview generated for {Count} members for year {Year}",
             result.TotalActiveMembers, year);
-        
+
         return result;
     }
 }

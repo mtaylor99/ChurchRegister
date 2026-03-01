@@ -105,10 +105,10 @@ public class UploadHsbcStatementUseCase : IUploadHsbcStatementUseCase
     private string BuildSuccessMessage(ImportResult importResult, ContributionProcessingResult processingResult)
     {
         var message = $"{importResult.NewTransactions} new transaction(s) imported successfully";
-        
+
         if (importResult.DuplicatesSkipped > 0)
             message += $", {importResult.DuplicatesSkipped} duplicate(s) skipped";
-        
+
         if (importResult.IgnoredNoMoneyIn > 0)
             message += $", {importResult.IgnoredNoMoneyIn} transaction(s) ignored (no credit amount)";
 

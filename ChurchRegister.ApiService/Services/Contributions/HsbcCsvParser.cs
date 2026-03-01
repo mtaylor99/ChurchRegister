@@ -17,7 +17,7 @@ public class HsbcCsvParser : IHsbcCsvParser
         {
             using var reader = new StreamReader(csvStream);
             var csvContent = await reader.ReadToEndAsync(cancellationToken);
-            
+
             var lines = csvContent.Split('\n', StringSplitOptions.RemoveEmptyEntries)
                 .Select(l => l.Trim('\r'))
                 .ToList();
@@ -113,7 +113,7 @@ public class HsbcCsvParser : IHsbcCsvParser
     private static DateTime ParseDate(string[] cols, Dictionary<string, int> map, string key)
     {
         var alternateKeys = new[] { key, "transaction date" };
-        
+
         foreach (var k in alternateKeys)
         {
             if (map.TryGetValue(k, out int idx) && idx < cols.Length)
@@ -123,7 +123,7 @@ public class HsbcCsvParser : IHsbcCsvParser
                     return dt;
             }
         }
-        
+
         return DateTime.MinValue;
     }
 
@@ -134,7 +134,7 @@ public class HsbcCsvParser : IHsbcCsvParser
             if (map.TryGetValue(key, out int idx) && idx < cols.Length)
             {
                 var valueStr = cols[idx].Trim();
-                if (!string.IsNullOrWhiteSpace(valueStr) && 
+                if (!string.IsNullOrWhiteSpace(valueStr) &&
                     decimal.TryParse(valueStr, NumberStyles.Any, CultureInfo.InvariantCulture, out var val))
                 {
                     return val;

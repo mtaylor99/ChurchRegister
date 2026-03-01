@@ -1,5 +1,5 @@
 using ChurchRegister.ApiService.Models.Reminders;
-using ChurchRegister.ApiService.UseCase.Reminders;
+using ChurchRegister.ApiService.UseCase.Reminders.CreateReminder;
 using ChurchRegister.Database.Constants;
 using FastEndpoints;
 using System.Security.Claims;
@@ -33,9 +33,9 @@ public class CreateReminderEndpoint : Endpoint<CreateReminderRequest, ReminderDt
     {
         _logger.LogInformation("CreateReminder called with Description={Description}, DueDate={DueDate}, AssignedToUserId={AssignedToUserId}, CategoryId={CategoryId}, Priority={Priority}",
             req.Description, req.DueDate, req.AssignedToUserId, req.CategoryId, req.Priority);
-        
+
         var username = User.Identity?.Name ?? throw new UnauthorizedAccessException("User not authenticated");
-        
+
         // Handle "current-user" as a special case to assign to the current logged-in user
         if (req.AssignedToUserId == "current-user")
         {
@@ -47,11 +47,11 @@ public class CreateReminderEndpoint : Endpoint<CreateReminderRequest, ReminderDt
             _logger.LogInformation("Converting 'current-user' to actual user ID: {UserId}", userId);
             req.AssignedToUserId = userId;
         }
-        
+
         var reminder = await _useCase.ExecuteAsync(req, username);
-        
+
         _logger.LogInformation("Reminder created successfully with ID={Id}, Status={Status}", reminder.Id, reminder.Status);
-        
+
         await SendCreatedAtAsync<GetReminderByIdEndpoint>(new { id = reminder.Id }, reminder, cancellation: ct);
         return reminder;
     }

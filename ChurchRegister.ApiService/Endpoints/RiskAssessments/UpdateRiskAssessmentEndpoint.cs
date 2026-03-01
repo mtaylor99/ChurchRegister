@@ -1,6 +1,6 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.RiskAssessments;
-using ChurchRegister.ApiService.UseCase.RiskAssessments;
+using ChurchRegister.ApiService.UseCase.RiskAssessments.UpdateRiskAssessment;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
@@ -8,7 +8,7 @@ namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
 /// <summary>
 /// Request model for updating a risk assessment including the ID from route
 /// </summary>
- public class UpdateRiskAssessmentEndpointRequest : UpdateRiskAssessmentRequest
+public class UpdateRiskAssessmentEndpointRequest : UpdateRiskAssessmentRequest
 {
     public int Id { get; set; }
 }
@@ -49,13 +49,13 @@ public class UpdateRiskAssessmentEndpoint : Endpoint<UpdateRiskAssessmentEndpoin
             Notes = req.Notes
         };
         var result = await _useCase.ExecuteAsync(req.Id, request, modifiedBy);
-        
+
         if (result == null)
         {
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         await SendOkAsync(result, ct);
     }
 }

@@ -66,7 +66,7 @@ public class GetContributionHistoryUseCase : IGetContributionHistoryUseCase
                 })
             .ToListAsync(cancellationToken);
 
-        _logger.LogInformation("Retrieved {Count} contributions for member {MemberId}", 
+        _logger.LogInformation("Retrieved {Count} contributions for member {MemberId}",
             contributions.Count, memberId);
 
         return contributions;

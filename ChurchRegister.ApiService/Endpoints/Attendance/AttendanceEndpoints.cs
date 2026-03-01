@@ -71,7 +71,7 @@ public class CreateAttendanceEndpoint : Endpoint<CreateAttendanceRequest>
         {
             var createdBy = User.Identity?.Name ?? "system";
             await _useCase.ExecuteAsync(req, createdBy, ct);
-            
+
             await SendCreatedAtAsync<GetAttendanceEndpoint>(
                 routeValues: null,
                 responseBody: null,

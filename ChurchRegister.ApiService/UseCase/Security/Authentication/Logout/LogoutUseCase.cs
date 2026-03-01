@@ -22,17 +22,17 @@ public class LogoutUseCase : ILogoutUseCase
     public async Task<LogoutResponse> ExecuteAsync(ClaimsPrincipal user, string? ipAddress = null, CancellationToken cancellationToken = default)
     {
         await _signInManager.SignOutAsync();
-        
+
         // Revoke all refresh tokens for the user
         var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!string.IsNullOrEmpty(userId))
         {
             await _refreshTokenRepository.RevokeAllForUserAsync(userId, ipAddress, cancellationToken);
         }
-        
-        return new LogoutResponse 
-        { 
-            Message = "Logout successful" 
+
+        return new LogoutResponse
+        {
+            Message = "Logout successful"
         };
     }
 }

@@ -21,12 +21,12 @@ public class GetChurchMembersUseCase : IGetChurchMembersUseCase
         ChurchMemberGridQuery request,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Getting church members - Page: {Page}, PageSize: {PageSize}", 
+        _logger.LogInformation("Getting church members - Page: {Page}, PageSize: {PageSize}",
             request.Page, request.PageSize);
-        
+
         var result = await _churchMemberService.GetChurchMembersAsync(request, cancellationToken);
-        
-        _logger.LogInformation("Retrieved {Count} church members out of {Total}", 
+
+        _logger.LogInformation("Retrieved {Count} church members out of {Total}",
             result.Items.Count(), result.TotalCount);
         return result;
     }

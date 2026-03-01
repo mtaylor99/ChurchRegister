@@ -16,7 +16,7 @@ public class UpdateProfileUseCase : IUpdateProfileUseCase
     public async Task<ChurchRegisterWebUser> ExecuteAsync(UpdateProfileRequest request, string userId, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        
+
         if (user == null)
         {
             throw new InvalidOperationException("User not found");

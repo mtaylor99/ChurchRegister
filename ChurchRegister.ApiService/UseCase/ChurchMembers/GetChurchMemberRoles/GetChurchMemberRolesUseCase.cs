@@ -20,9 +20,9 @@ public class GetChurchMemberRolesUseCase : IGetChurchMemberRolesUseCase
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Getting church member roles");
-        
+
         var result = await _churchMemberService.GetRolesAsync(cancellationToken);
-        
+
         _logger.LogInformation("Retrieved {Count} church member roles", result.Count());
         return result;
     }

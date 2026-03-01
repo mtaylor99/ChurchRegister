@@ -50,7 +50,7 @@ public class TokenRevocationMiddleware
             // Check if user has any active refresh tokens
             // If user has no active tokens, it means all tokens were revoked (e.g., logout, admin action)
             var activeTokens = await refreshTokenRepository.GetActiveTokensForUserAsync(userId);
-            
+
             if (!activeTokens.Any())
             {
                 // User has no active refresh tokens - they may have been revoked
@@ -58,7 +58,7 @@ public class TokenRevocationMiddleware
                 _logger.LogWarning(
                     "User {UserId} has no active refresh tokens. Access token may be from a revoked session.",
                     userId);
-                
+
                 // Note: We don't block access here because:
                 // 1. Access tokens are short-lived (1 hour)
                 // 2. Blocking would require tracking every access token in the database

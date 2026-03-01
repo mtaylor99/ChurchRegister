@@ -17,15 +17,15 @@ public class CreateTrainingCertificateUseCase : ICreateTrainingCertificateUseCas
     }
 
     public async Task<TrainingCertificateDto> ExecuteAsync(
-        CreateTrainingCertificateRequest request, 
-        string userId, 
+        CreateTrainingCertificateRequest request,
+        string userId,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Creating training certificate for member {MemberId}, type {TypeId} by user {UserId}", 
+        _logger.LogInformation("Creating training certificate for member {MemberId}, type {TypeId} by user {UserId}",
             request.ChurchMemberId, request.TrainingCertificateTypeId, userId);
-        
+
         var result = await _trainingCertificateService.CreateTrainingCertificateAsync(request, userId, cancellationToken);
-        
+
         _logger.LogInformation("Created training certificate {CertificateId}", result.Id);
         return result;
     }

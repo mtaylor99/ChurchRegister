@@ -38,7 +38,7 @@ public class ReminderService : IReminderService
             if (query.Status.Equals("Overdue", StringComparison.OrdinalIgnoreCase))
             {
                 // Overdue = Pending AND DueDate < Today
-                remindersQuery = remindersQuery.Where(r => 
+                remindersQuery = remindersQuery.Where(r =>
                     r.Status == "Pending" && r.DueDate < DateTime.Today);
             }
             else
@@ -273,7 +273,7 @@ public class ReminderService : IReminderService
             .Where(r => r.Status == "Pending" && r.DueDate <= thirtyDaysFromNow)
             .CountAsync();
 
-        _logger.LogInformation("Dashboard reminder summary: Found {Count} pending reminders due on or before {EndDate}", 
+        _logger.LogInformation("Dashboard reminder summary: Found {Count} pending reminders due on or before {EndDate}",
             count, thirtyDaysFromNow.ToString("yyyy-MM-dd"));
 
         return new DashboardReminderSummaryDto
@@ -307,15 +307,15 @@ public class ReminderService : IReminderService
 
     private ReminderDto MapToDto(Reminder reminder, ChurchRegisterWebUser? user, ReminderCategory? category)
     {
-        var userName = user != null 
-            ? $"{user.FirstName} {user.LastName}".Trim() 
+        var userName = user != null
+            ? $"{user.FirstName} {user.LastName}".Trim()
             : "Unknown";
-        
+
         if (string.IsNullOrWhiteSpace(userName))
         {
             userName = user?.UserName ?? "Unknown";
         }
-        
+
         return new ReminderDto
         {
             Id = reminder.Id,

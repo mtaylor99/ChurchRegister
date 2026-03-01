@@ -20,13 +20,13 @@ public class ResendInvitationUseCase : IResendInvitationUseCase
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Resending invitation for user {UserId}", userId);
-        
+
         if (string.IsNullOrWhiteSpace(userId))
             throw new ArgumentException("User ID is required");
-        
+
         var result = await _userManagementService.ResendInvitationAsync(userId, cancellationToken);
-        
-        _logger.LogInformation("Invitation resend {Status} for user {UserId}", 
+
+        _logger.LogInformation("Invitation resend {Status} for user {UserId}",
             result ? "successful" : "failed", userId);
         return result;
     }

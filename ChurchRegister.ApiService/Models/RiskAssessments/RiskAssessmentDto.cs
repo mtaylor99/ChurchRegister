@@ -16,11 +16,11 @@ public class RiskAssessmentDto
     public string? Notes { get; set; }
     public int ApprovalCount { get; set; }
     public int MinimumApprovalsRequired { get; set; }
-    
+
     // Calculated fields
     public bool IsOverdue { get; set; }
     public string AlertStatus { get; set; } = string.Empty;
-    
+
     // Audit fields
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime CreatedDateTime { get; set; }

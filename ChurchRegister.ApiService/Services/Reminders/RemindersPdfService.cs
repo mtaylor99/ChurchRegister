@@ -25,7 +25,7 @@ public class RemindersPdfService : IRemindersPdfService
         _context = context;
         _userManager = userManager;
         _logger = logger;
-        
+
         // Configure QuestPDF license (Community License for open-source projects)
         QuestPDF.Settings.License = LicenseType.Community;
     }
@@ -38,18 +38,18 @@ public class RemindersPdfService : IRemindersPdfService
 
             var dueDate = DateTime.UtcNow.AddDays(daysAhead);
             var now = DateTime.UtcNow;
-            
+
             // Fetch due reminders
             var reminders = await _context.Reminders
                 .Include(r => r.Category)
-                .Where(r => r.DueDate <= dueDate && 
+                .Where(r => r.DueDate <= dueDate &&
                            r.DueDate >= now &&
                            r.Status != "Completed")
                 .OrderBy(r => r.DueDate)
                 .ToListAsync(cancellationToken);
 
             var dueReminders = new List<DueReminder>();
-            
+
             foreach (var reminder in reminders)
             {
                 var assignedToName = "Unassigned";
@@ -99,9 +99,9 @@ public class RemindersPdfService : IRemindersPdfService
             });
 
             var pdfBytes = document.GeneratePdf();
-            
+
             _logger.LogInformation("Successfully generated reminders PDF report ({Size} bytes)", pdfBytes.Length);
-            
+
             return pdfBytes;
         }
         catch (Exception ex)
@@ -180,12 +180,12 @@ public class RemindersPdfService : IRemindersPdfService
                 {
                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(reminder.Description);
                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(reminder.DueDate.ToString("dd/MM/yyyy"));
-                    
+
                     var daysColor = reminder.DaysUntilDue <= 7 ? Colors.Red.Medium : Colors.Orange.Medium;
                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(reminder.DaysUntilDue.ToString()).FontColor(daysColor);
-                    
+
                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(reminder.AssignedTo);
-                    
+
                     var priorityText = reminder.Priority == true ? "High" : "";
                     table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5).Text(priorityText).FontColor(Colors.Red.Medium);
                 }

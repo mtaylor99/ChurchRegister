@@ -1,5 +1,5 @@
 using ChurchRegister.ApiService.Models.Reminders;
-using ChurchRegister.ApiService.UseCase.Reminders;
+using ChurchRegister.ApiService.UseCase.Reminders.GetReminders;
 using ChurchRegister.Database.Constants;
 using FastEndpoints;
 
@@ -32,11 +32,11 @@ public class GetRemindersEndpoint : Endpoint<ReminderQueryParameters, List<Remin
     {
         _logger.LogInformation("GetReminders called with Status={Status}, AssignedToUserId={AssignedToUserId}, CategoryId={CategoryId}, ShowCompleted={ShowCompleted}",
             query.Status, query.AssignedToUserId, query.CategoryId, query.ShowCompleted);
-        
+
         var reminders = await _useCase.ExecuteAsync(query);
-        
+
         _logger.LogInformation("GetReminders returning {Count} reminders", reminders.Count);
-        
+
         await SendOkAsync(reminders, ct);
     }
 }

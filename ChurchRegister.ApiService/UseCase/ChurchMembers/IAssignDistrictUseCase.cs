@@ -1,7 +1,7 @@
 using ChurchRegister.ApiService.Models.ChurchMembers;
 using ChurchRegister.ApiService.Models.Districts;
 
-namespace ChurchRegister.ApiService.UseCase.ChurchMembers;
+namespace ChurchRegister.ApiService.UseCase.ChurchMembers.AssignDistrict;
 
 /// <summary>
 /// Use case interface for assigning a district to a church member

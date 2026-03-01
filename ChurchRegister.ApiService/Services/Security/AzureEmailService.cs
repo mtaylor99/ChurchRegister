@@ -9,39 +9,39 @@ namespace ChurchRegister.ApiService.Services.Security;
 /// Azure Communication Services Email implementation
 /// </summary>
 public class AzureEmailService : IAzureEmailService
+{
+    private readonly EmailClient _emailClient;
+    private readonly AzureEmailServiceConfiguration _configuration;
+    private readonly ILogger<AzureEmailService> _logger;
+
+    public AzureEmailService(
+        IOptions<AzureEmailServiceConfiguration> configuration,
+        ILogger<AzureEmailService> logger)
     {
-        private readonly EmailClient _emailClient;
-        private readonly AzureEmailServiceConfiguration _configuration;
-        private readonly ILogger<AzureEmailService> _logger;
+        _configuration = configuration.Value;
+        _logger = logger;
 
-        public AzureEmailService(
-            IOptions<AzureEmailServiceConfiguration> configuration,
-            ILogger<AzureEmailService> logger)
+        if (string.IsNullOrEmpty(_configuration.ConnectionString))
         {
-            _configuration = configuration.Value;
-            _logger = logger;
+            _logger.LogWarning("Azure Communication Services connection string is not configured. Email functionality will be disabled.");
+            _emailClient = null!;
+        }
+        else
+        {
+            _emailClient = new EmailClient(_configuration.ConnectionString);
+        }
+    }
 
-            if (string.IsNullOrEmpty(_configuration.ConnectionString))
-            {
-                _logger.LogWarning("Azure Communication Services connection string is not configured. Email functionality will be disabled.");
-                _emailClient = null!;
-            }
-            else
-            {
-                _emailClient = new EmailClient(_configuration.ConnectionString);
-            }
+    public async Task<bool> SendUserVerificationEmailAsync(string toEmail, string firstName, string verificationLink)
+    {
+        if (!_configuration.EnableEmailVerification)
+        {
+            _logger.LogInformation("Email verification is disabled in configuration");
+            return true; // Return true to not block user creation
         }
 
-        public async Task<bool> SendUserVerificationEmailAsync(string toEmail, string firstName, string verificationLink)
-        {
-            if (!_configuration.EnableEmailVerification)
-            {
-                _logger.LogInformation("Email verification is disabled in configuration");
-                return true; // Return true to not block user creation
-            }
-
-            var subject = "Welcome to ChurchRegister - Please verify your email";
-            var htmlContent = $@"
+        var subject = "Welcome to ChurchRegister - Please verify your email";
+        var htmlContent = $@"
                 <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
                     <h2 style='color: #1976d2;'>Welcome to ChurchRegister, {firstName}!</h2>
                     <p>Thank you for joining our church management system. To complete your account setup, please verify your email address by clicking the button below:</p>
@@ -63,13 +63,13 @@ public class AzureEmailService : IAzureEmailService
                     </p>
                 </div>";
 
-            return await SendEmailAsync(toEmail, subject, htmlContent);
-        }
+        return await SendEmailAsync(toEmail, subject, htmlContent);
+    }
 
-        public async Task<bool> SendPasswordResetEmailAsync(string toEmail, string firstName, string resetLink)
-        {
-            var subject = "ChurchRegister - Password Reset Request";
-            var htmlContent = $@"
+    public async Task<bool> SendPasswordResetEmailAsync(string toEmail, string firstName, string resetLink)
+    {
+        var subject = "ChurchRegister - Password Reset Request";
+        var htmlContent = $@"
                 <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
                     <h2 style='color: #1976d2;'>Password Reset Request</h2>
                     <p>Hello {firstName},</p>
@@ -94,13 +94,13 @@ public class AzureEmailService : IAzureEmailService
                     </p>
                 </div>";
 
-            return await SendEmailAsync(toEmail, subject, htmlContent);
-        }
+        return await SendEmailAsync(toEmail, subject, htmlContent);
+    }
 
-        public async Task<bool> SendAccountStatusNotificationAsync(string toEmail, string firstName, string statusChange)
-        {
-            var subject = "ChurchRegister - Account Status Update";
-            var htmlContent = $@"
+    public async Task<bool> SendAccountStatusNotificationAsync(string toEmail, string firstName, string statusChange)
+    {
+        var subject = "ChurchRegister - Account Status Update";
+        var htmlContent = $@"
                 <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
                     <h2 style='color: #1976d2;'>Account Status Update</h2>
                     <p>Hello {firstName},</p>
@@ -118,46 +118,46 @@ public class AzureEmailService : IAzureEmailService
                     </p>
                 </div>";
 
-            return await SendEmailAsync(toEmail, subject, htmlContent);
+        return await SendEmailAsync(toEmail, subject, htmlContent);
+    }
+
+    public async Task<bool> SendEmailAsync(string toEmail, string subject, string htmlContent)
+    {
+        if (_emailClient == null)
+        {
+            _logger.LogWarning("Email client is not configured. Cannot send email to {Email}", toEmail);
+            return false;
         }
 
-        public async Task<bool> SendEmailAsync(string toEmail, string subject, string htmlContent)
+        try
         {
-            if (_emailClient == null)
-            {
-                _logger.LogWarning("Email client is not configured. Cannot send email to {Email}", toEmail);
-                return false;
-            }
+            var emailMessage = new EmailMessage(
+                _configuration.SenderEmail,
+                toEmail,
+                new EmailContent(subject)
+                {
+                    Html = htmlContent
+                });
 
-            try
-            {
-                var emailMessage = new EmailMessage(
-                    _configuration.SenderEmail,
-                    toEmail,
-                    new EmailContent(subject)
-                    {
-                        Html = htmlContent
-                    });
+            var emailSendOperation = await _emailClient.SendAsync(
+                WaitUntil.Started,
+                emailMessage);
 
-                var emailSendOperation = await _emailClient.SendAsync(
-                    WaitUntil.Started,
-                    emailMessage);
+            _logger.LogInformation("Email sent successfully to {Email} with subject '{Subject}'. Operation ID: {OperationId}",
+                toEmail, subject, emailSendOperation.Id);
 
-                _logger.LogInformation("Email sent successfully to {Email} with subject '{Subject}'. Operation ID: {OperationId}",
-                    toEmail, subject, emailSendOperation.Id);
-
-                return true;
-            }
-            catch (RequestFailedException ex)
-            {
-                _logger.LogError(ex, "Failed to send email to {Email} with subject '{Subject}'. Error: {Error}",
-                    toEmail, subject, ex.Message);
-                return false;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error sending email to {Email} with subject '{Subject}'",
-                    toEmail, subject);
+            return true;
+        }
+        catch (RequestFailedException ex)
+        {
+            _logger.LogError(ex, "Failed to send email to {Email} with subject '{Subject}'. Error: {Error}",
+                toEmail, subject, ex.Message);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error sending email to {Email} with subject '{Subject}'",
+                toEmail, subject);
             return false;
         }
     }

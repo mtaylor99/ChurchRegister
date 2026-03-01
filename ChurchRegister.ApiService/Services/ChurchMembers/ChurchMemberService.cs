@@ -38,7 +38,7 @@ public class ChurchMemberService : IChurchMemberService
         // Validate pagination parameters (validation also exists at model level via [Range] attribute)
         Helpers.ValidationHelpers.RequireValidPageNumber(query.Page);
         Helpers.ValidationHelpers.RequireValidPageSize(query.PageSize);
-        
+
         var membersQuery = _context.ChurchMembers
             .AsNoTracking()
             .Include(m => m.ChurchMemberStatus)
@@ -125,8 +125,8 @@ public class ChurchMemberService : IChurchMemberService
         var yearEnd = new DateTime(currentYear, 12, 31, 23, 59, 59);
 
         var contributionSums = await _context.ChurchMemberContributions
-            .Where(c => memberIds.Contains(c.ChurchMemberId) && 
-                       c.Date >= yearStart && 
+            .Where(c => memberIds.Contains(c.ChurchMemberId) &&
+                       c.Date >= yearStart &&
                        c.Date <= yearEnd)
             .GroupBy(c => c.ChurchMemberId)
             .Select(g => new { ChurchMemberId = g.Key, TotalAmount = g.Sum(c => c.Amount) })
@@ -136,8 +136,8 @@ public class ChurchMemberService : IChurchMemberService
 
         // Get last contribution date for each member
         var lastContributionDates = await _context.ChurchMemberContributions
-            .Where(c => memberIds.Contains(c.ChurchMemberId) && 
-                       c.Date >= yearStart && 
+            .Where(c => memberIds.Contains(c.ChurchMemberId) &&
+                       c.Date >= yearStart &&
                        c.Date <= yearEnd)
             .GroupBy(c => c.ChurchMemberId)
             .Select(g => new { ChurchMemberId = g.Key, LastDate = g.Max(c => c.Date) })
@@ -181,7 +181,7 @@ public class ChurchMemberService : IChurchMemberService
         if (!string.IsNullOrWhiteSpace(request.BankReference))
         {
             var duplicateBankReference = await _context.ChurchMembers
-                .AnyAsync(m => m.BankReference != null && 
+                .AnyAsync(m => m.BankReference != null &&
                               m.BankReference.ToLower().Trim() == request.BankReference.ToLower().Trim(),
                         cancellationToken);
 
@@ -325,7 +325,7 @@ public class ChurchMemberService : IChurchMemberService
                         _logger.LogInformation("Auto-generated member number {Number} for year {Year} for new active member {MemberId}",
                             memberNumber, currentYear, member.Id);
                     }
-                    
+
                     var registerNumber = new ChurchMemberRegisterNumber
                     {
                         ChurchMemberId = member.Id,
@@ -334,7 +334,7 @@ public class ChurchMemberService : IChurchMemberService
                         CreatedBy = createdBy,
                         CreatedDateTime = DateTime.UtcNow
                     };
-                    
+
                     _context.ChurchMemberRegisterNumbers.Add(registerNumber);
                     await _context.SaveChangesAsync(cancellationToken);
                 }
@@ -387,8 +387,8 @@ public class ChurchMemberService : IChurchMemberService
         if (!string.IsNullOrWhiteSpace(request.BankReference))
         {
             var duplicateBankReference = await _context.ChurchMembers
-                .AnyAsync(m => m.Id != request.Id && 
-                              m.BankReference != null && 
+                .AnyAsync(m => m.Id != request.Id &&
+                              m.BankReference != null &&
                               m.BankReference.ToLower().Trim() == request.BankReference.ToLower().Trim(),
                         cancellationToken);
 
@@ -401,8 +401,8 @@ public class ChurchMemberService : IChurchMemberService
         {
             var currentYear = DateTime.UtcNow.Year;
             var numberExists = await _context.ChurchMemberRegisterNumbers
-                .AnyAsync(r => r.ChurchMemberId != request.Id && 
-                              r.Number == request.MemberNumber && 
+                .AnyAsync(r => r.ChurchMemberId != request.Id &&
+                              r.Number == request.MemberNumber &&
                               r.Year == currentYear, cancellationToken);
 
             if (numberExists)
@@ -811,12 +811,12 @@ public class ChurchMemberService : IChurchMemberService
     }
 
     public async Task<ChurchMemberDetailDto> AssignDistrictAsync(
-        int memberId, 
-        AssignDistrictRequest request, 
-        string modifiedBy, 
+        int memberId,
+        AssignDistrictRequest request,
+        string modifiedBy,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Assigning district {DistrictId} to church member {MemberId} by {ModifiedBy}", 
+        _logger.LogInformation("Assigning district {DistrictId} to church member {MemberId} by {ModifiedBy}",
             request.DistrictId, memberId, modifiedBy);
 
         // Find the member
@@ -839,7 +839,7 @@ public class ChurchMemberService : IChurchMemberService
         {
             var districtExists = await _context.Districts
                 .AnyAsync(d => d.Id == request.DistrictId.Value, cancellationToken);
-            
+
             if (!districtExists)
             {
                 throw new ArgumentException($"District with ID {request.DistrictId.Value} not found");
@@ -853,7 +853,7 @@ public class ChurchMemberService : IChurchMemberService
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation("Successfully assigned district {DistrictId} to church member {MemberId}", 
+        _logger.LogInformation("Successfully assigned district {DistrictId} to church member {MemberId}",
             request.DistrictId, memberId);
 
         // Return updated member details
@@ -914,7 +914,7 @@ public class ChurchMemberService : IChurchMemberService
             GeneratedDate = DateTime.UtcNow
         };
 
-        _logger.LogInformation("Pastoral care report generated with {DistrictCount} districts and {MemberCount} members", 
+        _logger.LogInformation("Pastoral care report generated with {DistrictCount} districts and {MemberCount} members",
             groupedByDistrict.Length, members.Count);
 
         return report;

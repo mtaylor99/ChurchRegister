@@ -21,9 +21,9 @@ public class GetTrainingCertificateTypesUseCase : IGetTrainingCertificateTypesUs
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Getting training certificate types with status filter: {StatusFilter}", statusFilter ?? "none");
-        
+
         var result = await _trainingCertificateService.GetTrainingCertificateTypesAsync(statusFilter, cancellationToken);
-        
+
         _logger.LogInformation("Retrieved {Count} training certificate types", result.Count());
         return result;
     }

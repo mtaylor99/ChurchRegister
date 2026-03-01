@@ -21,12 +21,12 @@ public class GetUsersUseCase : IGetUsersUseCase
         UserGridQuery request,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Getting users - Page: {Page}, PageSize: {PageSize}", 
+        _logger.LogInformation("Getting users - Page: {Page}, PageSize: {PageSize}",
             request.Page, request.PageSize);
-        
+
         var result = await _userManagementService.GetUsersAsync(request, cancellationToken);
-        
-        _logger.LogInformation("Retrieved {Count} users out of {Total}", 
+
+        _logger.LogInformation("Retrieved {Count} users out of {Total}",
             result.Items.Count(), result.TotalCount);
         return result;
     }

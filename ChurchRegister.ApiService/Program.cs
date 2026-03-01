@@ -27,7 +27,7 @@ if (builder.Environment.IsProduction())
 ValidateConfiguration(builder.Configuration);
 
 // Get connection string
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? builder.Configuration.GetConnectionString("ChurchRegisterDatabaseContextConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' or 'ChurchRegisterDatabaseContextConnection' not found.");
 
@@ -35,7 +35,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddScoped<AuditInterceptor>();
 
 // Add DbContext with Identity
-builder.Services.AddDbContext<ChurchRegisterWebContext>((serviceProvider, options) => 
+builder.Services.AddDbContext<ChurchRegisterWebContext>((serviceProvider, options) =>
 {
     var auditInterceptor = serviceProvider.GetRequiredService<AuditInterceptor>();
     options.UseSqlServer(connectionString)
@@ -77,13 +77,13 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowCredentials();
     });
-    
+
     // Production CORS policy - restrict to specific domain
     options.AddPolicy("ReactProduction", policy =>
     {
         var allowedOrigins = builder.Configuration["CORS:AllowedOrigins"]?.Split(',', StringSplitOptions.RemoveEmptyEntries)
             ?? new[] { "https://your-production-domain.com" };
-        
+
         policy.WithOrigins(allowedOrigins)
               .AllowAnyMethod()
               .AllowAnyHeader()
@@ -93,17 +93,17 @@ builder.Services.AddCors(options =>
 });
 
 // Add Identity services with JWT support
-builder.Services.AddIdentity<ChurchRegisterWebUser, IdentityRole>(options => 
+builder.Services.AddIdentity<ChurchRegisterWebUser, IdentityRole>(options =>
     {
         options.SignIn.RequireConfirmedAccount = false; // Allow login without email confirmation for API
-        
+
         // Password requirements
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 12; // Increased from 6 to 12
         options.Password.RequireNonAlphanumeric = true; // Changed from false to true
         options.Password.RequireUppercase = true;
         options.Password.RequireLowercase = true;
-        
+
         // Account lockout settings
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
         options.Lockout.MaxFailedAccessAttempts = 5;
@@ -163,7 +163,7 @@ builder.Services.AddAuthorization(options =>
         policy.AddAuthenticationSchemes("Bearer");
         policy.RequireAuthenticatedUser();
     });
-    
+
     // Attendance policies that allow either specific permissions OR SystemAdministration role
     options.AddPolicy("AttendanceViewPolicy", policy =>
     {
@@ -173,7 +173,7 @@ builder.Services.AddAuthorization(options =>
             context.User.HasClaim("permission", "Attendance.View") ||
             context.User.IsInRole("SystemAdministration"));
     });
-    
+
     options.AddPolicy("AttendanceRecordPolicy", policy =>
     {
         policy.AddAuthenticationSchemes("Bearer");
@@ -182,7 +182,7 @@ builder.Services.AddAuthorization(options =>
             context.User.HasClaim("permission", "Attendance.Record") ||
             context.User.IsInRole("SystemAdministration"));
     });
-    
+
     options.AddPolicy("AttendanceAnalyticsPolicy", policy =>
     {
         policy.AddAuthenticationSchemes("Bearer");
@@ -191,7 +191,7 @@ builder.Services.AddAuthorization(options =>
             context.User.HasClaim("permission", "Attendance.ViewAnalytics") ||
             context.User.IsInRole("SystemAdministration"));
     });
-    
+
     options.AddPolicy("AttendanceSharePolicy", policy =>
     {
         policy.AddAuthenticationSchemes("Bearer");
@@ -200,7 +200,7 @@ builder.Services.AddAuthorization(options =>
             context.User.HasClaim("permission", "Attendance.ShareAnalytics") ||
             context.User.IsInRole("SystemAdministration"));
     });
-    
+
     // Event management policies that allow either specific permissions OR SystemAdministration role
     options.AddPolicy("EventCreatePolicy", policy =>
     {
@@ -210,7 +210,7 @@ builder.Services.AddAuthorization(options =>
             context.User.HasClaim("permission", "EventManagement.Create") ||
             context.User.IsInRole("SystemAdministration"));
     });
-    
+
     options.AddPolicy("EventUpdatePolicy", policy =>
     {
         policy.AddAuthenticationSchemes("Bearer");
@@ -222,11 +222,11 @@ builder.Services.AddAuthorization(options =>
 });
 
 // Register Use Cases
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Authentication.Login.ILoginUseCase, 
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Authentication.Login.ILoginUseCase,
                            ChurchRegister.ApiService.UseCase.Authentication.Login.LoginUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Authentication.Logout.ILogoutUseCase, 
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Authentication.Logout.ILogoutUseCase,
                            ChurchRegister.ApiService.UseCase.Authentication.Logout.LogoutUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Authentication.GetCurrentUser.IGetCurrentUserUseCase, 
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Authentication.GetCurrentUser.IGetCurrentUserUseCase,
                            ChurchRegister.ApiService.UseCase.Authentication.GetCurrentUser.GetCurrentUserUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Authentication.ChangePassword.IChangePasswordUseCase,
                            ChurchRegister.ApiService.UseCase.Authentication.ChangePassword.ChangePasswordUseCase>();
@@ -272,22 +272,22 @@ builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.Gener
                            ChurchRegister.ApiService.UseCase.ChurchMembers.GenerateRegisterNumbers.GenerateRegisterNumbersUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.PreviewRegisterNumbers.IPreviewRegisterNumbersUseCase,
                            ChurchRegister.ApiService.UseCase.ChurchMembers.PreviewRegisterNumbers.PreviewRegisterNumbersUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.IAssignDistrictUseCase,
-                           ChurchRegister.ApiService.UseCase.ChurchMembers.AssignDistrictUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.AssignDistrict.IAssignDistrictUseCase,
+                           ChurchRegister.ApiService.UseCase.ChurchMembers.AssignDistrict.AssignDistrictUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.ExportPastoralCareReport.IExportPastoralCareReportUseCase,
                            ChurchRegister.ApiService.UseCase.ChurchMembers.ExportPastoralCareReport.ExportPastoralCareReportUseCase>();
 
 // DataProtection Use Cases
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.DataProtection.IGetDataProtectionUseCase,
-                           ChurchRegister.ApiService.UseCase.DataProtection.GetDataProtectionUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.DataProtection.IUpdateDataProtectionUseCase,
-                           ChurchRegister.ApiService.UseCase.DataProtection.UpdateDataProtectionUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.DataProtection.GetDataProtection.IGetDataProtectionUseCase,
+                           ChurchRegister.ApiService.UseCase.DataProtection.GetDataProtection.GetDataProtectionUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.DataProtection.UpdateDataProtection.IUpdateDataProtectionUseCase,
+                           ChurchRegister.ApiService.UseCase.DataProtection.UpdateDataProtection.UpdateDataProtectionUseCase>();
 
 // Districts Use Cases
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Districts.IGetDistrictsUseCase,
-                           ChurchRegister.ApiService.UseCase.Districts.GetDistrictsUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Districts.IExportDistrictsUseCase,
-                           ChurchRegister.ApiService.UseCase.Districts.ExportDistrictsUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Districts.GetDistricts.IGetDistrictsUseCase,
+                           ChurchRegister.ApiService.UseCase.Districts.GetDistricts.GetDistrictsUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Districts.ExportDistricts.IExportDistrictsUseCase,
+                           ChurchRegister.ApiService.UseCase.Districts.ExportDistricts.ExportDistrictsUseCase>();
 
 // Contributions Use Cases
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Contributions.UploadHsbcStatement.IUploadHsbcStatementUseCase,
@@ -348,51 +348,60 @@ builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.TrainingCertificate
                            ChurchRegister.ApiService.UseCase.TrainingCertificates.GetDashboardTrainingSummary.GetDashboardTrainingSummaryUseCase>();
 
 // Reminders Use Cases
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.IGetReminderCategoriesUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.GetReminderCategoriesUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.IGetReminderCategoryByIdUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.GetReminderCategoryByIdUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.ICreateReminderCategoryUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.CreateReminderCategoryUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.IUpdateReminderCategoryUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.UpdateReminderCategoryUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.IDeleteReminderCategoryUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.DeleteReminderCategoryUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.IGetRemindersUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.GetRemindersUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.IGetReminderByIdUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.GetReminderByIdUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.ICreateReminderUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.CreateReminderUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.IUpdateReminderUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.UpdateReminderUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.ICompleteReminderUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.CompleteReminderUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.IDeleteReminderUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.DeleteReminderUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.IGetDashboardReminderSummaryUseCase,
-                           ChurchRegister.ApiService.UseCase.Reminders.GetDashboardReminderSummaryUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.GetReminderCategories.IGetReminderCategoriesUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.GetReminderCategories.GetReminderCategoriesUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.GetReminderCategoryById.IGetReminderCategoryByIdUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.GetReminderCategoryById.GetReminderCategoryByIdUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.CreateReminderCategory.ICreateReminderCategoryUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.CreateReminderCategory.CreateReminderCategoryUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.UpdateReminderCategory.IUpdateReminderCategoryUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.UpdateReminderCategory.UpdateReminderCategoryUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.DeleteReminderCategory.IDeleteReminderCategoryUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.DeleteReminderCategory.DeleteReminderCategoryUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.GetReminders.IGetRemindersUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.GetReminders.GetRemindersUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.GetReminderById.IGetReminderByIdUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.GetReminderById.GetReminderByIdUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.CreateReminder.ICreateReminderUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.CreateReminder.CreateReminderUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.UpdateReminder.IUpdateReminderUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.UpdateReminder.UpdateReminderUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.CompleteReminder.ICompleteReminderUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.CompleteReminder.CompleteReminderUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.DeleteReminder.IDeleteReminderUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.DeleteReminder.DeleteReminderUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Reminders.GetDashboardReminderSummary.IGetDashboardReminderSummaryUseCase,
+                           ChurchRegister.ApiService.UseCase.Reminders.GetDashboardReminderSummary.GetDashboardReminderSummaryUseCase>();
 
 // Dashboard Use Cases
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Dashboard.GetDashboardStatistics.IGetDashboardStatisticsUseCase,
                            ChurchRegister.ApiService.UseCase.Dashboard.GetDashboardStatistics.GetDashboardStatisticsUseCase>();
 
 // Risk Assessment Use Cases
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.IGetRiskAssessmentsUseCase,
-                           ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentsUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.IGetRiskAssessmentByIdUseCase,
-                           ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentByIdUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.IUpdateRiskAssessmentUseCase,
-                           ChurchRegister.ApiService.UseCase.RiskAssessments.UpdateRiskAssessmentUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.IStartReviewUseCase,
-                           ChurchRegister.ApiService.UseCase.RiskAssessments.StartReviewUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.IApproveRiskAssessmentUseCase,
-                           ChurchRegister.ApiService.UseCase.RiskAssessments.ApproveRiskAssessmentUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.IGetDashboardRiskAssessmentSummaryUseCase,
-                           ChurchRegister.ApiService.UseCase.RiskAssessments.GetDashboardRiskAssessmentSummaryUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.IGetRiskAssessmentCategoriesUseCase,
-                           ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentCategoriesUseCase>();
-builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentHistoryUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.CreateRiskAssessment.ICreateRiskAssessmentUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.CreateRiskAssessment.CreateRiskAssessmentUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessments.IGetRiskAssessmentsUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessments.GetRiskAssessmentsUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentById.IGetRiskAssessmentByIdUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentById.GetRiskAssessmentByIdUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.UpdateRiskAssessment.IUpdateRiskAssessmentUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.UpdateRiskAssessment.UpdateRiskAssessmentUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.StartReview.IStartReviewUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.StartReview.StartReviewUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.ApproveRiskAssessment.IApproveRiskAssessmentUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.ApproveRiskAssessment.ApproveRiskAssessmentUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.GetDashboardRiskAssessmentSummary.IGetDashboardRiskAssessmentSummaryUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.GetDashboardRiskAssessmentSummary.GetDashboardRiskAssessmentSummaryUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentCategories.IGetRiskAssessmentCategoriesUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentCategories.GetRiskAssessmentCategoriesUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentHistory.IGetRiskAssessmentHistoryUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentHistory.GetRiskAssessmentHistoryUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.CreateRiskAssessmentCategory.ICreateRiskAssessmentCategoryUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.CreateRiskAssessmentCategory.CreateRiskAssessmentCategoryUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.UpdateRiskAssessmentCategory.IUpdateRiskAssessmentCategoryUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.UpdateRiskAssessmentCategory.UpdateRiskAssessmentCategoryUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.DeleteRiskAssessmentCategory.IDeleteRiskAssessmentCategoryUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.DeleteRiskAssessmentCategory.DeleteRiskAssessmentCategoryUseCase>();
 
 // Register Repositories
 builder.Services.AddScoped<ChurchRegister.Database.Interfaces.IRefreshTokenRepository,
@@ -401,7 +410,7 @@ builder.Services.AddScoped<ChurchRegister.Database.Interfaces.IRefreshTokenRepos
 // Register Azure Email Service
 builder.Services.Configure<ChurchRegister.ApiService.Configuration.AzureEmailServiceConfiguration>(
     builder.Configuration.GetSection(ChurchRegister.ApiService.Configuration.AzureEmailServiceConfiguration.SectionName));
-builder.Services.AddScoped<ChurchRegister.ApiService.Services.Security.IAzureEmailService, 
+builder.Services.AddScoped<ChurchRegister.ApiService.Services.Security.IAzureEmailService,
                            ChurchRegister.ApiService.Services.Security.AzureEmailService>();
 
 // Configure RiskAssessment settings
@@ -499,18 +508,18 @@ app.Use(async (context, next) =>
 {
     // Prevent clickjacking attacks
     context.Response.Headers.Append("X-Frame-Options", "DENY");
-    
+
     // Prevent MIME type sniffing
     context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
-    
+
     // Enable XSS protection
     context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
-    
+
     // Control referrer information
     context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
-    
+
     // Content Security Policy
-    context.Response.Headers.Append("Content-Security-Policy", 
+    context.Response.Headers.Append("Content-Security-Policy",
         "default-src 'self'; " +
         "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " + // Required for React and Vite HMR in development
         "style-src 'self' 'unsafe-inline'; " +
@@ -518,11 +527,11 @@ app.Use(async (context, next) =>
         "font-src 'self' data:; " +
         "connect-src 'self' http://localhost:* https://localhost:*; " + // API calls
         "frame-ancestors 'none'");
-    
+
     // Permissions Policy (formerly Feature Policy)
-    context.Response.Headers.Append("Permissions-Policy", 
+    context.Response.Headers.Append("Permissions-Policy",
         "geolocation=(), microphone=(), camera=()");
-    
+
     await next();
 });
 
@@ -579,16 +588,16 @@ if (!app.Environment.IsEnvironment("Testing"))
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<ChurchRegisterWebContext>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-        
+
         try
         {
             logger.LogInformation("Checking for pending database migrations...");
             var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync();
-            
+
             if (pendingMigrations.Any())
             {
-                logger.LogInformation("Applying {Count} pending migrations: {Migrations}", 
-                    pendingMigrations.Count(), 
+                logger.LogInformation("Applying {Count} pending migrations: {Migrations}",
+                    pendingMigrations.Count(),
                     string.Join(", ", pendingMigrations));
                 await dbContext.Database.MigrateAsync();
                 logger.LogInformation("Database migrations applied successfully");
@@ -625,10 +634,10 @@ static void ValidateConfiguration(IConfiguration config)
 
     foreach (var kvp in required)
     {
-        var value = kvp.Key.Contains(':') 
-            ? config[kvp.Key] 
+        var value = kvp.Key.Contains(':')
+            ? config[kvp.Key]
             : config.GetSection(kvp.Key.Split(':')[0])[kvp.Key.Split(':')[1]];
-            
+
         if (string.IsNullOrEmpty(value))
         {
             throw new InvalidOperationException(

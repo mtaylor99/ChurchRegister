@@ -32,7 +32,7 @@ public class CreateUserEndpoint : Endpoint<CreateUserRequest, CreateUserResponse
     {
         var createdBy = User.Identity?.Name ?? "System";
         var result = await _useCase.ExecuteAsync(req, createdBy, ct);
-        
+
         await SendCreatedAtAsync("/api/administration/users", new { id = result.UserId }, result, cancellation: ct);
     }
 }

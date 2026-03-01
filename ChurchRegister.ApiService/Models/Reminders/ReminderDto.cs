@@ -15,13 +15,13 @@ public class ReminderDto
     public string? CompletionNotes { get; set; }
     public string? CompletedBy { get; set; }
     public DateTime? CompletedDateTime { get; set; }
-    
+
     // Audit fields
     public string CreatedBy { get; set; } = string.Empty;
     public DateTime CreatedDateTime { get; set; }
     public string? ModifiedBy { get; set; }
     public DateTime? ModifiedDateTime { get; set; }
-    
+
     // Calculated fields
     public string AlertStatus { get; set; } = "none";
     public int DaysUntilDue { get; set; }

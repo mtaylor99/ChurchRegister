@@ -19,9 +19,9 @@ public class GetDashboardTrainingSummaryUseCase : IGetDashboardTrainingSummaryUs
     public async Task<IEnumerable<TrainingCertificateGroupSummaryDto>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Getting dashboard training summary");
-        
+
         var result = await _trainingCertificateService.GetDashboardTrainingSummaryAsync(cancellationToken);
-        
+
         _logger.LogInformation("Retrieved {Count} grouped training alerts for dashboard", result.Count());
         return result;
     }

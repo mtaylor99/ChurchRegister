@@ -22,10 +22,10 @@ public class UpdateChurchMemberUseCase : IUpdateChurchMemberUseCase
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Updating church member {MemberId}", request.Id);
-        
+
         ValidateRequest(request, userId);
         var result = await _churchMemberService.UpdateChurchMemberAsync(request, userId, cancellationToken);
-        
+
         _logger.LogInformation("Successfully updated church member {MemberId}", request.Id);
         return result;
     }

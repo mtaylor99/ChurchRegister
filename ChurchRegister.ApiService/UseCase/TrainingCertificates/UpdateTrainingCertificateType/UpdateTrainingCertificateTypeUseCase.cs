@@ -17,16 +17,16 @@ public class UpdateTrainingCertificateTypeUseCase : IUpdateTrainingCertificateTy
     }
 
     public async Task<TrainingCertificateTypeDto> ExecuteAsync(
-        UpdateTrainingCertificateTypeRequest request, 
-        string userId, 
+        UpdateTrainingCertificateTypeRequest request,
+        string userId,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Updating training certificate type {TypeId} by user {UserId}", 
+        _logger.LogInformation("Updating training certificate type {TypeId} by user {UserId}",
             request.Id, userId);
-        
+
         var result = await _trainingCertificateService.UpdateTrainingCertificateTypeAsync(request, userId, cancellationToken);
-        
-        _logger.LogInformation("Updated training certificate type {TypeId} to '{Type}' with status '{Status}'", 
+
+        _logger.LogInformation("Updated training certificate type {TypeId} to '{Type}' with status '{Status}'",
             result.Id, result.Type, result.Status);
         return result;
     }

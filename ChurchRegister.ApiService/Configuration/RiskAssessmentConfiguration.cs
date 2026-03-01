@@ -16,7 +16,7 @@ namespace ChurchRegister.ApiService.Configuration
         /// Number of days to look ahead when checking for due reviews in the background job
         /// </summary>
         public int ReviewLookaheadDays { get; set; } = 60;
-        
+
         /// <summary>
         /// Default user ID to assign reminders to if no specific user is configured
         /// </summary>

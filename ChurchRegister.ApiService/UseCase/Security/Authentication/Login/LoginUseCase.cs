@@ -54,7 +54,7 @@ public class LoginUseCase : ILoginUseCase
         if (await _userManager.IsLockedOutAsync(user))
         {
             var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
-            var timeRemaining = lockoutEnd.HasValue 
+            var timeRemaining = lockoutEnd.HasValue
                 ? Math.Ceiling((lockoutEnd.Value - DateTimeOffset.UtcNow).TotalMinutes)
                 : 0;
             throw new UnauthorizedAccessException(
@@ -62,13 +62,13 @@ public class LoginUseCase : ILoginUseCase
         }
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
-        
+
         if (!result.Succeeded)
         {
             if (result.IsLockedOut)
             {
                 var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
-                var timeRemaining = lockoutEnd.HasValue 
+                var timeRemaining = lockoutEnd.HasValue
                     ? Math.Ceiling((lockoutEnd.Value - DateTimeOffset.UtcNow).TotalMinutes)
                     : 0;
                 throw new UnauthorizedAccessException(
@@ -84,7 +84,7 @@ public class LoginUseCase : ILoginUseCase
         var tokenString = await GenerateJwtTokenAsync(user);
         var accessTokenExpirationMinutes = int.TryParse(_configuration["Jwt:AccessTokenExpirationMinutes"], out var accessMinutes) ? accessMinutes : 60;
         var expirationTime = DateTime.UtcNow.AddMinutes(accessTokenExpirationMinutes);
-        
+
         // Generate and store refresh token
         var refreshToken = GenerateRefreshToken();
         var refreshTokenExpirationDays = int.TryParse(_configuration["Jwt:RefreshTokenExpirationDays"], out var days) ? days : 7;
@@ -97,12 +97,12 @@ public class LoginUseCase : ILoginUseCase
             CreatedDateTime = DateTime.UtcNow
         };
         await _refreshTokenRepository.CreateAsync(refreshTokenEntity, cancellationToken);
-        
+
         // Debug logging for roles and permissions
         var userRoles = await _userManager.GetRolesAsync(user);
         var userClaims = await _userManager.GetClaimsAsync(user);
         var permissions = userClaims.Where(c => c.Type == "permission").Select(c => c.Value).ToArray();
-        
+
         Console.WriteLine($"Login successful for user: {user.Email}");
         Console.WriteLine($"Roles: {string.Join(", ", userRoles)}");
         Console.WriteLine($"Permissions: {string.Join(", ", permissions)}");
@@ -125,15 +125,15 @@ public class LoginUseCase : ILoginUseCase
     private async Task<string> GenerateJwtTokenAsync(ChurchRegisterWebUser user)
     {
         var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? "ChurchRegister-Super-Secret-Key-For-Development-Only-2024!");
-        
+
         // Get user roles for JWT claims
         var userRoles = await _userManager.GetRolesAsync(user);
-        
+
         // Use consistent UTC time
         var now = DateTime.UtcNow;
         var expirationMinutes = int.TryParse(_configuration["Jwt:AccessTokenExpirationMinutes"], out var minutes) ? minutes : 60;
         var expires = now.AddMinutes(expirationMinutes);
-        
+
         // Create claims including user roles
         var claims = new List<Claim>
         {
@@ -143,13 +143,13 @@ public class LoginUseCase : ILoginUseCase
             new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-        
+
         // Add role claims
         foreach (var role in userRoles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
-        
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
@@ -171,7 +171,7 @@ public class LoginUseCase : ILoginUseCase
         var roles = await _userManager.GetRolesAsync(user);
         var claims = await _userManager.GetClaimsAsync(user);
         var permissions = claims.Where(c => c.Type == "permission").Select(c => c.Value).ToArray();
-        
+
         return new UserDto
         {
             Id = user.Id,
@@ -181,8 +181,8 @@ public class LoginUseCase : ILoginUseCase
             LastName = user.UserName?.Contains(' ') == true ? user.UserName.Split(' ').LastOrDefault() ?? "" : "",
             Roles = roles.ToArray(),
             Permissions = permissions,
-            Avatar = !string.IsNullOrWhiteSpace(user.FirstName) && !string.IsNullOrWhiteSpace(user.LastName) 
-                ? $"{user.FirstName[0]}{user.LastName[0]}".ToUpper() 
+            Avatar = !string.IsNullOrWhiteSpace(user.FirstName) && !string.IsNullOrWhiteSpace(user.LastName)
+                ? $"{user.FirstName[0]}{user.LastName[0]}".ToUpper()
                 : null,
             IsActive = true,
             EmailConfirmed = user.EmailConfirmed,

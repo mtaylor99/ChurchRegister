@@ -25,7 +25,7 @@ public class GetAttendanceAnalyticsUseCase : IGetAttendanceAnalyticsUseCase
         _logger.LogInformation("Getting attendance analytics for event {EventId}", request.EventId);
 
         var eventEntity = await _context.Events.FindAsync(new object[] { request.EventId }, cancellationToken);
-        
+
         if (eventEntity == null || !eventEntity.IsActive)
         {
             throw new KeyNotFoundException($"Active event with ID {request.EventId} not found.");
@@ -79,19 +79,19 @@ public class GetAttendanceAnalyticsUseCase : IGetAttendanceAnalyticsUseCase
     private static double CalculateTrend(List<int> values)
     {
         if (values.Count < 2) return 0;
-        
+
         var firstHalf = values.Take(values.Count / 2).Average();
         var secondHalf = values.Skip(values.Count / 2).Average();
-        
+
         if (firstHalf == 0) return 0;
-        
+
         return ((secondHalf - firstHalf) / firstHalf) * 100;
     }
 
     private static string CalculateTrendDirection(List<int> values)
     {
         var trend = CalculateTrend(values);
-        
+
         return trend switch
         {
             > 5 => "up",

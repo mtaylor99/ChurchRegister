@@ -222,12 +222,12 @@ public class EmailAttendanceAnalyticsUseCase : IEmailAttendanceAnalyticsUseCase
     private static double CalculateTrend(List<int> values)
     {
         if (values.Count < 2) return 0;
-        
+
         var firstHalf = values.Take(values.Count / 2).Average();
         var secondHalf = values.Skip(values.Count / 2).Average();
-        
+
         if (firstHalf == 0) return 0;
-        
+
         return ((secondHalf - firstHalf) / firstHalf) * 100;
     }
 

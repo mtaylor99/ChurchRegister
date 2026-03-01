@@ -31,7 +31,7 @@ public class DeleteChurchMemberEndpoint : EndpointWithoutRequest
     public override async Task HandleAsync(CancellationToken ct)
     {
         var id = Route<int>("id");
-        
+
         await _useCase.ExecuteAsync(id, ct);
         await SendNoContentAsync(ct);
     }

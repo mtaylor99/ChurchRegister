@@ -1,7 +1,7 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models;
 using ChurchRegister.ApiService.Models.DataProtection;
-using ChurchRegister.ApiService.UseCase.DataProtection;
+using ChurchRegister.ApiService.UseCase.DataProtection.UpdateDataProtection;
 using ChurchRegister.Database.Constants;
 using System.Security.Claims;
 
@@ -24,7 +24,7 @@ public class UpdateDataProtectionEndpoint : Endpoint<UpdateDataProtectionRequest
         Put("/api/church-members/{id}/data-protection");
         Policies("Bearer");
         Roles(
-            SystemRoles.ChurchMembersContributor, 
+            SystemRoles.ChurchMembersContributor,
             SystemRoles.ChurchMembersAdministrator,
             SystemRoles.SystemAdministration);
         Description(x => x
@@ -38,11 +38,11 @@ public class UpdateDataProtectionEndpoint : Endpoint<UpdateDataProtectionRequest
     {
         // Extract member ID from route
         var memberId = Route<int>("id");
-        
+
         // Extract username from JWT claims for audit trail
-        var username = User.Identity?.Name 
-            ?? User.FindFirst(ClaimTypes.Name)?.Value 
-            ?? User.FindFirst("preferred_username")?.Value 
+        var username = User.Identity?.Name
+            ?? User.FindFirst(ClaimTypes.Name)?.Value
+            ?? User.FindFirst("preferred_username")?.Value
             ?? "Unknown";
 
         var dataProtection = await _useCase.ExecuteAsync(memberId, req, username, ct);

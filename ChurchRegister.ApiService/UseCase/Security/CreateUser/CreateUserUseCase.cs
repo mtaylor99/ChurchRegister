@@ -22,10 +22,10 @@ public class CreateUserUseCase : ICreateUserUseCase
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating user: {Email}", request.Email);
-        
+
         ValidateRequest(request, createdBy);
         var result = await _userManagementService.CreateUserAsync(request, createdBy, cancellationToken);
-        
+
         _logger.LogInformation("Successfully created user with ID: {UserId}", result.UserId);
         return result;
     }

@@ -1,7 +1,7 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.ChurchMembers;
 using ChurchRegister.ApiService.Models.Districts;
-using ChurchRegister.ApiService.UseCase.ChurchMembers;
+using ChurchRegister.ApiService.UseCase.ChurchMembers.AssignDistrict;
 using ChurchRegister.Database.Constants;
 using System.Security.Claims;
 
@@ -43,7 +43,7 @@ public class AssignDistrictEndpoint : Endpoint<AssignDistrictRequestWithId, Chur
     public override async Task HandleAsync(AssignDistrictRequestWithId req, CancellationToken ct)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
+
         if (string.IsNullOrEmpty(userId))
         {
             await SendUnauthorizedAsync(ct);

@@ -46,9 +46,9 @@ public class GetContributionHistoryEndpoint : Endpoint<GetContributionHistoryReq
     {
         Get("/api/church-members/{memberId}/contributions");
         Policies("Bearer");
-        Roles(SystemRoles.SystemAdministration, 
-              SystemRoles.FinancialViewer, 
-              SystemRoles.FinancialContributor, 
+        Roles(SystemRoles.SystemAdministration,
+              SystemRoles.FinancialViewer,
+              SystemRoles.FinancialContributor,
               SystemRoles.FinancialAdministrator);
         Description(x => x
             .WithName("GetContributionHistory")

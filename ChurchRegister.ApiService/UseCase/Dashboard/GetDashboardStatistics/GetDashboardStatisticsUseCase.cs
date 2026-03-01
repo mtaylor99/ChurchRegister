@@ -9,17 +9,22 @@ public class GetDashboardStatisticsUseCase : IGetDashboardStatisticsUseCase
 {
     private readonly ChurchRegisterWebContext _context;
     private readonly ITrainingCertificateService _trainingCertificateService;
+    private readonly ILogger<GetDashboardStatisticsUseCase> _logger;
 
     public GetDashboardStatisticsUseCase(
         ChurchRegisterWebContext context,
-        ITrainingCertificateService trainingCertificateService)
+        ITrainingCertificateService trainingCertificateService,
+        ILogger<GetDashboardStatisticsUseCase> logger)
     {
         _context = context;
         _trainingCertificateService = trainingCertificateService;
+        _logger = logger;
     }
 
     public async Task<DashboardStatisticsResponse> ExecuteAsync(CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("Retrieving dashboard statistics");
+
         var now = DateTime.UtcNow;
         var thirtyDaysAgo = now.AddDays(-30);
         var sevenDaysAgo = now.AddDays(-7);
@@ -82,7 +87,7 @@ public class GetDashboardStatisticsUseCase : IGetDashboardStatisticsUseCase
             Message = t.Message
         });
 
-        return new DashboardStatisticsResponse
+        var response = new DashboardStatisticsResponse
         {
             TotalMembers = totalMembers,
             NewMembersThisMonth = newMembersThisMonth,
@@ -96,6 +101,10 @@ public class GetDashboardStatisticsUseCase : IGetDashboardStatisticsUseCase
             BibleStudyChangePercentage = bibleStudyChange,
             TrainingAlerts = trainingAlertsSummary
         };
+
+        _logger.LogInformation("Dashboard statistics retrieved successfully: {TotalMembers} total members", response.TotalMembers);
+
+        return response;
     }
 
     private async Task<(decimal average, decimal changePercentage)> CalculateAttendanceStats(

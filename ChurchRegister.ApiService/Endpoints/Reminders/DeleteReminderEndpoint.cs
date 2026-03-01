@@ -1,4 +1,4 @@
-using ChurchRegister.ApiService.UseCase.Reminders;
+using ChurchRegister.ApiService.UseCase.Reminders.DeleteReminder;
 using ChurchRegister.Database.Constants;
 using FastEndpoints;
 

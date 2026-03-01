@@ -1,6 +1,6 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.RiskAssessments;
-using ChurchRegister.ApiService.Services.RiskAssessments;
+using ChurchRegister.ApiService.UseCase.RiskAssessments.CreateRiskAssessmentCategory;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
@@ -10,11 +10,11 @@ namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
 /// </summary>
 public class CreateRiskAssessmentCategoryEndpoint : Endpoint<CreateCategoryRequest, RiskAssessmentCategoryDto>
 {
-    private readonly IRiskAssessmentCategoryService _service;
+    private readonly ICreateRiskAssessmentCategoryUseCase _useCase;
 
-    public CreateRiskAssessmentCategoryEndpoint(IRiskAssessmentCategoryService service)
+    public CreateRiskAssessmentCategoryEndpoint(ICreateRiskAssessmentCategoryUseCase useCase)
     {
-        _service = service;
+        _useCase = useCase;
     }
 
     public override void Configure()
@@ -32,8 +32,8 @@ public class CreateRiskAssessmentCategoryEndpoint : Endpoint<CreateCategoryReque
     public override async Task HandleAsync(CreateCategoryRequest req, CancellationToken ct)
     {
         var createdBy = User.Identity?.Name ?? "System";
-        var result = await _service.CreateCategoryAsync(req, createdBy);
-        
+        var result = await _useCase.ExecuteAsync(req, createdBy, ct);
+
         await SendCreatedAtAsync<GetRiskAssessmentCategoriesEndpoint>(null, result, cancellation: ct);
     }
 }

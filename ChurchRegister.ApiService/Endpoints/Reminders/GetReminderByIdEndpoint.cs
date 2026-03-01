@@ -1,5 +1,5 @@
 using ChurchRegister.ApiService.Models.Reminders;
-using ChurchRegister.ApiService.UseCase.Reminders;
+using ChurchRegister.ApiService.UseCase.Reminders.GetReminderById;
 using ChurchRegister.Database.Constants;
 using FastEndpoints;
 

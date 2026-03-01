@@ -1,6 +1,6 @@
 using FastEndpoints;
 using ChurchRegister.ApiService.Models.RiskAssessments;
-using ChurchRegister.ApiService.UseCase.RiskAssessments;
+using ChurchRegister.ApiService.UseCase.RiskAssessments.GetRiskAssessmentHistory;
 using ChurchRegister.Database.Constants;
 
 namespace ChurchRegister.ApiService.Endpoints.RiskAssessments;
@@ -21,9 +21,9 @@ public class GetRiskAssessmentHistoryRequest
 /// </summary>
 public class GetRiskAssessmentHistoryEndpoint : Endpoint<GetRiskAssessmentHistoryRequest, RiskAssessmentHistoryDto>
 {
-    private readonly GetRiskAssessmentHistoryUseCase _useCase;
+    private readonly IGetRiskAssessmentHistoryUseCase _useCase;
 
-    public GetRiskAssessmentHistoryEndpoint(GetRiskAssessmentHistoryUseCase useCase)
+    public GetRiskAssessmentHistoryEndpoint(IGetRiskAssessmentHistoryUseCase useCase)
     {
         _useCase = useCase;
     }
@@ -43,7 +43,7 @@ public class GetRiskAssessmentHistoryEndpoint : Endpoint<GetRiskAssessmentHistor
     public override async Task HandleAsync(GetRiskAssessmentHistoryRequest req, CancellationToken ct)
     {
         var result = await _useCase.ExecuteAsync(req.Id);
-        
+
         if (result == null)
         {
             await SendNotFoundAsync(ct);

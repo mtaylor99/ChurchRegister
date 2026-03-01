@@ -22,19 +22,19 @@ public class GenerateRegisterNumbersUseCase : IGenerateRegisterNumbersUseCase
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Generating register numbers for year {Year}", request.TargetYear);
-        
+
         ValidateRequest(request);
-        
+
         if (await _registerNumberService.HasBeenGeneratedForYearAsync(request.TargetYear, cancellationToken))
         {
             throw new ValidationException($"Register numbers for year {request.TargetYear} have already been generated. Please use the existing numbers or contact an administrator.");
         }
 
         var result = await _registerNumberService.GenerateForYearAsync(request.TargetYear, cancellationToken);
-        
-        _logger.LogInformation("Successfully generated {Count} register numbers for year {Year}", 
+
+        _logger.LogInformation("Successfully generated {Count} register numbers for year {Year}",
             result.TotalMembersAssigned, request.TargetYear);
-        
+
         return result;
     }
 
@@ -42,7 +42,7 @@ public class GenerateRegisterNumbersUseCase : IGenerateRegisterNumbersUseCase
     {
         if (!request.ConfirmGeneration)
             throw new ArgumentException("Generation must be confirmed");
-        
+
         if (request.TargetYear < 2000 || request.TargetYear > 2100)
             throw new ArgumentException("Invalid target year");
     }

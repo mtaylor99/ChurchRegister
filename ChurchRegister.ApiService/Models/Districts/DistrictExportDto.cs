@@ -9,17 +9,17 @@ public class DistrictExportDto
     /// District name (A-L)
     /// </summary>
     public string DistrictName { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Full name of assigned deacon
     /// </summary>
     public string DeaconName { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Full name of assigned district officer
     /// </summary>
     public string DistrictOfficerName { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// List of active members in this district
     /// </summary>

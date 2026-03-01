@@ -44,7 +44,7 @@ public class EmailAttendanceAnalyticsEndpoint : Endpoint<EmailAttendanceAnalytic
         {
             var userId = User.Identity?.Name ?? "system";
             await _useCase.ExecuteAsync(req.EventId, req.Email, ct);
-            _logger.LogInformation("Attendance analytics email sent successfully to {Email} by {User}", 
+            _logger.LogInformation("Attendance analytics email sent successfully to {Email} by {User}",
                 req.Email, userId);
             await SendOkAsync("Email sent successfully", ct);
         }
@@ -70,8 +70,8 @@ public record EmailAttendanceAnalyticsRequest
     [Required]
     [EmailAddress]
     public string Email { get; init; } = string.Empty;
-    
+
     public int? EventId { get; init; } // If null, send all events
-    
+
     public string? ChartData { get; init; } // Base64 encoded chart image (optional)
 }

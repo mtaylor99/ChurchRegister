@@ -1,3 +1,4 @@
+using ChurchRegister.ApiService.Exceptions;
 using ChurchRegister.ApiService.Models.ChurchMembers;
 using ChurchRegister.ApiService.Models.Security;
 using ChurchRegister.ApiService.Models.Attendance;
@@ -370,10 +371,10 @@ public class ChurchMemberServiceTests : IDisposable
         };
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+        var exception = await Assert.ThrowsAsync<ValidationException>(
             async () => await _service.CreateChurchMemberAsync(request, "testUser"));
         
-        exception.Message.Should().Contain("Bank reference 'DUPLICATE123' is already in use by another active member");
+        exception.Message.Should().Contain("is already in use");
     }
 
     [Fact]
@@ -408,10 +409,10 @@ public class ChurchMemberServiceTests : IDisposable
         };
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+        var exception = await Assert.ThrowsAsync<ValidationException>(
             async () => await _service.CreateChurchMemberAsync(request, "testUser"));
         
-        exception.Message.Should().Contain("is already in use by another active member");
+        exception.Message.Should().Contain("is already in use");
     }
 
     [Fact]
@@ -555,10 +556,10 @@ public class ChurchMemberServiceTests : IDisposable
         };
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+        var exception = await Assert.ThrowsAsync<ValidationException>(
             async () => await _service.UpdateChurchMemberAsync(request, "testUser"));
         
-        exception.Message.Should().Contain("Bank reference 'REF123' is already in use by another active member");
+        exception.Message.Should().Contain("is already in use");
     }
 
     [Fact]

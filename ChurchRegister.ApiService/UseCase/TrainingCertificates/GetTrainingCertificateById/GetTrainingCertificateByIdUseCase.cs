@@ -19,14 +19,14 @@ public class GetTrainingCertificateByIdUseCase : IGetTrainingCertificateByIdUseC
     public async Task<TrainingCertificateDto?> ExecuteAsync(int id, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Getting training certificate by ID: {Id}", id);
-        
+
         var result = await _trainingCertificateService.GetTrainingCertificateByIdAsync(id, cancellationToken);
-        
+
         if (result == null)
         {
             _logger.LogWarning("Training certificate with ID {Id} not found", id);
         }
-        
+
         return result;
     }
 }

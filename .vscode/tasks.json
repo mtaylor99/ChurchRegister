@@ -93,6 +93,36 @@
 			"label": "Remove All Migrations",
 			"type": "shell",
 			"command": "cd ChurchRegister.Database; dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService; dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService; dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService"
+		},
+		{
+			"label": "Build Tests Project",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.Tests/ChurchRegister.Tests.csproj"
+		},
+		{
+			"label": "Run All Tests",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --no-build --logger \"console;verbosity=minimal\""
+		},
+		{
+			"label": "Run Tests Summary",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --logger trx --verbosity normal 2>&1 | Select-String -Pattern 'passed|failed|skipped|error|Passed|Failed|Skipped|Error|Total'"
+		},
+		{
+			"label": "Run Tests Errors Only",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity normal 2>&1 | Select-String -Pattern 'Failed|Error Message|Expected|Actual|Stack' -Context 0,3"
+		},
+		{
+			"label": "Run Failed Tests",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --logger \"trx;LogFileName=testresults.trx\" --filter \"FullyQualifiedName~CreateChurchMember|FullyQualifiedName~SubmitEnvelopeBatch|FullyQualifiedName~GetContributionHistory_WithDate|FullyQualifiedName~GetContributionHistory_WithContributions|FullyQualifiedName~DuplicateBankReference|FullyQualifiedName~AnotherMembersBankReference\""
+		},
+		{
+			"label": "Run All Tests Final",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal"
 		}
 	]
 }

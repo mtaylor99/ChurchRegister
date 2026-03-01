@@ -39,7 +39,7 @@ public class GenerateRegisterNumbersEndpoint : Endpoint<Models.ChurchMembers.Gen
     public override async Task HandleAsync(Models.ChurchMembers.GenerateRegisterNumbersRequest req, CancellationToken ct)
     {
         var result = await _useCase.ExecuteAsync(req, ct);
-        
+
         // Update GeneratedBy with current user's full name
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!string.IsNullOrEmpty(userId))
@@ -58,7 +58,7 @@ public class GenerateRegisterNumbersEndpoint : Endpoint<Models.ChurchMembers.Gen
         {
             result.GeneratedBy = "System";
         }
-        
+
         await SendOkAsync(result, ct);
     }
 }

@@ -86,7 +86,7 @@ public class ExcelParserService : IExcelParserService
         for (int row = startRow; row <= maxRow; row++)
         {
             var dataRow = ParseDataRow(worksheet, row, result.EventColumns);
-            
+
             if (dataRow != null)
             {
                 result.DataRows.Add(dataRow);
