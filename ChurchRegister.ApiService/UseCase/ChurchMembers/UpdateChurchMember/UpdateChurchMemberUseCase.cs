@@ -1,3 +1,4 @@
+using ChurchRegister.ApiService.Helpers;
 using ChurchRegister.ApiService.Models.ChurchMembers;
 using ChurchRegister.ApiService.Services.ChurchMembers;
 
@@ -40,5 +41,10 @@ public class UpdateChurchMemberUseCase : IUpdateChurchMemberUseCase
             throw new ArgumentException("First name is required");
         if (string.IsNullOrWhiteSpace(request.LastName))
             throw new ArgumentException("Last name is required");
+
+        // Sanitize text inputs to prevent stored XSS
+        request.FirstName = ValidationHelpers.SanitizeHtml(request.FirstName);
+        request.LastName = ValidationHelpers.SanitizeHtml(request.LastName);
+        request.Title = ValidationHelpers.SanitizeHtml(request.Title);
     }
 }

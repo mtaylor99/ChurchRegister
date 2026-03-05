@@ -1,3 +1,4 @@
+using ChurchRegister.ApiService.Helpers;
 using ChurchRegister.ApiService.Models.Security;
 using ChurchRegister.ApiService.Services.Security;
 
@@ -24,6 +25,10 @@ public class UpdateUserUseCase : IUpdateUserUseCase
         _logger.LogInformation("Updating user {UserId}", request.UserId);
 
         ValidateRequest(request, modifiedBy);
+
+        request.FirstName = ValidationHelpers.SanitizeHtml(request.FirstName);
+        request.LastName = ValidationHelpers.SanitizeHtml(request.LastName);
+
         var result = await _userManagementService.UpdateUserAsync(request, modifiedBy, cancellationToken);
 
         _logger.LogInformation("Successfully updated user {UserId}", request.UserId);

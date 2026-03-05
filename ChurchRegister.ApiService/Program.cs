@@ -5,9 +5,12 @@ using ChurchRegister.Database.Data;
 using ChurchRegister.Database.Interceptors;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 using FastEndpoints;
 using Azure.Identity;
 using ChurchRegister.ApiService.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +50,40 @@ builder.Services.AddProblemDetails();
 // Add FastEndpoints
 builder.Services.AddFastEndpoints();
 
+// Rate limiting to protect against brute-force attacks
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Strict policy for authentication endpoints (login, refresh)
+    options.AddFixedWindowLimiter("auth", opt =>
+    {
+        opt.PermitLimit = 10;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
+
+    // General API policy
+    options.AddFixedWindowLimiter("api", opt =>
+    {
+        opt.PermitLimit = 100;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 5;
+    });
+
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsJsonAsync(new
+        {
+            Message = "Too many requests. Please try again later.",
+            RetryAfterSeconds = 60
+        }, cancellationToken);
+    };
+});
+
 // Configure form options for file uploads
 builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
 {
@@ -72,8 +109,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("ReactDevelopment", policy =>
     {
         policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://localhost:3003", "http://localhost:3004", "http://localhost:3005")
-              .AllowAnyMethod()
-              .AllowAnyHeader()
+              .WithMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+              .WithHeaders("Content-Type", "Authorization", "X-Requested-With", "Accept")
               .AllowCredentials();
     });
 
@@ -84,8 +121,8 @@ builder.Services.AddCors(options =>
             ?? new[] { "https://your-production-domain.com" };
 
         policy.WithOrigins(allowedOrigins)
-              .AllowAnyMethod()
-              .AllowAnyHeader()
+              .WithMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+              .WithHeaders("Content-Type", "Authorization", "X-Requested-With", "Accept")
               .AllowCredentials()
               .SetIsOriginAllowedToAllowWildcardSubdomains();
     });
@@ -152,6 +189,19 @@ builder.Services.AddAuthentication()
             ValidAudience = builder.Configuration["Jwt:Audience"] ?? "ChurchRegister.React",
             IssuerSigningKey = new SymmetricSecurityKey(key),
             ClockSkew = TimeSpan.FromMinutes(5) // Allow 5 minutes clock skew tolerance
+        };
+
+        // Read JWT from httpOnly cookie as fallback when no Authorization header is present
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                if (string.IsNullOrEmpty(context.Token))
+                {
+                    context.Token = context.Request.Cookies["access_token"];
+                }
+                return Task.CompletedTask;
+            }
         };
     });
 
@@ -549,15 +599,29 @@ app.Use(async (context, next) =>
     // Control referrer information
     context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
 
-    // Content Security Policy
-    context.Response.Headers.Append("Content-Security-Policy",
-        "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " + // Required for React and Vite HMR in development
-        "style-src 'self' 'unsafe-inline'; " +
-        "img-src 'self' data: https:; " +
-        "font-src 'self' data:; " +
-        "connect-src 'self' http://localhost:* https://localhost:*; " + // API calls
-        "frame-ancestors 'none'");
+    // Content Security Policy — strict in production, relaxed for Vite HMR in development
+    if (app.Environment.IsDevelopment())
+    {
+        context.Response.Headers.Append("Content-Security-Policy",
+            "default-src 'self'; " +
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+            "style-src 'self' 'unsafe-inline'; " +
+            "img-src 'self' data: https:; " +
+            "font-src 'self' data:; " +
+            "connect-src 'self' http://localhost:* https://localhost:* ws://localhost:*; " +
+            "frame-ancestors 'none'");
+    }
+    else
+    {
+        context.Response.Headers.Append("Content-Security-Policy",
+            "default-src 'self'; " +
+            "script-src 'self'; " +
+            "style-src 'self' 'unsafe-inline'; " +
+            "img-src 'self' data: https:; " +
+            "font-src 'self' data:; " +
+            "connect-src 'self'; " +
+            "frame-ancestors 'none'");
+    }
 
     // Permissions Policy (formerly Feature Policy)
     context.Response.Headers.Append("Permissions-Policy",
@@ -585,6 +649,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Rate limiting middleware (after auth, before endpoints)
+app.UseRateLimiter();
 
 // Token revocation validation middleware (after authentication)
 app.UseTokenRevocation();

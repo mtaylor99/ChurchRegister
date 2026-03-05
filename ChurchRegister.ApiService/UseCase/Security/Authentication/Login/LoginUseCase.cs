@@ -16,17 +16,20 @@ public class LoginUseCase : ILoginUseCase
     private readonly UserManager<ChurchRegisterWebUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly ILogger<LoginUseCase> _logger;
 
     public LoginUseCase(
         SignInManager<ChurchRegisterWebUser> signInManager,
         UserManager<ChurchRegisterWebUser> userManager,
         IConfiguration configuration,
-        IRefreshTokenRepository refreshTokenRepository)
+        IRefreshTokenRepository refreshTokenRepository,
+        ILogger<LoginUseCase> logger)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _configuration = configuration;
         _refreshTokenRepository = refreshTokenRepository;
+        _logger = logger;
     }
 
     public async Task<LoginResponse> ExecuteAsync(LoginRequest request, CancellationToken cancellationToken = default)
@@ -98,14 +101,13 @@ public class LoginUseCase : ILoginUseCase
         };
         await _refreshTokenRepository.CreateAsync(refreshTokenEntity, cancellationToken);
 
-        // Debug logging for roles and permissions
+        // Structured logging for roles and permissions
         var userRoles = await _userManager.GetRolesAsync(user);
         var userClaims = await _userManager.GetClaimsAsync(user);
         var permissions = userClaims.Where(c => c.Type == "permission").Select(c => c.Value).ToArray();
 
-        Console.WriteLine($"Login successful for user: {user.Email}");
-        Console.WriteLine($"Roles: {string.Join(", ", userRoles)}");
-        Console.WriteLine($"Permissions: {string.Join(", ", permissions)}");
+        _logger.LogDebug("Login successful for user {UserId}. Roles: {Roles}, Permissions: {Permissions}",
+            user.Id, string.Join(", ", userRoles), string.Join(", ", permissions));
 
         return new LoginResponse
         {

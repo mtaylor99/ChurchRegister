@@ -66,10 +66,15 @@ public class TokenRevocationMiddleware
                 // This is a reasonable security trade-off for performance
             }
         }
+        catch (OperationCanceledException)
+        {
+            // Request was cancelled — rethrow so the pipeline can abort cleanly
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error checking token revocation for user {UserId}", userId);
-            // Don't block the request on database errors
+            // Don't block the request on transient database errors
         }
 
         await _next(context);

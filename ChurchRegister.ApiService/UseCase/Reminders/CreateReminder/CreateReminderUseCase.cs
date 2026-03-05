@@ -24,6 +24,9 @@ public class CreateReminderUseCase : ICreateReminderUseCase
     {
         try
         {
+            // Sanitize text inputs to prevent stored XSS
+            request.Description = Helpers.ValidationHelpers.SanitizeHtml(request.Description);
+
             _logger.LogInformation("Creating reminder: {Description} by {Username}", request.Description, username);
 
             var result = await _reminderService.CreateReminderAsync(request, username);

@@ -55,6 +55,10 @@ RUN apt-get update && apt-get install -y dos2unix && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
+# Run as non-root user for security (using built-in 'app' user from aspnet image)
+RUN chown -R app:app /app
+USER app
+
 EXPOSE 5000
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]

@@ -76,6 +76,12 @@ namespace ChurchRegister.Database.Data
                     .HasDatabaseName("IX_ChurchMembers_BankReference_Unique")
                     .IsUnique()
                     .HasFilter("[BankReference] IS NOT NULL");
+
+                // FK indexes for frequently filtered columns
+                entity.HasIndex(e => e.ChurchMemberStatusId)
+                    .HasDatabaseName("IX_ChurchMembers_ChurchMemberStatusId");
+                entity.HasIndex(e => e.DistrictId)
+                    .HasDatabaseName("IX_ChurchMembers_DistrictId");
                 
                 // Foreign key relationships
                 entity.HasOne(d => d.Address)
@@ -125,6 +131,11 @@ namespace ChurchRegister.Database.Data
                     .WithMany(p => p.Contributions)
                     .HasForeignKey(d => d.ChurchMemberId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(e => e.ContributionTypeId)
+                    .HasDatabaseName("IX_ChurchMemberContributions_ContributionTypeId");
+                entity.HasIndex(e => e.EnvelopeContributionBatchId)
+                    .HasDatabaseName("IX_ChurchMemberContributions_EnvelopeContributionBatchId");
 
                 entity.HasOne(d => d.ContributionType)
                     .WithMany(p => p.ChurchMemberContributions)
@@ -379,6 +390,11 @@ namespace ChurchRegister.Database.Data
             // ChurchMemberRoles
             modelBuilder.Entity<ChurchMemberRoles>(entity =>
             {
+                entity.HasIndex(e => e.ChurchMemberId)
+                    .HasDatabaseName("IX_ChurchMemberRoles_ChurchMemberId");
+                entity.HasIndex(e => e.ChurchMemberRoleTypeId)
+                    .HasDatabaseName("IX_ChurchMemberRoles_ChurchMemberRoleTypeId");
+
                 entity.HasOne(d => d.ChurchMember)
                     .WithMany(p => p.Roles)
                     .HasForeignKey(d => d.ChurchMemberId)
@@ -426,6 +442,11 @@ namespace ChurchRegister.Database.Data
             modelBuilder.Entity<ChurchMemberTrainingCertificates>(entity =>
             {
                 entity.Property(e => e.Notes).HasColumnType("nvarchar(max)");
+
+                entity.HasIndex(e => e.ChurchMemberId)
+                    .HasDatabaseName("IX_ChurchMemberTrainingCertificates_ChurchMemberId");
+                entity.HasIndex(e => e.TrainingCertificateTypeId)
+                    .HasDatabaseName("IX_ChurchMemberTrainingCertificates_TrainingCertificateTypeId");
 
                 entity.HasOne(d => d.ChurchMember)
                     .WithMany(p => p.TrainingCertificates)

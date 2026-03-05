@@ -197,8 +197,6 @@ export const UploadAttendanceTemplateModal: React.FC<
    * Handle download template
    */
   const handleDownloadTemplate = () => {
-    // TODO: Implement template download endpoint
-    // For now, show a message
     alert(
       'Template download feature coming soon. Please contact your administrator for the template file.'
     );

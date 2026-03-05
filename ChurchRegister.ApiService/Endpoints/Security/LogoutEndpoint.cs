@@ -1,4 +1,5 @@
 using FastEndpoints;
+using ChurchRegister.ApiService.Helpers;
 using ChurchRegister.ApiService.Models.Security;
 using ChurchRegister.ApiService.UseCase.Authentication.Logout;
 
@@ -7,10 +8,12 @@ namespace ChurchRegister.ApiService.Endpoints.Security;
 public class LogoutEndpoint : EndpointWithoutRequest<LogoutResponse>
 {
     private readonly ILogoutUseCase _logoutUseCase;
+    private readonly IHostEnvironment _environment;
 
-    public LogoutEndpoint(ILogoutUseCase logoutUseCase)
+    public LogoutEndpoint(ILogoutUseCase logoutUseCase, IHostEnvironment environment)
     {
         _logoutUseCase = logoutUseCase;
+        _environment = environment;
     }
 
     public override void Configure()
@@ -29,6 +32,10 @@ public class LogoutEndpoint : EndpointWithoutRequest<LogoutResponse>
     {
         var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
         var response = await _logoutUseCase.ExecuteAsync(User, ipAddress, ct);
+
+        // Clear httpOnly auth cookies
+        AuthCookieHelper.ClearAuthCookies(HttpContext.Response, _environment);
+
         await Send.OkAsync(response, ct);
     }
 }

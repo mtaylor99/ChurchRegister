@@ -66,7 +66,7 @@ describe('tokenService', () => {
       expect(tokens).toBeNull();
     });
 
-    test('should store tokens in localStorage', () => {
+    test('should store tokens in memory', () => {
       const mockTokens: AuthTokens = {
         accessToken: 'test-access-token',
         refreshToken: 'test-refresh-token',
@@ -77,15 +77,8 @@ describe('tokenService', () => {
 
       tokenService.setTokens(mockTokens);
 
-      const storedAccessToken = localStorageMock.getItem(
-        'church_register_access_token'
-      );
-      const storedRefreshToken = localStorageMock.getItem(
-        'church_register_refresh_token'
-      );
-
-      expect(storedAccessToken).toBe(mockTokens.accessToken);
-      expect(storedRefreshToken).toBe(mockTokens.refreshToken);
+      expect(tokenService.getAccessToken()).toBe(mockTokens.accessToken);
+      expect(tokenService.getRefreshToken()).toBe(mockTokens.refreshToken);
     });
   });
 
@@ -322,10 +315,13 @@ describe('tokenService', () => {
     });
 
     test('should handle corrupted token data', () => {
-      localStorageMock.setItem(
-        'church_register_access_token',
-        'corrupted-data'
-      );
+      tokenService.setTokens({
+        accessToken: 'corrupted-data',
+        refreshToken: 'corrupted-refresh',
+        expiresIn: 3600,
+        tokenType: 'Bearer',
+        expiresAt: new Date(Date.now() + 3600 * 1000),
+      });
 
       // Should return token even if corrupted (decoding is separate)
       const token = tokenService.getAccessToken();

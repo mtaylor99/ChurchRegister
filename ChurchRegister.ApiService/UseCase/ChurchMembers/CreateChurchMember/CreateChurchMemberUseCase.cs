@@ -1,3 +1,4 @@
+using ChurchRegister.ApiService.Helpers;
 using ChurchRegister.ApiService.Models.ChurchMembers;
 using ChurchRegister.ApiService.Services.ChurchMembers;
 
@@ -73,5 +74,10 @@ public class CreateChurchMemberUseCase : ICreateChurchMemberUseCase
         {
             throw new ArgumentException("Valid status ID is required");
         }
+
+        // Sanitize text inputs to prevent stored XSS
+        request.FirstName = ValidationHelpers.SanitizeHtml(request.FirstName);
+        request.LastName = ValidationHelpers.SanitizeHtml(request.LastName);
+        request.Title = ValidationHelpers.SanitizeHtml(request.Title);
     }
 }

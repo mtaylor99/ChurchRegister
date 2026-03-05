@@ -6,6 +6,7 @@ using ChurchRegister.Database.Interfaces;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -50,7 +51,8 @@ public class LoginUseCaseTests
             _mockSignInManager.Object,
             _mockUserManager.Object,
             _mockConfiguration.Object,
-            _mockRefreshTokenRepository.Object);
+            _mockRefreshTokenRepository.Object,
+            Mock.Of<ILogger<LoginUseCase>>());
     }
 
     [Fact]

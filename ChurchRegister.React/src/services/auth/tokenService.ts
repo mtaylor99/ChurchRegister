@@ -106,6 +106,12 @@ class TokenService {
     new Set();
   private isRefreshing = false;
 
+  // In-memory token storage — tokens are NOT persisted to localStorage.
+  // httpOnly cookies handle session persistence across page reloads.
+  private inMemoryAccessToken: string | null = null;
+  private inMemoryRefreshToken: string | null = null;
+  private inMemoryExpiresAt: Date | null = null;
+
   private constructor(config: Partial<AuthConfig> = {}) {
     this.config = { ...defaultConfig, ...config };
 
@@ -144,34 +150,23 @@ class TokenService {
     this.isRefreshing = false;
   }
 
-  // Enhanced token storage with automatic refresh scheduling
+  // Enhanced token storage — in-memory only (httpOnly cookies handle persistence)
   setTokens(tokens: AuthTokens): void {
     try {
-      localStorage.setItem(this.config.tokenStorageKey, tokens.accessToken);
-      localStorage.setItem(
-        this.config.refreshTokenStorageKey,
-        tokens.refreshToken
-      );
+      this.inMemoryAccessToken = tokens.accessToken;
+      this.inMemoryRefreshToken = tokens.refreshToken;
 
       // Handle both expiresAt (absolute date) and expiresIn (seconds from now)
-      let expirationTime: Date;
       if (tokens.expiresAt) {
-        // If we have an absolute expiration date, use it
-        expirationTime = new Date(tokens.expiresAt);
+        this.inMemoryExpiresAt = new Date(tokens.expiresAt);
       } else {
-        // Fall back to calculating from expiresIn seconds
-        expirationTime = new Date(Date.now() + tokens.expiresIn * 1000);
+        this.inMemoryExpiresAt = new Date(Date.now() + tokens.expiresIn * 1000);
       }
-
-      localStorage.setItem(
-        `${this.config.tokenStorageKey}_expires_at`,
-        expirationTime.toISOString()
-      );
 
       authLogger.log('INFO', 'auth.token.set', {
         hasAccessToken: !!tokens.accessToken,
         hasRefreshToken: !!tokens.refreshToken,
-        expiresAt: expirationTime.toISOString(),
+        expiresAt: this.inMemoryExpiresAt.toISOString(),
         tokenLength: tokens.accessToken.length,
       });
 
@@ -185,37 +180,26 @@ class TokenService {
     }
   }
 
-  // Get access token
+  // Get access token from in-memory storage
   getAccessToken(): string | null {
-    try {
-      return localStorage.getItem(this.config.tokenStorageKey);
-    } catch {
-      return null;
-    }
+    return this.inMemoryAccessToken;
   }
 
-  // Get refresh token
+  // Get refresh token from in-memory storage
   getRefreshToken(): string | null {
-    try {
-      return localStorage.getItem(this.config.refreshTokenStorageKey);
-    } catch {
-      return null;
-    }
+    return this.inMemoryRefreshToken;
   }
 
-  // Get all stored tokens
+  // Get all stored tokens from in-memory storage
   getTokens(): AuthTokens | null {
-    const accessToken = this.getAccessToken();
-    const refreshToken = this.getRefreshToken();
-    const expiresAtStr = localStorage.getItem(
-      `${this.config.tokenStorageKey}_expires_at`
-    );
+    const accessToken = this.inMemoryAccessToken;
+    const refreshToken = this.inMemoryRefreshToken;
+    const expiresAt = this.inMemoryExpiresAt;
 
-    if (!accessToken || !refreshToken || !expiresAtStr) {
+    if (!accessToken || !refreshToken || !expiresAt) {
       return null;
     }
 
-    const expiresAt = new Date(expiresAtStr);
     const expiresIn = Math.max(
       0,
       Math.floor((expiresAt.getTime() - Date.now()) / 1000)
@@ -233,9 +217,9 @@ class TokenService {
   // Clear all tokens and cleanup
   clearTokens(): void {
     try {
-      localStorage.removeItem(this.config.tokenStorageKey);
-      localStorage.removeItem(this.config.refreshTokenStorageKey);
-      localStorage.removeItem(`${this.config.tokenStorageKey}_expires_at`);
+      this.inMemoryAccessToken = null;
+      this.inMemoryRefreshToken = null;
+      this.inMemoryExpiresAt = null;
       localStorage.removeItem(this.config.userStorageKey);
 
       // Cancel any pending refresh
@@ -522,10 +506,11 @@ class TokenService {
     return this.isRefreshing;
   }
 
-  // Perform the actual token refresh API call
+  // Perform the actual token refresh API call (cookies carry refresh token)
   private async performTokenRefresh(refreshToken: string): Promise<AuthTokens> {
     const response = await fetch(`${this.config.apiBaseUrl}/auth/refresh`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },

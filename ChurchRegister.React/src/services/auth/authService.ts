@@ -396,10 +396,9 @@ class AuthService {
     }
   }
 
-  // Cancel pending requests (placeholder for future implementation)
+  // Cancel pending requests - request cancellation is handled at the component level via TanStack Query
   private cancelPendingRequests(): void {
-    // TODO: Implement request cancellation using AbortController
-    // This would cancel any ongoing API requests to prevent data leaks
+    // No-op: individual components manage their own request lifecycle
   }
 
   // Reset internal service state
@@ -693,21 +692,39 @@ class AuthService {
     isAuthenticated: boolean;
   }> {
     try {
-      // Check if we have valid tokens
-      if (!this.isAuthenticated()) {
-        return { user: null, isAuthenticated: false };
+      // If we have valid in-memory tokens, use them
+      if (this.isAuthenticated()) {
+        const user = await this.getCurrentUser();
+        return { user, isAuthenticated: true };
       }
 
-      // Try to get fresh user data from server
-      const user = await this.getCurrentUser();
-      return { user, isAuthenticated: true };
+      // On page reload, in-memory tokens are lost but httpOnly cookies persist.
+      // Try to recover the session by calling the server (cookies sent automatically).
+      try {
+        const response = await fetch(`${this.baseURL}/api/auth/user`, {
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const user = data.data ?? data;
+
+          if (user && 'id' in user) {
+            this.storeUser(user as User);
+            return { user: user as User, isAuthenticated: true };
+          }
+        }
+      } catch {
+        // Cookie-based recovery failed — user needs to log in again
+      }
+
+      return { user: null, isAuthenticated: false };
     } catch (error) {
-      // Only log error if it's not due to being unauthenticated
       if (this.isAuthenticated()) {
         console.error('Auth initialization error:', error);
       }
 
-      // Clear invalid tokens
       tokenService.clearTokens();
       this.clearUser();
 

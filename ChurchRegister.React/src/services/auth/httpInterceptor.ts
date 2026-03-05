@@ -128,12 +128,7 @@ export class HttpInterceptor {
       // Clear the current token to force a refresh
       const refreshToken = tokenService.getRefreshToken();
       if (refreshToken) {
-        // Clear access token but keep refresh token
-        const accessTokenKey = tokenService.getConfig().tokenStorageKey;
-        localStorage.removeItem(accessTokenKey);
-        localStorage.removeItem(`${accessTokenKey}_expires_at`);
-
-        // Now refresh
+        // Force a refresh attempt — cookies carry the refresh token
         return await tokenService.refreshTokenIfNeeded();
       }
       return null;
@@ -159,6 +154,7 @@ export class HttpInterceptor {
     return {
       ...init,
       headers,
+      credentials: 'include' as RequestCredentials,
     };
   }
 

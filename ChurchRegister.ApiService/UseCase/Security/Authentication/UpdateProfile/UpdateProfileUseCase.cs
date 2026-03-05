@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using ChurchRegister.Database.Data;
+using ChurchRegister.ApiService.Helpers;
 using ChurchRegister.ApiService.Models.Security;
 
 namespace ChurchRegister.ApiService.UseCase.Authentication.UpdateProfile;
@@ -25,12 +26,12 @@ public class UpdateProfileUseCase : IUpdateProfileUseCase
         // Update profile fields if provided
         if (!string.IsNullOrWhiteSpace(request.FirstName))
         {
-            user.FirstName = request.FirstName.Trim();
+            user.FirstName = ValidationHelpers.SanitizeHtml(request.FirstName).Trim();
         }
 
         if (!string.IsNullOrWhiteSpace(request.LastName))
         {
-            user.LastName = request.LastName.Trim();
+            user.LastName = ValidationHelpers.SanitizeHtml(request.LastName).Trim();
         }
 
         // Update the modified timestamp

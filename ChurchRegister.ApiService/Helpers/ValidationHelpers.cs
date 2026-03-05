@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Web;
 using ChurchRegister.ApiService.Exceptions;
 
 namespace ChurchRegister.ApiService.Helpers;
@@ -231,6 +232,37 @@ public static class ValidationHelpers
         if (pageNumber < 0)
         {
             throw new ValidationException("Page number must be zero or greater.");
+        }
+    }
+
+    /// <summary>
+    /// Strips HTML tags from input to prevent stored XSS.
+    /// Returns the sanitized plain-text string.
+    /// </summary>
+    public static string SanitizeHtml(string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            return input ?? string.Empty;
+
+        // Remove HTML tags
+        var stripped = Regex.Replace(input, "<[^>]*>", string.Empty, RegexOptions.None, TimeSpan.FromSeconds(1));
+        // Decode any HTML entities to prevent double-encoding
+        stripped = HttpUtility.HtmlDecode(stripped);
+        return stripped.Trim();
+    }
+
+    /// <summary>
+    /// Validates that a plain-text field contains no HTML tags.
+    /// Throws if HTML is detected.
+    /// </summary>
+    public static void RequireNoHtml(string? value, string fieldName)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return;
+
+        if (Regex.IsMatch(value, "<[^>]*>", RegexOptions.None, TimeSpan.FromSeconds(1)))
+        {
+            throw new ValidationException($"{fieldName} must not contain HTML markup.");
         }
     }
 }

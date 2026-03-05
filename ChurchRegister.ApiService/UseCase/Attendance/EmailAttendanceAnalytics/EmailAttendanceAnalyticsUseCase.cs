@@ -102,7 +102,7 @@ public class EmailAttendanceAnalyticsUseCase : IEmailAttendanceAnalyticsUseCase
     <div class='header'>
         <h1>Attendance Analytics Report</h1>
         <h2>{eventEntity.Name}</h2>
-        <p>Generated on {DateTime.Now:MMMM dd, yyyy} by Church Register System</p>
+        <p>Generated on {DateTime.UtcNow:MMMM dd, yyyy} by Church Register System</p>
     </div>
     
     <div class='stats'>
@@ -178,7 +178,7 @@ public class EmailAttendanceAnalyticsUseCase : IEmailAttendanceAnalyticsUseCase
     <div class='header'>
         <h1>Church Attendance Analytics Report</h1>
         <h2>All Events Summary</h2>
-        <p>Generated on {DateTime.Now:MMMM dd, yyyy} by Church Register System</p>
+        <p>Generated on {DateTime.UtcNow:MMMM dd, yyyy} by Church Register System</p>
     </div>
 
     <table class='data-table'>

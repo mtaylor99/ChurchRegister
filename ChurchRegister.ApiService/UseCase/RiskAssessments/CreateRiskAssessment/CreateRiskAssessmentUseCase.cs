@@ -28,6 +28,10 @@ public class CreateRiskAssessmentUseCase : ICreateRiskAssessmentUseCase
     {
         try
         {
+            // Sanitize text inputs to prevent stored XSS
+            request.Title = Helpers.ValidationHelpers.SanitizeHtml(request.Title);
+            request.Description = Helpers.ValidationHelpers.SanitizeHtml(request.Description);
+
             _logger.LogInformation("Creating risk assessment: {Title} by {CreatedBy}", request.Title, createdBy);
 
             var result = await _riskAssessmentService.CreateRiskAssessmentAsync(request, createdBy);
