@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -107,7 +107,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,23 +120,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { apiClient } from './ApiClient';
@@ -145,7 +145,7 @@ import type { ContributionHistoryDto } from '../../types/contributionHistory';
 /**
  * API service for church member contribution history operations
  */
-export const contributionHistoryApi = <span class="cstat-no" title="statement not covered" >{</span>
+export const contributionHistoryApi = {
   /**
    * Get contribution history for a specific church member
    * @param memberId - The church member ID
@@ -153,28 +153,28 @@ export const contributionHistoryApi = <span class="cstat-no" title="statement no
    * @param endDate - Optional end date filter (ISO string)
    * @returns List of contribution history records
    */
-  async <span class="fstat-no" title="function not covered" >getContributionHistory(</span>
+  async getContributionHistory(
     memberId: number,
     startDate?: string,
     endDate?: string
   ): Promise&lt;ContributionHistoryDto[]&gt; {
-    const params: Record&lt;string, string&gt; = <span class="cstat-no" title="statement not covered" >{};</span>
+    const params: Record&lt;string, string&gt; = {};
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (startDate) {</span>
-<span class="cstat-no" title="statement not covered" >      params.startDate = startDate;</span>
+    if (startDate) {
+      params.startDate = startDate;
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (endDate) {</span>
-<span class="cstat-no" title="statement not covered" >      params.endDate = endDate;</span>
+    if (endDate) {
+      params.endDate = endDate;
     }
 &nbsp;
-    const queryString = <span class="cstat-no" title="statement not covered" >new URLSearchParams(params).toString();</span>
-    const url = <span class="cstat-no" title="statement not covered" >`/api/church-members/${memberId}/contributions${</span>
+    const queryString = new URLSearchParams(params).toString();
+    const url = `/api/church-members/${memberId}/contributions${
       queryString ? `?${queryString}` : ''
     }`;
 &nbsp;
-    const response = <span class="cstat-no" title="statement not covered" >await apiClient.get&lt;ContributionHistoryDto[]&gt;(url);</span>
-<span class="cstat-no" title="statement not covered" >    return response;</span>
+    const response = await apiClient.get&lt;ContributionHistoryDto[]&gt;(url);
+    return response;
   },
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -184,7 +184,7 @@ export const contributionHistoryApi = <span class="cstat-no" title="statement no
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-05T20:50:50.699Z
+                at 2026-03-06T10:26:00.840Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

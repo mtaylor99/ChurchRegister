@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">7.05% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/85</span>
+                <span class='fraction'>6/85</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">7.59% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/79</span>
+                <span class='fraction'>6/79</span>
             </div>
         
             
@@ -651,7 +651,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -864,7 +864,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -878,7 +878,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -945,7 +945,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -965,7 +965,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1039,7 +1039,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { apiClient } from './api/ApiClient';
 import type {
@@ -1140,7 +1140,7 @@ export interface EmailAttendanceRequest {
  * Attendance service for managing attendance records and analytics
  */
 export class AttendanceService {
-  private basePath = <span class="cstat-no" title="statement not covered" >'/api/attendance';</span>
+  private basePath = '/api/attendance';
 &nbsp;
   /**
    * Get all attendance records
@@ -1353,7 +1353,7 @@ export class AttendanceService {
 }
 &nbsp;
 // Create and export singleton instance
-export const attendanceService = <span class="cstat-no" title="statement not covered" >new AttendanceService();</span>
+export const attendanceService = new AttendanceService();
 &nbsp;
 /**
  * Envelope Contribution Service for managing envelope batches
@@ -1367,7 +1367,7 @@ import type {
 } from '../types/administration';
 &nbsp;
 export class EnvelopeContributionService {
-  private basePath = <span class="cstat-no" title="statement not covered" >'/api/financial/envelope-contributions';</span>
+  private basePath = '/api/financial/envelope-contributions';
 &nbsp;
   /**
    * Submit a new envelope contribution batch
@@ -1434,7 +1434,7 @@ export class EnvelopeContributionService {
 }
 &nbsp;
 // Create and export singleton instance
-export const envelopeContributionService = <span class="cstat-no" title="statement not covered" >new EnvelopeContributionService();</span>
+export const envelopeContributionService = new EnvelopeContributionService();
 &nbsp;
 /**
  * Register Number Service for managing annual register number generation
@@ -1454,7 +1454,7 @@ interface GenerationStatusResponse {
 }
 &nbsp;
 export class RegisterNumberService {
-  private basePath = <span class="cstat-no" title="statement not covered" >'/api/register-numbers';</span>
+  private basePath = '/api/register-numbers';
 &nbsp;
   /**
    * Generate register numbers for a specific year
@@ -1528,7 +1528,7 @@ export class RegisterNumberService {
 }
 &nbsp;
 // Create and export singleton instance
-export const registerNumberService = <span class="cstat-no" title="statement not covered" >new RegisterNumberService();</span>
+export const registerNumberService = new RegisterNumberService();
 &nbsp;
 &nbsp;</pre></td></tr></table></pre>
 
@@ -1537,7 +1537,7 @@ export const registerNumberService = <span class="cstat-no" title="statement not
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-05T20:50:50.699Z
+                at 2026-03-06T10:26:00.840Z
             </div>
         <script src="../prettify.js"></script>
         <script>
