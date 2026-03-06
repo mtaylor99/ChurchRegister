@@ -7,6 +7,7 @@ namespace ChurchRegister.ApiService.Tests.Districts;
 /// <summary>
 /// Integration tests for GET /api/districts/export-members-list (TASK-037)
 /// </summary>
+[Collection("IntegrationTests")]
 public class DistrictMemberListExportTests : IAsyncLifetime
 {
     private readonly TestWebApplicationFactory<Program> _factory;

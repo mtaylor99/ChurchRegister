@@ -12,6 +12,7 @@ namespace ChurchRegister.ApiService.Tests.ChurchMembers;
 /// <summary>
 /// Integration tests for GET /api/church-members/statistics (TASK-036)
 /// </summary>
+[Collection("IntegrationTests")]
 public class MemberStatisticsTests : IAsyncLifetime
 {
     private readonly TestWebApplicationFactory<Program> _factory;
