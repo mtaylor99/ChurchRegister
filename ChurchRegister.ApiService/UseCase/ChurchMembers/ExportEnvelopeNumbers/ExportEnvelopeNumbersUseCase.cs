@@ -8,7 +8,7 @@ namespace ChurchRegister.ApiService.UseCase.ChurchMembers.ExportEnvelopeNumbers;
 
 /// <summary>
 /// Builds the Envelope Number Review Excel workbook for a given year.
-/// Columns: Last Name | First Name | Address | Current Number | New Number
+/// Columns: First Name | Last Name | Name/Number | Address Line 1 | Address Line 2 | Town | County | Postcode | District | Current Number | New Number
 /// </summary>
 public class ExportEnvelopeNumbersUseCase : IExportEnvelopeNumbersUseCase
 {
@@ -41,6 +41,7 @@ public class ExportEnvelopeNumbersUseCase : IExportEnvelopeNumbersUseCase
         var members = await _db.ChurchMembers
             .Where(m => m.ChurchMemberStatusId == 1 && m.Envelopes)
             .Include(m => m.Address)
+            .Include(m => m.District)
             .Include(m => m.RegisterNumbers)
             .AsNoTracking()
             .ToListAsync(ct);
@@ -61,9 +62,15 @@ public class ExportEnvelopeNumbersUseCase : IExportEnvelopeNumbersUseCase
 
             return new
             {
-                LastName = m.LastName,
                 FirstName = m.FirstName,
-                Address = FormatAddress(m.Address),
+                LastName = m.LastName,
+                NameNumber = m.Address?.NameNumber ?? string.Empty,
+                AddressLine1 = m.Address?.AddressLineOne ?? string.Empty,
+                AddressLine2 = m.Address?.AddressLineTwo ?? string.Empty,
+                Town = m.Address?.Town ?? string.Empty,
+                County = m.Address?.County ?? string.Empty,
+                Postcode = m.Address?.Postcode ?? string.Empty,
+                District = m.District?.Name ?? string.Empty,
                 CurrentNumber = currentNumber,
                 NewNumber = newNumber,
                 HasNewNumber = newNumber != null,
@@ -87,14 +94,20 @@ public class ExportEnvelopeNumbersUseCase : IExportEnvelopeNumbersUseCase
         var ws = package.Workbook.Worksheets.Add(year.ToString());
 
         // Header row
-        ws.Cells[1, 1].Value = "Last Name";
-        ws.Cells[1, 2].Value = "First Name";
-        ws.Cells[1, 3].Value = "Address";
-        ws.Cells[1, 4].Value = "Current Number";
-        ws.Cells[1, 5].Value = "New Number";
+        ws.Cells[1, 1].Value = "First Name";
+        ws.Cells[1, 2].Value = "Last Name";
+        ws.Cells[1, 3].Value = "Name/Number";
+        ws.Cells[1, 4].Value = "Address Line 1";
+        ws.Cells[1, 5].Value = "Address Line 2";
+        ws.Cells[1, 6].Value = "Town";
+        ws.Cells[1, 7].Value = "County";
+        ws.Cells[1, 8].Value = "Postcode";
+        ws.Cells[1, 9].Value = "District";
+        ws.Cells[1, 10].Value = "Current Number";
+        ws.Cells[1, 11].Value = "New Number";
 
         // Style header
-        using (var headerRange = ws.Cells[1, 1, 1, 5])
+        using (var headerRange = ws.Cells[1, 1, 1, 11])
         {
             headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
             headerRange.Style.Fill.BackgroundColor.SetColor(HeaderBackground);
@@ -113,15 +126,21 @@ public class ExportEnvelopeNumbersUseCase : IExportEnvelopeNumbersUseCase
             var row = sorted[i];
             var excelRow = i + 2; // row 1 is header
 
-            ws.Cells[excelRow, 1].Value = row.LastName;
-            ws.Cells[excelRow, 2].Value = row.FirstName;
-            ws.Cells[excelRow, 3].Value = row.Address;
-            ws.Cells[excelRow, 4].Value = row.CurrentNumber;
-            ws.Cells[excelRow, 5].Value = row.NewNumber;
+            ws.Cells[excelRow, 1].Value = row.FirstName;
+            ws.Cells[excelRow, 2].Value = row.LastName;
+            ws.Cells[excelRow, 3].Value = row.NameNumber;
+            ws.Cells[excelRow, 4].Value = row.AddressLine1;
+            ws.Cells[excelRow, 5].Value = row.AddressLine2;
+            ws.Cells[excelRow, 6].Value = row.Town;
+            ws.Cells[excelRow, 7].Value = row.County;
+            ws.Cells[excelRow, 8].Value = row.Postcode;
+            ws.Cells[excelRow, 9].Value = row.District;
+            ws.Cells[excelRow, 10].Value = row.CurrentNumber;
+            ws.Cells[excelRow, 11].Value = row.NewNumber;
 
             // Alternating row fill
             var fillColour = (i % 2 == 0) ? RowWhite : RowGrey;
-            using var rowRange = ws.Cells[excelRow, 1, excelRow, 5];
+            using var rowRange = ws.Cells[excelRow, 1, excelRow, 11];
             rowRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
             rowRange.Style.Fill.BackgroundColor.SetColor(fillColour);
             rowRange.Style.Font.Name = "Calibri";
@@ -129,24 +148,20 @@ public class ExportEnvelopeNumbersUseCase : IExportEnvelopeNumbersUseCase
         }
 
         // Column widths
-        ws.Column(1).Width = 25;
-        ws.Column(2).Width = 20;
-        ws.Column(3).Width = 45;
-        ws.Column(4).Width = 18;
-        ws.Column(5).Width = 18;
+        ws.Column(1).Width = 20;  // First Name
+        ws.Column(2).Width = 20;  // Last Name
+        ws.Column(3).Width = 20;  // Name/Number
+        ws.Column(4).Width = 30;  // Address Line 1
+        ws.Column(5).Width = 25;  // Address Line 2
+        ws.Column(6).Width = 20;  // Town
+        ws.Column(7).Width = 20;  // County
+        ws.Column(8).Width = 12;  // Postcode
+        ws.Column(9).Width = 12;  // District
+        ws.Column(10).Width = 18; // Current Number
+        ws.Column(11).Width = 18; // New Number
 
         _logger.LogInformation("Envelope numbers Excel generated with {Count} rows for year {Year}", sorted.Count, year);
 
         return package.GetAsByteArray();
-    }
-
-    private static string FormatAddress(ChurchRegister.Database.Entities.Address? address)
-    {
-        if (address == null) return string.Empty;
-
-        var parts = new[] { address.NameNumber, address.AddressLineOne, address.Town, address.Postcode }
-            .Where(s => !string.IsNullOrWhiteSpace(s));
-
-        return string.Join(", ", parts);
     }
 }

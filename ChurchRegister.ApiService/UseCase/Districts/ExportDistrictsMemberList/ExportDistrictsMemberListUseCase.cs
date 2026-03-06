@@ -68,6 +68,7 @@ public class ExportDistrictsMemberListUseCase : IExportDistrictsMemberListUseCas
                 DeaconName = FormatName(district.Deacon),
                 DistrictOfficerName = FormatName(district.DistrictOfficer),
                 IsUnassigned = false,
+                ResidenceCount = CountResidences(members),
                 Members = members.Select(m => new MemberListRow
                 {
                     FullName = FormatMemberName(m),
@@ -84,6 +85,7 @@ public class ExportDistrictsMemberListUseCase : IExportDistrictsMemberListUseCas
             {
                 DistrictName = "Unassigned Members",
                 IsUnassigned = true,
+                ResidenceCount = CountResidences(unassignedMembers),
                 Members = unassignedMembers.Select(m => new MemberListRow
                 {
                     FullName = FormatMemberName(m),
@@ -100,6 +102,19 @@ public class ExportDistrictsMemberListUseCase : IExportDistrictsMemberListUseCas
         _logger.LogInformation("District members list PDF generated successfully ({Size} bytes)", pdfBytes.Length);
 
         return pdfBytes;
+    }
+
+    private static int CountResidences(List<ChurchRegister.Database.Entities.ChurchMember> members)
+    {
+        return members
+            .Where(m => m.AddressId != null && m.Address != null)
+            .GroupBy(m => (
+                (m.Address!.NameNumber ?? string.Empty).Trim().ToLowerInvariant(),
+                (m.Address!.AddressLineOne ?? string.Empty).Trim().ToLowerInvariant(),
+                (m.Address!.Postcode ?? string.Empty).Trim().ToLowerInvariant()
+            ))
+            .Where(g => g.Key.Item1 != string.Empty || g.Key.Item2 != string.Empty || g.Key.Item3 != string.Empty)
+            .Count();
     }
 
     private static string FormatMemberName(ChurchRegister.Database.Entities.ChurchMember member)
@@ -145,6 +160,7 @@ public class DistrictMemberListSection
     public string? DeaconName { get; set; }
     public string? DistrictOfficerName { get; set; }
     public bool IsUnassigned { get; set; }
+    public int ResidenceCount { get; set; }
     public List<MemberListRow> Members { get; set; } = new();
 }
 

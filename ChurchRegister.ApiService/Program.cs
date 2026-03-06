@@ -329,6 +329,8 @@ builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.Expor
                            ChurchRegister.ApiService.UseCase.ChurchMembers.ExportEnvelopeLabels.ExportEnvelopeLabelsUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.ExportAddressLabels.IExportAddressLabelsUseCase,
                            ChurchRegister.ApiService.UseCase.ChurchMembers.ExportAddressLabels.ExportAddressLabelsUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.ExportAddressList.IExportAddressListUseCase,
+                           ChurchRegister.ApiService.UseCase.ChurchMembers.ExportAddressList.ExportAddressListUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.ExportEnvelopeNumbers.IExportEnvelopeNumbersUseCase,
                            ChurchRegister.ApiService.UseCase.ChurchMembers.ExportEnvelopeNumbers.ExportEnvelopeNumbersUseCase>();
 

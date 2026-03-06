@@ -147,6 +147,81 @@ public class DistrictPdfService
 
         var document = Document.Create(container =>
         {
+            // Summary page
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4);
+                page.Margin(40);
+
+                page.Header().Column(column =>
+                {
+                    column.Spacing(4);
+                    column.Item().Text("District Summary")
+                        .FontSize(24).Bold().FontColor(Colors.Blue.Darken2);
+                    column.Item().PaddingTop(8).LineHorizontal(1).LineColor(Colors.Grey.Lighten1);
+                });
+
+                page.Content().PaddingTop(16).Table(table =>
+                {
+                    table.ColumnsDefinition(columns =>
+                    {
+                        columns.RelativeColumn(1.5f); // District
+                        columns.RelativeColumn(2.5f); // Deacon
+                        columns.RelativeColumn(2.5f); // District Officer
+                        columns.RelativeColumn(1.2f); // Residences
+                        columns.RelativeColumn(1.2f); // Members
+                    });
+
+                    table.Header(header =>
+                    {
+                        header.Cell().Element(SummaryHeaderStyle).Text("District").SemiBold();
+                        header.Cell().Element(SummaryHeaderStyle).Text("Deacon").SemiBold();
+                        header.Cell().Element(SummaryHeaderStyle).Text("District Officer").SemiBold();
+                        header.Cell().Element(SummaryHeaderStyle).Text("Residences").SemiBold();
+                        header.Cell().Element(SummaryHeaderStyle).Text("Members").SemiBold();
+
+                        static IContainer SummaryHeaderStyle(IContainer c) =>
+                            c.Background(Colors.Grey.Lighten3)
+                             .Padding(8)
+                             .BorderBottom(1)
+                             .BorderColor(Colors.Grey.Darken1);
+                    });
+
+                    for (int i = 0; i < sections.Count; i++)
+                    {
+                        var s = sections[i];
+                        var isEven = i % 2 == 0;
+
+                        IContainer SummaryRowStyle(IContainer c) =>
+                            c.Background(isEven ? Colors.White : Colors.Grey.Lighten5)
+                             .Padding(7)
+                             .BorderBottom(1)
+                             .BorderColor(Colors.Grey.Lighten2);
+
+                        table.Cell().Element(SummaryRowStyle).Text(s.DistrictName).FontSize(10);
+                        table.Cell().Element(SummaryRowStyle).Text(s.IsUnassigned ? "" : (s.DeaconName ?? "Not assigned")).FontSize(10);
+                        table.Cell().Element(SummaryRowStyle).Text(s.IsUnassigned ? "" : (s.DistrictOfficerName ?? "Not assigned")).FontSize(10);
+                        table.Cell().Element(SummaryRowStyle).Text(s.ResidenceCount.ToString()).FontSize(10);
+                        table.Cell().Element(SummaryRowStyle).Text(s.Members.Count.ToString()).FontSize(10);
+                    }
+                });
+
+                page.Footer().Row(row =>
+                {
+                    row.RelativeItem().Text($"Generated: {generatedDate}")
+                        .FontSize(9)
+                        .FontColor(Colors.Grey.Darken1);
+                    row.RelativeItem().AlignRight().Text(text =>
+                    {
+                        text.Span("Page ").FontSize(9).FontColor(Colors.Grey.Darken1);
+                        text.CurrentPageNumber().FontSize(9).FontColor(Colors.Grey.Darken1);
+                        text.Span(" of ").FontSize(9).FontColor(Colors.Grey.Darken1);
+                        text.TotalPages().FontSize(9).FontColor(Colors.Grey.Darken1);
+                    });
+                });
+            });
+
+            // Per-district pages
             foreach (var section in sections)
             {
                 container.Page(page =>

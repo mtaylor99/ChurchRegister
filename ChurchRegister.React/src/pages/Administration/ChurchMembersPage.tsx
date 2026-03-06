@@ -53,6 +53,7 @@ export const ChurchMembersPage: React.FC = () => {
   const [envelopeLabelsDialogOpen, setEnvelopeLabelsDialogOpen] = useState(false);
   const [envelopeLabelsExporting, setEnvelopeLabelsExporting] = useState(false);
   const [addressLabelsExporting, setAddressLabelsExporting] = useState(false);
+  const [addressListExporting, setAddressListExporting] = useState(false);
   const [envelopeNumbersDialogOpen, setEnvelopeNumbersDialogOpen] = useState(false);
   const [envelopeNumbersExporting, setEnvelopeNumbersExporting] = useState(false);
   const [statsModalOpen, setStatsModalOpen] = useState(false);
@@ -178,6 +179,19 @@ export const ChurchMembersPage: React.FC = () => {
       console.error('Failed to export address labels:', error);
     } finally {
       setAddressLabelsExporting(false);
+    }
+  };
+
+  const handleExportAddressList = async () => {
+    try {
+      setAddressListExporting(true);
+      setExportAnchorEl(null);
+      await churchMembersApi.exportAddressList();
+      showSuccess('Address list downloaded successfully.');
+    } catch (error) {
+      console.error('Failed to export address list:', error);
+    } finally {
+      setAddressListExporting(false);
     }
   };
 
@@ -325,6 +339,15 @@ export const ChurchMembersPage: React.FC = () => {
                 <ListItemText>Export Envelope Labels</ListItemText>
               </MenuItem>
               <MenuItem
+                onClick={() => { setExportAnchorEl(null); setEnvelopeNumbersDialogOpen(true); }}
+                disabled={envelopeNumbersExporting}
+              >
+                <ListItemIcon>
+                  {envelopeNumbersExporting ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
+                </ListItemIcon>
+                <ListItemText>Export Envelope Numbers</ListItemText>
+              </MenuItem>
+              <MenuItem
                 onClick={() => { setExportAnchorEl(null); handleExportAddressLabels(); }}
                 disabled={addressLabelsExporting}
               >
@@ -334,13 +357,13 @@ export const ChurchMembersPage: React.FC = () => {
                 <ListItemText>Export Address Labels</ListItemText>
               </MenuItem>
               <MenuItem
-                onClick={() => { setExportAnchorEl(null); setEnvelopeNumbersDialogOpen(true); }}
-                disabled={envelopeNumbersExporting}
+                onClick={handleExportAddressList}
+                disabled={addressListExporting}
               >
                 <ListItemIcon>
-                  {envelopeNumbersExporting ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
+                  {addressListExporting ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
                 </ListItemIcon>
-                <ListItemText>Export Envelope Numbers</ListItemText>
+                <ListItemText>Export Address List</ListItemText>
               </MenuItem>
             </Menu>
           </Box>

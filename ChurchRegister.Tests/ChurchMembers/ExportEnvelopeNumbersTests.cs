@@ -82,8 +82,8 @@ public class ExportEnvelopeNumbersTests : IDisposable
         var bytes = await CreateUseCase().ExecuteAsync(2026, CancellationToken.None);
 
         var ws = ReadWorksheet(bytes, "2026");
-        // Row 2 = first data row. Column E = New Number
-        var newNumber = ws.Cells[2, 5].Value;
+        // Row 2 = first data row. Column K = New Number
+        var newNumber = ws.Cells[2, 11].Value;
         newNumber.Should().BeNull();
     }
 
@@ -108,8 +108,8 @@ public class ExportEnvelopeNumbersTests : IDisposable
         var bytes = await CreateUseCase().ExecuteAsync(2026, CancellationToken.None);
 
         var ws = ReadWorksheet(bytes, "2026");
-        ws.Cells[2, 4].Value.Should().Be("42"); // Current Number (D)
-        ws.Cells[2, 5].Value.Should().Be("50"); // New Number (E)
+        ws.Cells[2, 10].Value.Should().Be("42"); // Current Number (J)
+        ws.Cells[2, 11].Value.Should().Be("50"); // New Number (K)
     }
 
     // ─── No Current-Year Number ───────────────────────────────────────────────
@@ -132,8 +132,8 @@ public class ExportEnvelopeNumbersTests : IDisposable
         var bytes = await CreateUseCase().ExecuteAsync(2026, CancellationToken.None);
 
         var ws = ReadWorksheet(bytes, "2026");
-        ws.Cells[2, 4].Value.Should().BeNull(); // Current Number (D) blank
-        ws.Cells[2, 5].Value.Should().Be("7");  // New Number (E) populated
+        ws.Cells[2, 10].Value.Should().BeNull(); // Current Number (J) blank
+        ws.Cells[2, 11].Value.Should().Be("7");  // New Number (K) populated
     }
 
     // ─── Worksheet Tab Name ───────────────────────────────────────────────────

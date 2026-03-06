@@ -292,6 +292,37 @@ export class ChurchMembersApi {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   }
+
+  /**
+   * Export address list as Excel.
+   */
+  async exportAddressList(): Promise<void> {
+    const response = await fetch(
+      `${apiClient.getBaseUrl()}${this.basePath}/export/address-list`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${apiClient.getToken()}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to export address list');
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const today = new Date().toISOString().split('T')[0];
+    link.download = `Address-List-${today}.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
+
   /**
    * Get member statistics: envelope count, residence count, no-address count, district breakdown
    */
