@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.IdentityModel.Tokens.Jwt;
@@ -51,7 +52,9 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
                 options.UseInMemoryDatabase(_databaseName);
                 options.EnableSensitiveDataLogging();
                 options.ConfigureWarnings(warnings =>
-                    warnings.Ignore(new EventId(20800, "Microsoft.EntityFrameworkCore.Database.Transaction.TransactionIgnoredWarning")));
+                {
+                    warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning);
+                });
             });
 
             // Apply custom service configuration if provided
@@ -158,8 +161,10 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
         {
             new Claim(ClaimTypes.NameIdentifier, userId),
             new Claim(ClaimTypes.Email, email),
+            new Claim(ClaimTypes.Name, email),
             new Claim(JwtRegisteredClaimNames.Sub, userId),
-            new Claim(JwtRegisteredClaimNames.Email, email)
+            new Claim(JwtRegisteredClaimNames.Email, email),
+            new Claim(JwtRegisteredClaimNames.Name, email)
         };
 
         foreach (var role in roles)

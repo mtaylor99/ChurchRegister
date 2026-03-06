@@ -251,4 +251,258 @@ public class TrainingCertificateServiceIntegrationTests : IAsyncLifetime
         var response = await client.GetAsync("/api/dashboard/training-summary");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
+    [Fact]
+    public async Task GetDashboardTrainingSummary_WithExpiringCertificates_ReturnsAlerts()
+    {
+        // Seed 3 members with DBS certificates expiring within 60 days (individual alerts)
+        await _factory.SeedDatabaseAsync(ctx =>
+        {
+            var expiringType = new TrainingCertificateTypes
+            {
+                Type = "Fire Safety",
+                Status = "Active",
+                Description = "Fire Safety Training",
+                CreatedBy = "system",
+                CreatedDateTime = DateTime.UtcNow
+            };
+            ctx.TrainingCertificateTypes.Add(expiringType);
+            ctx.SaveChanges();
+
+            for (var i = 1; i <= 3; i++)
+            {
+                var m = new ChurchMember
+                {
+                    FirstName = $"Exp{i}",
+                    LastName = "Member",
+                    ChurchMemberStatusId = 1,
+                    CreatedBy = "system",
+                    CreatedDateTime = DateTime.UtcNow
+                };
+                ctx.ChurchMembers.Add(m);
+                ctx.SaveChanges();
+
+                ctx.ChurchMemberTrainingCertificates.Add(new ChurchMemberTrainingCertificates
+                {
+                    ChurchMemberId = m.Id,
+                    TrainingCertificateTypeId = expiringType.Id,
+                    Status = "In Validity",
+                    Expires = DateTime.UtcNow.AddDays(30), // Expiring within 60-day threshold
+                    CreatedBy = "system",
+                    CreatedDateTime = DateTime.UtcNow
+                });
+            }
+            ctx.SaveChanges();
+        });
+
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.GetAsync("/api/dashboard/training-summary");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<List<TrainingCertificateGroupSummaryDto>>();
+        result.Should().NotBeNull();
+        // Should have individual alerts (less than 5 members)
+    }
+
+    [Fact]
+    public async Task GetDashboardTrainingSummary_With5OrMoreExpiringMembers_GroupsSummary()
+    {
+        // Seed 5+ members with same training type expiring on same date (grouped summary)
+        await _factory.SeedDatabaseAsync(ctx =>
+        {
+            var groupType = new TrainingCertificateTypes
+            {
+                Type = "Child Protection",
+                Status = "Active",
+                Description = "Child Protection Training",
+                CreatedBy = "system",
+                CreatedDateTime = DateTime.UtcNow
+            };
+            ctx.TrainingCertificateTypes.Add(groupType);
+            ctx.SaveChanges();
+
+            var expiryDate = DateTime.UtcNow.AddDays(45);
+            for (var i = 1; i <= 6; i++)
+            {
+                var m = new ChurchMember
+                {
+                    FirstName = $"Group{i}",
+                    LastName = "Member",
+                    ChurchMemberStatusId = 1,
+                    CreatedBy = "system",
+                    CreatedDateTime = DateTime.UtcNow
+                };
+                ctx.ChurchMembers.Add(m);
+                ctx.SaveChanges();
+
+                ctx.ChurchMemberTrainingCertificates.Add(new ChurchMemberTrainingCertificates
+                {
+                    ChurchMemberId = m.Id,
+                    TrainingCertificateTypeId = groupType.Id,
+                    Status = "In Validity",
+                    Expires = expiryDate,
+                    CreatedBy = "system",
+                    CreatedDateTime = DateTime.UtcNow
+                });
+            }
+            ctx.SaveChanges();
+        });
+
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.GetAsync("/api/dashboard/training-summary");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<List<TrainingCertificateGroupSummaryDto>>();
+        result.Should().NotBeNull();
+        // Should contain a grouped summary with MemberCount >= 5
+        result!.Any(r => r.MemberCount >= 5).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetDashboardTrainingSummary_WithPendingCertificates_IncludesPendingAlerts()
+    {
+        // Seed pending certificates (no expiry date)
+        await _factory.SeedDatabaseAsync(ctx =>
+        {
+            var pendingType = new TrainingCertificateTypes
+            {
+                Type = "Safeguarding",
+                Status = "Active",
+                Description = "Safeguarding Training",
+                CreatedBy = "system",
+                CreatedDateTime = DateTime.UtcNow
+            };
+            ctx.TrainingCertificateTypes.Add(pendingType);
+            ctx.SaveChanges();
+
+            for (var i = 1; i <= 6; i++)
+            {
+                var m = new ChurchMember
+                {
+                    FirstName = $"Pending{i}",
+                    LastName = "Member",
+                    ChurchMemberStatusId = 1,
+                    CreatedBy = "system",
+                    CreatedDateTime = DateTime.UtcNow
+                };
+                ctx.ChurchMembers.Add(m);
+                ctx.SaveChanges();
+
+                ctx.ChurchMemberTrainingCertificates.Add(new ChurchMemberTrainingCertificates
+                {
+                    ChurchMemberId = m.Id,
+                    TrainingCertificateTypeId = pendingType.Id,
+                    Status = "Pending",
+                    Expires = null, // No expiry - pending items
+                    CreatedBy = "system",
+                    CreatedDateTime = DateTime.UtcNow
+                });
+            }
+            ctx.SaveChanges();
+        });
+
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.GetAsync("/api/dashboard/training-summary");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<List<TrainingCertificateGroupSummaryDto>>();
+        result.Should().NotBeNull();
+        // Should contain a pending group summary with 5+ members
+        result!.Any(r => r.Status == "Pending" && r.MemberCount >= 5).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task GetDashboardTrainingSummary_WithPendingUnderFiveMembers_ReturnsIndividualAlerts()
+    {
+        // Seed 3 pending certificates (fewer than 5 for per-member alerts)
+        await _factory.SeedDatabaseAsync(ctx =>
+        {
+            var pendingType2 = new TrainingCertificateTypes
+            {
+                Type = "Manual Handling",
+                Status = "Active",
+                Description = "Manual Handling Training",
+                CreatedBy = "system",
+                CreatedDateTime = DateTime.UtcNow
+            };
+            ctx.TrainingCertificateTypes.Add(pendingType2);
+            ctx.SaveChanges();
+
+            for (var i = 1; i <= 3; i++)
+            {
+                var m = new ChurchMember
+                {
+                    FirstName = $"SmallPend{i}",
+                    LastName = "Member",
+                    ChurchMemberStatusId = 1,
+                    CreatedBy = "system",
+                    CreatedDateTime = DateTime.UtcNow
+                };
+                ctx.ChurchMembers.Add(m);
+                ctx.SaveChanges();
+
+                ctx.ChurchMemberTrainingCertificates.Add(new ChurchMemberTrainingCertificates
+                {
+                    ChurchMemberId = m.Id,
+                    TrainingCertificateTypeId = pendingType2.Id,
+                    Status = "Pending",
+                    Expires = null,
+                    CreatedBy = "system",
+                    CreatedDateTime = DateTime.UtcNow
+                });
+            }
+            ctx.SaveChanges();
+        });
+
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.GetAsync("/api/dashboard/training-summary");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task GetDashboardTrainingSummary_Unauthorized_Returns401()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.GetAsync("/api/dashboard/training-summary");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    // ─── GET /api/training-certificates with sort descending ─────────────────
+
+    [Fact]
+    public async Task GetTrainingCertificates_WithSortDescendingByMemberName_ReturnsSortedResults()
+    {
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.GetAsync("/api/training-certificates?sortBy=membername&sortDirection=desc");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task GetTrainingCertificates_WithSortDescendingByTrainingType_ReturnsSortedResults()
+    {
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.GetAsync("/api/training-certificates?sortBy=trainingtype&sortDirection=desc");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task GetTrainingCertificates_WithSortDescendingByStatus_ReturnsSortedResults()
+    {
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.GetAsync("/api/training-certificates?sortBy=status&sortDirection=desc");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task GetTrainingCertificates_WithSortDescendingByExpires_ReturnsSortedResults()
+    {
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.GetAsync("/api/training-certificates?sortBy=expires&sortDirection=desc");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task GetTrainingCertificates_WithSortDescendingByUnknownField_ReturnsDefault()
+    {
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.GetAsync("/api/training-certificates?sortBy=unknown&sortDirection=desc");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
 }

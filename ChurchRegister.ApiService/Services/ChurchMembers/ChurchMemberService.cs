@@ -896,11 +896,11 @@ public class ChurchMemberService : IChurchMemberService
     {
         _logger.LogInformation("Generating pastoral care report data");
 
-        // Query members requiring pastoral care with their district information
+        // Query active members requiring pastoral care with their district information
         var members = await _context.ChurchMembers
             .Include(m => m.District)
                 .ThenInclude(d => d!.Deacon)
-            .Where(m => m.PastoralCareRequired)
+            .Where(m => m.PastoralCareRequired && m.ChurchMemberStatusId == 1)
             .OrderBy(m => m.District!.Name)
                 .ThenBy(m => m.LastName)
                 .ThenBy(m => m.FirstName)

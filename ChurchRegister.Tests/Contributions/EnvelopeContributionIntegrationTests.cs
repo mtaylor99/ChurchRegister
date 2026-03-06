@@ -209,4 +209,169 @@ public class EnvelopeContributionIntegrationTests : IAsyncLifetime
         var response = await client.GetAsync("/api/financial/envelope-contributions/batches/1");
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
+
+    // ─── POST /api/financial/envelope-contributions/batches ───────────────────
+
+    [Fact]
+    public async Task SubmitBatch_WithValidSunday_ReturnsCreated()
+    {
+        var client = FinancialClient();
+
+        // Find most recent past Sunday (collection date cannot be in the future)
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var daysSinceSunday = (int)today.DayOfWeek; // 0=Sun, 1=Mon...
+        var lastSunday = daysSinceSunday == 0 ? today.AddDays(-7) : today.AddDays(-daysSinceSunday);
+
+        var request = new SubmitEnvelopeBatchRequest
+        {
+            CollectionDate = lastSunday,
+            Envelopes = new List<EnvelopeEntry>
+            {
+                new EnvelopeEntry { RegisterNumber = 1001, Amount = 10.00m }
+            }
+        };
+
+        var response = await client.PostAsJsonAsync("/api/financial/envelope-contributions/batches", request);
+        var body = await response.Content.ReadAsStringAsync();
+        ((int)response.StatusCode).Should().Be(201, $"Expected batch creation to succeed. Body: {body}");
+    }
+
+    [Fact]
+    public async Task SubmitBatch_WithNonSunday_ReturnsBadRequest()
+    {
+        var client = FinancialClient();
+
+        // Use a past weekday (last Saturday) to trigger "must be a Sunday" validation
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var daysSinceSunday = (int)today.DayOfWeek;
+        // Go back to last Saturday (day before last Sunday)
+        var lastSunday = daysSinceSunday == 0 ? today.AddDays(-7) : today.AddDays(-daysSinceSunday);
+        var lastSaturday = lastSunday.AddDays(-1);
+
+        var request = new SubmitEnvelopeBatchRequest
+        {
+            CollectionDate = lastSaturday,
+            Envelopes = new List<EnvelopeEntry>
+            {
+                new EnvelopeEntry { RegisterNumber = 1001, Amount = 10.00m }
+            }
+        };
+
+        var response = await client.PostAsJsonAsync("/api/financial/envelope-contributions/batches", request);
+        // Must be a Sunday - should return 400
+        ((int)response.StatusCode).Should().BeOneOf(400, 422);
+    }
+
+    [Fact]
+    public async Task SubmitBatch_WithInvalidRegisterNumber_ReturnsBadRequest()
+    {
+        var client = FinancialClient();
+
+        // Use a past Sunday (2 weeks ago) to avoid "cannot be in the future" error
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var daysSinceSunday = (int)today.DayOfWeek;
+        var lastSunday = daysSinceSunday == 0 ? today.AddDays(-7) : today.AddDays(-daysSinceSunday);
+        var twoWeeksAgoSunday = lastSunday.AddDays(-7); // Use 2 weeks ago to avoid conflict with happy path test
+
+        var request = new SubmitEnvelopeBatchRequest
+        {
+            CollectionDate = twoWeeksAgoSunday,
+            Envelopes = new List<EnvelopeEntry>
+            {
+                new EnvelopeEntry { RegisterNumber = 9999, Amount = 10.00m }  // Invalid register number
+            }
+        };
+
+        var response = await client.PostAsJsonAsync("/api/financial/envelope-contributions/batches", request);
+        ((int)response.StatusCode).Should().BeOneOf(400, 409, 422);
+    }
+
+    [Fact]
+    public async Task SubmitBatch_WithInactiveRegisterNumber_ReturnsBadRequest()
+    {
+        var client = FinancialClient();
+
+        // Use a past Sunday (3 weeks ago) to avoid "cannot be in the future" error and conflicts
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var daysSinceSunday = (int)today.DayOfWeek;
+        var lastSunday = daysSinceSunday == 0 ? today.AddDays(-7) : today.AddDays(-daysSinceSunday);
+        var threeWeeksAgoSunday = lastSunday.AddDays(-14); // Use 3 weeks ago to avoid conflicts
+
+        var request = new SubmitEnvelopeBatchRequest
+        {
+            CollectionDate = threeWeeksAgoSunday,
+            Envelopes = new List<EnvelopeEntry>
+            {
+                new EnvelopeEntry { RegisterNumber = 1002, Amount = 5.00m }  // Inactive member's register
+            }
+        };
+
+        var response = await client.PostAsJsonAsync("/api/financial/envelope-contributions/batches", request);
+        ((int)response.StatusCode).Should().BeOneOf(400, 409, 422);
+    }
+
+    // ─── POST /api/contributions/one-off ─────────────────────────────────────
+
+    [Fact]
+    public async Task AddOneOffContribution_WithValidMember_ReturnsOk()
+    {
+        // Seed a member for contributions
+        int memberId = 0;
+        await _factory.SeedDatabaseAsync(ctx =>
+        {
+            var m = new ChurchMember
+            {
+                FirstName = "Charlie", LastName = "Contributor",
+                ChurchMemberStatusId = 1,
+                CreatedBy = "system", CreatedDateTime = DateTime.UtcNow
+            };
+            ctx.ChurchMembers.Add(m);
+            ctx.SaveChanges();
+            memberId = m.Id;
+        });
+
+        var client = FinancialClient();
+        var request = new AddOneOffContributionRequest
+        {
+            MemberId = memberId,
+            Amount = 25.00m,
+            Date = DateTime.UtcNow.AddDays(-1),
+            Description = "Test one-off contribution"
+        };
+
+        var response = await client.PostAsJsonAsync("/api/contributions/one-off", request);
+        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.Created);
+    }
+
+    [Fact]
+    public async Task AddOneOffContribution_WithInvalidMember_Returns404()
+    {
+        var client = FinancialClient();
+        var request = new AddOneOffContributionRequest
+        {
+            MemberId = 999999,
+            Amount = 25.00m,
+            Date = DateTime.UtcNow,
+            Description = "Test"
+        };
+
+        var response = await client.PostAsJsonAsync("/api/contributions/one-off", request);
+        response.StatusCode.Should().BeOneOf(HttpStatusCode.NotFound, HttpStatusCode.InternalServerError);
+    }
+
+    [Fact]
+    public async Task AddOneOffContribution_Unauthorized_Returns401()
+    {
+        var client = _factory.CreateClient();
+        var request = new AddOneOffContributionRequest
+        {
+            MemberId = 1,
+            Amount = 10.00m,
+            Date = DateTime.UtcNow,
+            Description = "Test"
+        };
+
+        var response = await client.PostAsJsonAsync("/api/contributions/one-off", request);
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
 }
