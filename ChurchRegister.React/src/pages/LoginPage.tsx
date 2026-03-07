@@ -275,6 +275,7 @@ export const LoginPage: React.FC = () => {
                         onClick={handleTogglePasswordVisibility}
                         edge="end"
                         size="small"
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>

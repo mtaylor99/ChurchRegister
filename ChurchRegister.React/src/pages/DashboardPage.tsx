@@ -286,6 +286,7 @@ export const DashboardPage: React.FC = () => {
             onClick={handleRefresh}
             disabled={isLoading}
             color="primary"
+            aria-label="Refresh dashboard"
           >
             {isLoading ? <CircularProgress size={24} /> : <RefreshIcon />}
           </IconButton>

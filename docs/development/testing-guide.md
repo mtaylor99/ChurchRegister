@@ -143,3 +143,122 @@ dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity detaile
 - Each test is fully independent — no shared mutable state between tests
 - Always assert the HTTP status code first, then the response body
 - Prefer `Assert.Equal` over `Assert.True` for clearer failure messages
+
+---
+
+## End-to-End (E2E) Tests — Playwright
+
+E2E tests run against the full live stack: a real browser, the React frontend, and the .NET API. They live in `ChurchRegister.React/e2e/` and are powered by [Playwright](https://playwright.dev).
+
+### Technology stack
+
+| Tool | Role |
+|------|------|
+| `@playwright/test` | Test runner, browser automation |
+| `axe-playwright` | WCAG 2.1 AA accessibility checks |
+| `storageState` | Persist login session across all tests |
+| Page Object Model | `e2e/pages/` — encapsulates locators per page |
+
+### Prerequisites
+
+Before running E2E tests you need two services running:
+
+| Service | URL | How to start |
+|---------|-----|--------------|
+| .NET API | `http://localhost:5502` | `dotnet run --project ChurchRegister.ApiService/ChurchRegister.ApiService.csproj` |
+| React dev server | `http://localhost:3000` | Started **automatically** by Playwright via `webServer` config |
+
+> The API must be running before you execute any Playwright command. The React dev server is handled for you.
+
+### Running tests
+
+All commands run from `ChurchRegister.React/`:
+
+```powershell
+cd ChurchRegister.React
+
+# Run all tests headless (terminal output + HTML report)
+npm run test:e2e
+
+# Interactive Playwright UI — pick tests, watch a built-in browser panel
+npm run test:e2e:ui
+
+# Headed mode — opens a real Chrome window, watch every click live
+npx playwright test --headed
+
+# Run a single spec file
+npx playwright test e2e/auth/login.spec.ts
+
+# Run only Chromium (faster)
+npx playwright test --project=chromium
+
+# Debug a specific test step-by-step
+npm run test:e2e:debug
+```
+
+### Viewing results
+
+After a headless run, open the HTML report:
+
+```powershell
+npx playwright show-report
+```
+
+This opens a browser with a full breakdown of every test, including screenshots and traces for failures.
+
+### Directory structure
+
+```
+ChurchRegister.React/e2e/
+├── .auth/                        # Saved admin session (git-ignored, created at runtime)
+├── global-setup.ts               # Runs once — logs in and saves storageState
+├── fixtures.ts                   # Shared test users and custom fixtures
+├── helpers/
+│   └── api-seed.ts               # API helpers for seeding/deleting test data
+├── pages/                        # Page Object Models (POM)
+│   ├── LoginPage.ts
+│   ├── DashboardPage.ts
+│   └── ChurchMembersPage.ts
+├── auth/                         # Authentication tests (login, logout, change password)
+├── dashboard/                    # Dashboard tests
+├── navigation/                   # Sidebar navigation tests
+├── church-members/               # Members CRUD, data protection, RBAC
+├── attendance/                   # Attendance records and analytics
+├── training/                     # Training certificates
+├── reminders/                    # Reminders and categories
+├── risk-assessments/             # Risk assessments and categories
+├── contributions/                # Contributions, HSBC, envelope batch
+├── administration/               # Users, districts, register numbers
+├── errors/                       # Error pages (404, 500, unauthorized)
+└── accessibility/                # axe WCAG 2.1 AA checks for all routes
+```
+
+### Authentication strategy
+
+`global-setup.ts` runs once before all suites. It logs in as the admin user and saves the full browser session to `e2e/.auth/admin.json`. All tests reuse that session automatically — they start already logged in.
+
+Tests that need to test the unauthenticated state (e.g. `login.spec.ts`) clear it explicitly:
+
+```typescript
+test.use({ storageState: { cookies: [], origins: [] } });
+```
+
+### Environment variables
+
+Defaults are hardcoded in `global-setup.ts` and `api-seed.ts` so no configuration is needed for local development with standard settings. To override, copy `.env.test.example` to `.env.test` and set your values — the file is gitignored:
+
+```env
+PLAYWRIGHT_BASE_URL=http://localhost:3000
+PLAYWRIGHT_API_URL=http://localhost:5502
+TEST_ADMIN_EMAIL=admin@churchregister.com
+TEST_ADMIN_PASSWORD=AdminPassword123!
+```
+
+### CI
+
+E2E tests run automatically on pull requests to `main` via `.github/workflows/e2e.yml`. The workflow:
+1. Starts the .NET API with `dotnet run`
+2. Runs Playwright (which auto-starts the React dev server)
+3. Uploads the HTML report as a GitHub Actions artifact on failure (retained 14 days)
+
+Required repository secrets: `E2E_ADMIN_EMAIL`, `E2E_ADMIN_PASSWORD`.

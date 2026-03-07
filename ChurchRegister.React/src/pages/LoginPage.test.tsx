@@ -53,7 +53,9 @@ describe('LoginPage', () => {
     render(<LoginPage />, { withRouter: false });
 
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    // Use getAllByLabelText to avoid strict-mode clash with the 'Show password' toggle button
+    const passwordElements = screen.getAllByLabelText(/password/i);
+    expect(passwordElements.some((el) => el.tagName === 'INPUT')).toBe(true);
     expect(
       screen.getByRole('button', { name: /sign in/i })
     ).toBeInTheDocument();
@@ -107,7 +109,10 @@ describe('LoginPage', () => {
   test('toggles password visibility on icon click', async () => {
     render(<LoginPage />, { withRouter: false });
 
-    const passwordInput = screen.getByLabelText(/password/i);
+    // Use getAllByLabelText to avoid strict-mode clash with the 'Show password' toggle button
+    const passwordInput = screen.getAllByLabelText(/password/i).find(
+      (el) => el.tagName === 'INPUT'
+    ) as HTMLElement;
     expect(passwordInput).toHaveAttribute('type', 'password');
 
     // The toggle IconButton is the second button in the form (after Sign In)

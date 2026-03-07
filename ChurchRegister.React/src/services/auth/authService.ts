@@ -286,18 +286,18 @@ class AuthService {
 
       const refreshToken = tokenService.getRefreshToken();
 
-      if (refreshToken) {
-        // Notify server about logout with reason
-        await this.apiCall('/api/auth/logout', {
-          method: 'POST',
-          body: JSON.stringify({
-            refreshToken,
-            reason,
-            timestamp: new Date().toISOString(),
-          }),
-        });
-        this.log('Server logout notification sent');
-      }
+      // Always call the server logout endpoint so it can clear the httpOnly
+      // access_token and refresh_token cookies regardless of whether the
+      // in-memory refresh token is available (it is not after a page reload).
+      await this.apiCall('/api/auth/logout', {
+        method: 'POST',
+        body: JSON.stringify({
+          refreshToken: refreshToken ?? undefined,
+          reason,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+      this.log('Server logout notification sent');
 
       authLogger.logLogout(userId || 'unknown', reason);
     } catch (error) {
@@ -692,6 +692,8 @@ class AuthService {
     isAuthenticated: boolean;
   }> {
     try {
+      this.ensureInitialized();
+
       // If we have valid in-memory tokens, use them
       if (this.isAuthenticated()) {
         const user = await this.getCurrentUser();
