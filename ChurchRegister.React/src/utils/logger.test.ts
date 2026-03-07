@@ -64,5 +64,64 @@ describe('logger', () => {
       logger.log('error', 'delegated error');
       expect(spy).toHaveBeenCalledWith('[ERROR] delegated error');
     });
+
+    test('delegates to debug for debug level', () => {
+      const spy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = true;
+      logger.log('debug', 'delegated debug');
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = false;
+      expect(spy).toHaveBeenCalledWith('[DEBUG] delegated debug');
+    });
+
+    test('delegates to info for info level', () => {
+      const spy = vi.spyOn(console, 'info').mockImplementation(() => {});
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = true;
+      logger.log('info', 'delegated info');
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = false;
+      expect(spy).toHaveBeenCalledWith('[INFO] delegated info');
+    });
+  });
+
+  describe('debug', () => {
+    test('logs debug message in development mode', () => {
+      const spy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = true;
+      logger.debug('debug message');
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = false;
+      expect(spy).toHaveBeenCalledWith('[DEBUG] debug message');
+    });
+
+    test('logs debug message with metadata in development mode', () => {
+      const spy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = true;
+      logger.debug('debug message', { key: 'value' });
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = false;
+      expect(spy).toHaveBeenCalledWith('[DEBUG] debug message', { key: 'value' });
+    });
+
+    test('does not log in non-development mode', () => {
+      const spy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = false;
+      logger.debug('should not log');
+      expect(spy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('info', () => {
+    test('logs info message in development mode', () => {
+      const spy = vi.spyOn(console, 'info').mockImplementation(() => {});
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = true;
+      logger.info('info message');
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = false;
+      expect(spy).toHaveBeenCalledWith('[INFO] info message');
+    });
+
+    test('logs info message with metadata in development mode', () => {
+      const spy = vi.spyOn(console, 'info').mockImplementation(() => {});
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = true;
+      logger.info('info message', { context: 'test' });
+      (logger as unknown as { isDevelopment: boolean }).isDevelopment = false;
+      expect(spy).toHaveBeenCalledWith('[INFO] info message', { context: 'test' });
+    });
   });
 });

@@ -1,6 +1,7 @@
 using ChurchRegister.ApiService.Models.Security;
 using ChurchRegister.ApiService.UseCase.Authentication.RefreshToken;
 using ChurchRegister.Database.Data;
+using ChurchRegister.Database.Entities;
 using ChurchRegister.Database.Interfaces;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
@@ -56,7 +57,7 @@ public class RefreshTokenUseCaseTests
             EmailConfirmed = true
         };
 
-        var refreshTokenEntity = new Database.Entities.RefreshToken
+        var refreshTokenEntity = new RefreshToken
         {
             Token = oldRefreshToken,
             UserId = userId,
@@ -76,8 +77,8 @@ public class RefreshTokenUseCaseTests
             .ReturnsAsync(testUser);
         _mockUserManager.Setup(um => um.GetRolesAsync(testUser))
             .ReturnsAsync(new List<string> { "User" });
-        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<Database.Entities.RefreshToken>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Database.Entities.RefreshToken());
+        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new RefreshToken());
         _mockRefreshTokenRepository.Setup(r => r.RevokeAsync(oldRefreshToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
@@ -102,7 +103,7 @@ public class RefreshTokenUseCaseTests
         var userId = Guid.NewGuid().ToString();
         var expiredRefreshToken = "expired-refresh-token";
 
-        var refreshTokenEntity = new Database.Entities.RefreshToken
+        var refreshTokenEntity = new RefreshToken
         {
             Token = expiredRefreshToken,
             UserId = userId,
@@ -138,7 +139,7 @@ public class RefreshTokenUseCaseTests
         };
 
         _mockRefreshTokenRepository.Setup(r => r.GetByTokenAsync(invalidRefreshToken, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Database.Entities.RefreshToken?)null);
+            .ReturnsAsync((RefreshToken?)null);
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(
@@ -154,7 +155,7 @@ public class RefreshTokenUseCaseTests
         var userId = Guid.NewGuid().ToString();
         var revokedRefreshToken = "revoked-refresh-token";
 
-        var refreshTokenEntity = new Database.Entities.RefreshToken
+        var refreshTokenEntity = new RefreshToken
         {
             Token = revokedRefreshToken,
             UserId = userId,
@@ -187,7 +188,7 @@ public class RefreshTokenUseCaseTests
         var userId = Guid.NewGuid().ToString();
         var refreshToken = "valid-refresh-token";
 
-        var refreshTokenEntity = new Database.Entities.RefreshToken
+        var refreshTokenEntity = new RefreshToken
         {
             Token = refreshToken,
             UserId = userId,
@@ -228,7 +229,7 @@ public class RefreshTokenUseCaseTests
             UserName = "testuser@test.com"
         };
 
-        var refreshTokenEntity = new Database.Entities.RefreshToken
+        var refreshTokenEntity = new RefreshToken
         {
             Token = oldRefreshToken,
             UserId = userId,
@@ -248,8 +249,8 @@ public class RefreshTokenUseCaseTests
             .ReturnsAsync(testUser);
         _mockUserManager.Setup(um => um.GetRolesAsync(testUser))
             .ReturnsAsync(new List<string> { "User" });
-        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<Database.Entities.RefreshToken>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Database.Entities.RefreshToken());
+        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new RefreshToken());
         _mockRefreshTokenRepository.Setup(r => r.RevokeAsync(oldRefreshToken, ipAddress, It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
@@ -277,7 +278,7 @@ public class RefreshTokenUseCaseTests
             UserName = "testuser@test.com"
         };
 
-        var refreshTokenEntity = new Database.Entities.RefreshToken
+        var refreshTokenEntity = new RefreshToken
         {
             Token = oldRefreshToken,
             UserId = userId,
@@ -297,8 +298,8 @@ public class RefreshTokenUseCaseTests
             .ReturnsAsync(testUser);
         _mockUserManager.Setup(um => um.GetRolesAsync(testUser))
             .ReturnsAsync(new List<string> { "User" });
-        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<Database.Entities.RefreshToken>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Database.Entities.RefreshToken());
+        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new RefreshToken());
         _mockRefreshTokenRepository.Setup(r => r.RevokeAsync(oldRefreshToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
@@ -307,7 +308,7 @@ public class RefreshTokenUseCaseTests
 
         // Assert
         _mockRefreshTokenRepository.Verify(
-            r => r.CreateAsync(It.Is<Database.Entities.RefreshToken>(rt =>
+            r => r.CreateAsync(It.Is<RefreshToken>(rt =>
                 rt.UserId == userId &&
                 rt.Token != oldRefreshToken &&
                 rt.ExpiryDate > DateTime.UtcNow
@@ -331,7 +332,7 @@ public class RefreshTokenUseCaseTests
             UserName = "testuser@test.com"
         };
 
-        var refreshTokenEntity = new Database.Entities.RefreshToken
+        var refreshTokenEntity = new RefreshToken
         {
             Token = oldRefreshToken,
             UserId = userId,
@@ -351,8 +352,8 @@ public class RefreshTokenUseCaseTests
             .ReturnsAsync(testUser);
         _mockUserManager.Setup(um => um.GetRolesAsync(testUser))
             .ReturnsAsync(new List<string> { "User" });
-        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<Database.Entities.RefreshToken>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Database.Entities.RefreshToken());
+        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new RefreshToken());
         _mockRefreshTokenRepository.Setup(r => r.RevokeAsync(oldRefreshToken, ipAddress, It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
@@ -361,7 +362,7 @@ public class RefreshTokenUseCaseTests
 
         // Assert
         _mockRefreshTokenRepository.Verify(
-            r => r.CreateAsync(It.Is<Database.Entities.RefreshToken>(rt =>
+            r => r.CreateAsync(It.Is<RefreshToken>(rt =>
                 rt.CreatedByIp == ipAddress
             ), It.IsAny<CancellationToken>()),
             Times.Once);
@@ -381,7 +382,7 @@ public class RefreshTokenUseCaseTests
             UserName = "admin@test.com"
         };
 
-        var refreshTokenEntity = new Database.Entities.RefreshToken
+        var refreshTokenEntity = new RefreshToken
         {
             Token = refreshToken,
             UserId = userId,
@@ -403,8 +404,8 @@ public class RefreshTokenUseCaseTests
             .ReturnsAsync(testUser);
         _mockUserManager.Setup(um => um.GetRolesAsync(testUser))
             .ReturnsAsync(roles);
-        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<Database.Entities.RefreshToken>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Database.Entities.RefreshToken());
+        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new RefreshToken());
         _mockRefreshTokenRepository.Setup(r => r.RevokeAsync(refreshToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
@@ -431,7 +432,7 @@ public class RefreshTokenUseCaseTests
             UserName = "testuser@test.com"
         };
 
-        var refreshTokenEntity = new Database.Entities.RefreshToken
+        var refreshTokenEntity = new RefreshToken
         {
             Token = oldRefreshToken,
             UserId = userId,
@@ -451,8 +452,8 @@ public class RefreshTokenUseCaseTests
             .ReturnsAsync(testUser);
         _mockUserManager.Setup(um => um.GetRolesAsync(testUser))
             .ReturnsAsync(new List<string> { "User" });
-        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<Database.Entities.RefreshToken>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Database.Entities.RefreshToken());
+        _mockRefreshTokenRepository.Setup(r => r.CreateAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new RefreshToken());
         _mockRefreshTokenRepository.Setup(r => r.RevokeAsync(oldRefreshToken, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 

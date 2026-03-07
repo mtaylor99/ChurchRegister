@@ -4,7 +4,7 @@
 
 import { describe, test, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useRBAC } from './useRBAC';
+import { useRBAC, useAllRoles, useResourceAccess } from './useRBAC';
 import { AuthStateContext } from '../contexts/AuthContext';
 import { PERMISSIONS } from '../utils/rbac';
 import type { ReactNode } from 'react';
@@ -348,5 +348,44 @@ describe('useRBAC', () => {
       expect(firstIsAdmin).toBe(secondIsAdmin);
       expect(firstIsAdmin).toBe(true);
     });
+  });
+});
+
+describe('useAllRoles', () => {
+  test('returns true when user has all specified roles', () => {
+    const user = createMockUser(['Officer', 'Member']);
+    const { result } = renderHook(() => useAllRoles(['Officer', 'Member']), {
+      wrapper: createWrapper(user),
+    });
+    expect(result.current).toBe(true);
+  });
+
+  test('returns false when user is missing a role', () => {
+    const user = createMockUser(['Member']);
+    const { result } = renderHook(() => useAllRoles(['Officer', 'Member']), {
+      wrapper: createWrapper(user),
+    });
+    expect(result.current).toBe(false);
+  });
+});
+
+describe('useResourceAccess', () => {
+  test('returns canAccess and allowedActions for a null resource', () => {
+    const user = createMockUser(['Administrator']);
+    const { result } = renderHook(
+      () => useResourceAccess(undefined, [PERMISSIONS.ATTENDANCE_VIEW]),
+      { wrapper: createWrapper(user) }
+    );
+    expect(typeof result.current.canAccess).toBe('boolean');
+    expect(Array.isArray(result.current.allowedActions)).toBe(true);
+  });
+
+  test('returns false canAccess for unauthenticated user', () => {
+    const { result } = renderHook(
+      () => useResourceAccess(undefined, [PERMISSIONS.ATTENDANCE_VIEW]),
+      { wrapper: createWrapper(null) }
+    );
+    expect(result.current.canAccess).toBe(false);
+    expect(result.current.allowedActions).toEqual([]);
   });
 });

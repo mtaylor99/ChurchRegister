@@ -1,0 +1,624 @@
+﻿
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mC:/GitHub/ChurchRegister/ChurchRegister.React[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/excelExport.test.ts [2m([22m[2m47 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+node.exe : [90mstderr[2m | src/utils/exportRiskAssessmentsPdf.test.ts[2m > 
+[22m[2mexportRiskAssessmentsPdf[2m > [22m[2mthrows error with meaningful 
+message on jsPDF failure
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90mstderr[2m...n jsPDF failure 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[22m[39mError generating PDF: Error: PDF library error
+    at new <anonymous> (C:/GitHub/ChurchRegister/ChurchRegister.React/src/utils
+/exportRiskAssessmentsPdf.test.ts:243:13)
+    at new Mock [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[3
+9mnode_modules/[4m@vitest/spy[24m/dist/index.js:262:27[90m)[39m
+    at Module.exportRiskAssessmentsPdf (C:/GitHub/ChurchRegister/ChurchRegister
+.React/src/utils/exportRiskAssessmentsPdf.ts:12:17)
+    at C:/GitHub/ChurchRegister/ChurchRegister.React/src/utils/exportRiskAssess
+mentsPdf.test.ts:245:18
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:145:11
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:915:26
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.Rea
+ct/[39mnode_modules/[4m@vitest/runner[24m/dist/index.js:1209:10[90m)[39m
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1653:37
+
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/exportRiskAssessmentsPdf.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 173[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useOptimisticList.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 145[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/envelopeTemplateParser.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 313[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useRBAC.test.tsx [2m([22m[2m26 tests[22m[2m)[22m[32m 180[2mms[22m[39m
+[90mstdout[2m | src/hooks/useReminders.test.tsx[2m > [22m[2museReminders[2m > [22m[2mfetches reminders with params
+[22m[39museReminders - Fetching with params: { status: [32m'Pending'[39m }
+
+[90mstdout[2m | src/hooks/useReminders.test.tsx[2m > [22m[2museReminders[2m > [22m[2mfetches reminders with params
+[22m[39museReminders - API returned: [
+  {
+    id: [33m1[39m,
+    description: [32m'Test reminder'[39m,
+    dueDate: [32m'2024-12-31'[39m,
+    assignedToUserId: [32m'user-1'[39m,
+    assignedToUserName: [32m'Alice'[39m,
+    categoryId: [33m1[39m,
+    categoryName: [32m'Admin'[39m,
+    categoryColorHex: [32m'#000000'[39m,
+    priority: [33mfalse[39m,
+    status: [32m'Pending'[39m,
+    completionNotes: [1mnull[22m,
+    completedBy: [1mnull[22m,
+    completedDateTime: [1mnull[22m,
+    createdBy: [32m'admin'[39m,
+    createdDateTime: [32m'2024-01-01T00:00:00'[39m,
+    alertStatus: [32m'none'[39m,
+    daysUntilDue: [33m30[39m
+  }
+]
+useReminders - Result type: object Is array: [33mtrue[39m
+
+[90mstdout[2m | src/hooks/useReminders.test.tsx[2m > [22m[2museReminders[2m > [22m[2mreturns empty array when no reminders found
+[22m[39museReminders - Fetching with params: {}
+
+[90mstdout[2m | src/hooks/useReminders.test.tsx[2m > [22m[2museReminders[2m > [22m[2mreturns empty array when no reminders found
+[22m[39museReminders - API returned: []
+useReminders - Result type: object Is array: [33mtrue[39m
+
+[90mstdout[2m | src/hooks/useReminders.test.tsx[2m > [22m[2museReminders[2m > [22m[2mreturns error when fetch fails
+[22m[39museReminders - Fetching with params: {}
+
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useFormFocus.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 80[2mms[22m[39m
+[90mstdout[2m | src/hooks/useReminders.test.tsx[2m > [22m[2museCreateReminder[2m > [22m[2mcreates reminder and shows success notification
+[22m[39mCreating reminder with request: {
+  description: [32m'New reminder'[39m,
+  dueDate: [32m'2024-12-31'[39m,
+  assignedToUserId: [32m'user-1'[39m,
+  categoryId: [33m1[39m,
+  priority: [33mfalse[39m
+}
+
+[90mstdout[2m | src/hooks/useReminders.test.tsx[2m > [22m[2museCreateReminder[2m > [22m[2mcreates reminder and shows success notification
+[22m[39mReminder created successfully: {
+  id: [33m1[39m,
+  description: [32m'Test reminder'[39m,
+  dueDate: [32m'2024-12-31'[39m,
+  assignedToUserId: [32m'user-1'[39m,
+  assignedToUserName: [32m'Alice'[39m,
+  categoryId: [33m1[39m,
+  categoryName: [32m'Admin'[39m,
+  categoryColorHex: [32m'#000000'[39m,
+  priority: [33mfalse[39m,
+  status: [32m'Pending'[39m,
+  completionNotes: [1mnull[22m,
+  completedBy: [1mnull[22m,
+  completedDateTime: [1mnull[22m,
+  createdBy: [32m'admin'[39m,
+  createdDateTime: [32m'2024-01-01T00:00:00'[39m,
+  alertStatus: [32m'none'[39m,
+  daysUntilDue: [33m30[39m
+}
+
+[90mstdout[2m | src/hooks/useReminders.test.tsx[2m > [22m[2museCreateReminder[2m > [22m[2mcreates reminder and shows success notification
+[22m[39monSuccess called, invalidating queries
+
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useToast.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 151[2mms[22m[39m
+[90mstdout[2m | src/hooks/useReminders.test.tsx[2m > [22m[2museCreateReminder[2m > [22m[2mshows error when create fails
+[22m[39mCreating reminder with request: {
+  description: [32m'New reminder'[39m,
+  dueDate: [32m'2024-12-31'[39m,
+  assignedToUserId: [32m'user-1'[39m,
+  categoryId: [1mnull[22m,
+  priority: [1mnull[22m
+}
+
+[90mstderr[2m | src/hooks/useReminders.test.tsx[2m > 
+[22m[2museCreateReminder[2m > [22m[2mshows error when create fails
+[22m[39mFailed to create reminder: Error: Server error
+    at C:/GitHub/ChurchRegister/ChurchRegister.React/src/hooks/useReminders.tes
+t.tsx:171:42
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:145:11
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:915:26
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.Rea
+ct/[39mnode_modules/[4m@vitest/runner[24m/dist/index.js:1209:10[90m)[39m
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1653:37
+    at Traces.$ [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[3
+9mnode_modules/[4mvitest[24m/dist/chunks/traces.CCmnQaNT.js:142:27[90m)[39m
+    at trace [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mn
+ode_modules/[4mvitest[24m/dist/chunks/test.B8ej_ZHS.js:239:21[90m)[39m
+    at runTest [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39
+mnode_modules/[4m@vitest/runner[24m/dist/index.js:1653:12[90m)[39m
+
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useDataProtection.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 363[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useApiMutation.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 416[2mms[22m[39m
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (C:\GitHub\ChurchRegister\ChurchRegister.React\node_modul
+es\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at navigateFetch (C:\GitHub\ChurchRegister\ChurchRegister.React\node_module
+s\jsdom\lib\jsdom\living\window\navigation.js:77:3)
+    at exports.navigate (C:\GitHub\ChurchRegister\ChurchRegister.React\node_mod
+ules\jsdom\lib\jsdom\living\window\navigation.js:55:3)
+    at Timeout._onTimeout (C:\GitHub\ChurchRegister\ChurchRegister.React\node_m
+odules\jsdom\lib\jsdom\living\nodes\HTMLHyperlinkElementUtils-impl.js:80:7)
+    at listOnTimeout (node:internal/timers:608:17)
+    at processTimers (node:internal/timers:543:7) undefined
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useDistricts.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 554[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useRegisterNumbers.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 544[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/exportUtils.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/exportAttendanceAnalyticsPdf.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 4148[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m calls html2canvas for each chart element [33m 497[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m calls addImage for each chart canvas [33m 327[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m adds new page every 6 charts (chartsPerPage) [33m 1144[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m does not add pages for 6 or fewer charts [33m 1077[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useThemeAndNavigation.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 78[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useReminderCategories.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 779[2mms[22m[39m
+[90mstderr[2m | src/__tests__/auth/authService.test.ts[2m > 
+[22m[2mAuthService[2m > [22m[2mlogin[2m > [22m[2mshould throw error 
+for invalid credentials
+[22m[39mLogin error: { message: [32m'Invalid credentials'[39m, errors: [], 
+code: [32m'HTTP_401'[39m }
+
+[90mstderr[2m | src/__tests__/auth/authService.test.ts[2m > 
+[22m[2mAuthService[2m > [22m[2minitializeAuth[2m > [22m[2mshould 
+initialize as unauthenticated when no token
+[22m[39m[MSW] Warning: intercepted a request without a matching request 
+handler:
+
+  ÔÇó GET /null/api/auth/user
+
+If you still wish to intercept this unhandled request, please create a request 
+handler for it.
+Read more: https://mswjs.io/docs/http/intercepting-requests
+
+[90mstderr[2m | src/__tests__/auth/authService.test.ts[2m > 
+[22m[2mAuthService[2m > [22m[2mSecurity Tests[2m > [22m[2mshould not 
+expose sensitive data in error messages
+[22m[39mLogin error: { message: [32m'Invalid credentials'[39m, errors: [], 
+code: [32m'HTTP_401'[39m }
+
+[90mstderr[2m | src/__tests__/auth/authService.test.ts[2m > 
+[22m[2mAuthService[2m > [22m[2mSecurity Tests[2m > [22m[2mshould 
+handle malformed API responses safely
+[22m[39mLogin error: { message: [32m'Invalid credentials'[39m, errors: [], 
+code: [32m'HTTP_401'[39m }
+
+[90mstderr[2m | src/__tests__/auth/authService.test.ts[2m > 
+[22m[2mAuthService[2m > [22m[2mSecurity Tests[2m > [22m[2mshould 
+validate API response structure
+[22m[39mLogin error: { message: [32m'Invalid credentials'[39m, errors: [], 
+code: [32m'HTTP_401'[39m }
+
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/__tests__/auth/authService.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/components/Form/TextInput.test.tsx [2m([22m[2m32 tests[22m[2m)[22m[33m 1477[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useReminders.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 1208[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useAttendance.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 1423[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useRiskAssessments.test.tsx [2m([22m[2m25 tests[22m[2m)[22m[33m 1754[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/hooks/useEscapeKey.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+[90mstderr[2m | src/services/eventService.test.ts[2m > 
+[22m[2mEventService[2m > [22m[2mgetEvent[2m > [22m[2mreturns null and 
+does not throw when apiClient throws
+[22m[39mError fetching event: Error: Network error
+    at C:/GitHub/ChurchRegister/ChurchRegister.React/src/services/eventService.
+test.ts:115:50
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:145:11
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:915:26
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.Rea
+ct/[39mnode_modules/[4m@vitest/runner[24m/dist/index.js:1209:10[90m)[39m
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1653:37
+    at Traces.$ [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[3
+9mnode_modules/[4mvitest[24m/dist/chunks/traces.CCmnQaNT.js:142:27[90m)[39m
+    at trace [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mn
+ode_modules/[4mvitest[24m/dist/chunks/test.B8ej_ZHS.js:239:21[90m)[39m
+    at runTest [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39
+mnode_modules/[4m@vitest/runner[24m/dist/index.js:1653:12[90m)[39m
+
+[90mstderr[2m | src/services/eventService.test.ts[2m > 
+[22m[2mEventService[2m > [22m[2mtoggleEventStatus[2m > [22m[2mthrows 
+when event not found
+[22m[39mError fetching event: Error: Network error
+    at C:/GitHub/ChurchRegister/ChurchRegister.React/src/services/eventService.
+test.ts:182:50
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:145:11
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:915:26
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.Rea
+ct/[39mnode_modules/[4m@vitest/runner[24m/dist/index.js:1209:10[90m)[39m
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1653:37
+    at Traces.$ [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[3
+9mnode_modules/[4mvitest[24m/dist/chunks/traces.CCmnQaNT.js:142:27[90m)[39m
+    at trace [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mn
+ode_modules/[4mvitest[24m/dist/chunks/test.B8ej_ZHS.js:239:21[90m)[39m
+    at runTest [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39
+mnode_modules/[4m@vitest/runner[24m/dist/index.js:1653:12[90m)[39m
+
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/attendanceService.test.ts [2m([22m[2m44 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/churchMembersApi.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/typeGuards.test.ts [2m([22m[2m45 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/eventService.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+[90mstderr[2m | src/services/api/contributionsApi.test.ts[2m > 
+[22m[2mContributionsApi[2m > [22m[2mgetContributionMembers[2m > 
+[22m[2mre-throws errors
+[22m[39mError fetching contribution members: Error: Network error
+    at C:/GitHub/ChurchRegister/ChurchRegister.React/src/services/api/contribut
+ionsApi.test.ts:107:50
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:145:11
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:915:26
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.Rea
+ct/[39mnode_modules/[4m@vitest/runner[24m/dist/index.js:1209:10[90m)[39m
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1653:37
+    at Traces.$ [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[3
+9mnode_modules/[4mvitest[24m/dist/chunks/traces.CCmnQaNT.js:142:27[90m)[39m
+    at trace [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mn
+ode_modules/[4mvitest[24m/dist/chunks/test.B8ej_ZHS.js:239:21[90m)[39m
+    at runTest [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39
+mnode_modules/[4m@vitest/runner[24m/dist/index.js:1653:12[90m)[39m
+
+[90mstderr[2m | src/services/api/contributionsApi.test.ts[2m > 
+[22m[2mContributionsApi[2m > [22m[2maddOneOffContribution[2m > 
+[22m[2mre-throws errors from the API
+[22m[39mError adding one-off contribution: Error: Server error
+    at C:/GitHub/ChurchRegister/ChurchRegister.React/src/services/api/contribut
+ionsApi.test.ts:146:51
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:145:11
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:915:26
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.Rea
+ct/[39mnode_modules/[4m@vitest/runner[24m/dist/index.js:1209:10[90m)[39m
+    at [90mfile:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mnode_mod
+ules/[4m@vitest/runner[24m/dist/index.js:1653:37
+    at Traces.$ [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[3
+9mnode_modules/[4mvitest[24m/dist/chunks/traces.CCmnQaNT.js:142:27[90m)[39m
+    at trace [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39mn
+ode_modules/[4mvitest[24m/dist/chunks/test.B8ej_ZHS.js:239:21[90m)[39m
+    at runTest [90m(file:///C:/GitHub/ChurchRegister/ChurchRegister.React/[39
+mnode_modules/[4m@vitest/runner[24m/dist/index.js:1653:12[90m)[39m
+
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/passwordSecurity.test.ts [2m([22m[2m45 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/emailService.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/auth/tokenService.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/authErrors.test.ts [2m([22m[2m45 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/contributionsApi.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/auth/authLogger.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/districtsApi.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/riskAssessmentsApi.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/queryKeys.test.ts [2m([22m[2m59 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/trainingCertificatesApi.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/administrationApi.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/hsbcTransactionsApi.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/validation.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/logger.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/remindersApi.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/utils/errorUtils.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/reminderCategoriesApi.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/dashboardApi.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/dataProtectionApi.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/api/contributionHistoryApi.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/components/auth/ProtectedRoute.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 321[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/pages/LoginPage.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 786[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders the login form [33m 319[2mms[22m[39m
+ [32mÔ£ô[39m [30m[42m unit [49m[39m src/services/attendanceAnalyticsService.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+Failed to parse 
+file:///C:/GitHub/ChurchRegister/ChurchRegister.React/src/hooks/README.md. 
+Excluding it from coverage.
+ Error [RollupError]: Expected ';', '}' or <eof>
+    at getRollupError (file:///C:/GitHub/ChurchRegister/ChurchRegister.React/no
+de_modules/rollup/dist/es/shared/parseAst.js:402:41)
+    at convertProgram (file:///C:/GitHub/ChurchRegister/ChurchRegister.React/no
+de_modules/rollup/dist/es/shared/parseAst.js:1114:26)
+    at parseAstAsync (file:///C:/GitHub/ChurchRegister/ChurchRegister.React/nod
+e_modules/rollup/dist/es/shared/parseAst.js:2100:106)
+    at V8CoverageProvider.remapCoverage (file:///C:/GitHub/ChurchRegister/Churc
+hRegister.React/node_modules/@vitest/coverage-v8/dist/provider.js:133:10)
+    at file:///C:/GitHub/ChurchRegister/ChurchRegister.React/node_modules/@vite
+st/coverage-v8/dist/provider.js:119:23
+    at async Promise.all (index 1)
+    at V8CoverageProvider.getCoverageMapForUncoveredFiles (file:///C:/GitHub/Ch
+urchRegister/ChurchRegister.React/node_modules/@vitest/coverage-v8/dist/provide
+r.js:109:4)
+    at V8CoverageProvider.generateCoverage (file:///C:/GitHub/ChurchRegister/Ch
+urchRegister.React/node_modules/@vitest/coverage-v8/dist/provider.js:57:29)
+    at file:///C:/GitHub/ChurchRegister/ChurchRegister.React/node_modules/vites
+t/dist/chunks/cli-api.B7PN_QUv.js:12609:23
+    at file:///C:/GitHub/ChurchRegister/ChurchRegister.React/node_modules/vites
+t/dist/chunks/cli-api.B7PN_QUv.js:12622:11 {
+  code: 'PARSE_ERROR',
+  pos: 9
+}
+Failed to parse file:///C:/GitHub/ChurchRegister/ChurchRegister.React/src/servi
+ces/api/README.md. Excluding it from coverage.
+ Error [RollupError]: Expected ';', '}' or <eof>
+    at getRollupError (file:///C:/GitHub/ChurchRegister/ChurchRegister.React/no
+de_modules/rollup/dist/es/shared/parseAst.js:402:41)
+    at convertProgram (file:///C:/GitHub/ChurchRegister/ChurchRegister.React/no
+de_modules/rollup/dist/es/shared/parseAst.js:1114:26)
+    at parseAstAsync (file:///C:/GitHub/ChurchRegister/ChurchRegister.React/nod
+e_modules/rollup/dist/es/shared/parseAst.js:2100:106)
+    at V8CoverageProvider.remapCoverage (file:///C:/GitHub/ChurchRegister/Churc
+hRegister.React/node_modules/@vitest/coverage-v8/dist/provider.js:133:10)
+    at file:///C:/GitHub/ChurchRegister/ChurchRegister.React/node_modules/@vite
+st/coverage-v8/dist/provider.js:119:23
+    at async Promise.all (index 9)
+    at V8CoverageProvider.getCoverageMapForUncoveredFiles (file:///C:/GitHub/Ch
+urchRegister/ChurchRegister.React/node_modules/@vitest/coverage-v8/dist/provide
+r.js:109:4)
+    at V8CoverageProvider.generateCoverage (file:///C:/GitHub/ChurchRegister/Ch
+urchRegister.React/node_modules/@vitest/coverage-v8/dist/provider.js:57:29)
+    at file:///C:/GitHub/ChurchRegister/ChurchRegister.React/node_modules/vites
+t/dist/chunks/cli-api.B7PN_QUv.js:12609:23
+    at file:///C:/GitHub/ChurchRegister/ChurchRegister.React/node_modules/vites
+t/dist/chunks/cli-api.B7PN_QUv.js:12622:11 {
+  code: 'PARSE_ERROR',
+  pos: 6
+}
+
+[2m Test Files [22m [1m[32m48 passed[39m[22m[90m (48)[39m
+[2m      Tests [22m [1m[32m890 passed[39m[22m[90m (890)[39m
+[2m   Start at [22m 09:29:02
+[2m   Duration [22m 22.26s[2m (transform 16.42s, setup 55.39s, import 84.24s, tests 15.92s, environment 78.11s)[22m
+
+[34m % [39m[2mCoverage report from [22m[33mv8[39m
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   66.74 |    55.95 |   69.84 |   66.83 |                   
+ hooks             |   68.66 |    50.44 |   75.09 |   69.02 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ssibility.tsx |       0 |        0 |       0 |       0 | 8-55              
+  ...piMutation.ts |   91.66 |      100 |      75 |   91.66 | 93                
+  useApiQuery.ts   |       0 |      100 |       0 |       0 | 41                
+  useAttendance.ts |   65.51 |       75 |   64.81 |   65.51 | ...20-227,243-324 
+  ...Protection.ts |     100 |      100 |     100 |     100 |                   
+  useDistricts.ts  |     100 |      100 |     100 |     100 |                   
+  useEscapeKey.ts  |     100 |      100 |     100 |     100 |                   
+  useFocus.ts      |       0 |        0 |       0 |       0 | 11-100            
+  useFormFocus.ts  |     100 |      100 |     100 |     100 |                   
+  useNavigation.ts |     100 |      100 |     100 |     100 |                   
+  ...tification.ts |       0 |        0 |       0 |       0 | 12-19             
+  ...misticList.ts |     100 |    57.14 |     100 |     100 | 69-130,137        
+  useRBAC.ts       |      58 |    45.45 |   58.33 |   60.41 | ...31-232,243-246 
+  ...terNumbers.ts |     100 |      100 |     100 |     100 |                   
+  ...Categories.ts |     100 |      100 |     100 |     100 |                   
+  useReminders.ts  |     100 |      100 |     100 |     100 |                   
+  ...ssessments.ts |     100 |      100 |     100 |     100 |                   
+  useTheme.ts      |     100 |      100 |     100 |     100 |                   
+  useToast.ts      |     100 |     87.5 |     100 |     100 | 44                
+  ...kenRefresh.ts |       0 |        0 |       0 |       0 | 22-182            
+ services          |   73.99 |    69.18 |    69.6 |   73.72 |                   
+  ...icsService.ts |      48 |    34.78 |    37.5 |   46.21 | ...41-301,398-446 
+  ...nceService.ts |     100 |    92.85 |     100 |     100 | 144-145           
+  emailService.ts  |   27.27 |        0 |      50 |   28.57 | 23-56             
+  ...lateParser.ts |   88.23 |    91.66 |   83.33 |   89.89 | ...58,279-282,295 
+  eventService.ts  |     100 |      100 |     100 |     100 |                   
+  ...berService.ts |       0 |      100 |       0 |       0 | 52-79             
+ services/api      |   84.63 |    78.41 |   82.29 |   84.54 |                   
+  ApiClient.ts     |    8.92 |        0 |    5.55 |    8.92 | 52-58,65-220      
+  ...trationApi.ts |     100 |      100 |     100 |     100 |                   
+  ...MembersApi.ts |     100 |      100 |     100 |     100 |                   
+  ...HistoryApi.ts |     100 |      100 |     100 |     100 |                   
+  ...butionsApi.ts |     100 |    58.33 |     100 |     100 | 37-39,76-81,86    
+  dashboardApi.ts  |     100 |      100 |     100 |     100 |                   
+  ...tectionApi.ts |     100 |      100 |     100 |     100 |                   
+  districtsApi.ts  |     100 |      100 |     100 |     100 |                   
+  ...actionsApi.ts |     100 |      100 |     100 |     100 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...egoriesApi.ts |     100 |      100 |     100 |     100 |                   
+  remindersApi.ts  |     100 |      100 |     100 |     100 |                   
+  ...ssmentsApi.ts |     100 |      100 |     100 |     100 |                   
+  ...ficatesApi.ts |     100 |      100 |     100 |     100 |                   
+ services/auth     |   25.86 |    22.47 |   33.33 |   25.85 |                   
+  authLogger.ts    |   74.64 |    73.58 |      96 |   74.62 | ...25,329-358,372 
+  authService.ts   |   11.34 |    10.41 |   17.94 |   11.48 | ...09-715,724-742 
+  ...nterceptor.ts |   10.34 |     3.33 |   14.28 |   10.52 | 29-202            
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ionManager.ts |   13.19 |     1.56 |   11.11 |   13.57 | ...56,361,367-422 
+  tokenService.ts  |   38.67 |    28.96 |   35.55 |    39.3 | ...58,462,479-595 
+  types.ts         |       0 |        0 |       0 |       0 |                   
+ utils             |   87.71 |    73.71 |   84.93 |   88.32 |                   
+  authErrors.ts    |      98 |    95.65 |     100 |      98 | 250               
+  errorUtils.ts    |     100 |      100 |     100 |     100 |                   
+  excelExport.ts   |   91.37 |    73.12 |   85.71 |   91.46 | ...65,390,421,499 
+  ...alyticsPdf.ts |     100 |      100 |     100 |     100 |                   
+  ...ssmentsPdf.ts |   99.22 |     92.5 |     100 |    99.2 | 188               
+  exportUtils.ts   |     100 |    88.88 |     100 |     100 | 24,40             
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  logger.ts        |   59.25 |    54.54 |   83.33 |   59.25 | 28-44,90-94       
+  ...ionManager.ts |      30 |        0 |   16.66 |      30 | 29-61             
+  ...rdSecurity.ts |   95.94 |    85.71 |   93.33 |   96.42 | ...69-576,630,652 
+  queryKeys.ts     |    92.1 |      100 |      90 |    92.1 | ...,55-56,180-182 
+  rbac.ts          |   59.04 |    44.87 |      68 |    62.5 | ...90,494,509-520 
+  typeGuards.ts    |   90.56 |    80.43 |      80 |   89.36 | ...05,172-173,182 
+  validation.ts    |   72.13 |    45.16 |    87.5 |   70.68 | 108,119-149       
+  ...rBoundary.tsx |      20 |        0 |       0 |      20 | 10-18             
+-------------------|---------|----------|---------|---------|-------------------
+ERROR: Coverage for lines (66.83%) does not meet global threshold (80%)
+ERROR: Coverage for functions (69.84%) does not meet global threshold (80%)
+ERROR: Coverage for statements (66.74%) does not meet global threshold (80%)
+ERROR: Coverage for branches (55.95%) does not meet global threshold (70%)

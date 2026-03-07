@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">27.27% </span>
+                <span class="strong">95.45% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/22</span>
+                <span class='fraction'>21/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>9/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/4</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/21</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -175,40 +175,40 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -262,43 +262,43 @@ export interface EmailResponse {
 /**
  * Send an email with PDF attachment
  */
-export const sendEmailWithAttachment = <span class="fstat-no" title="function not covered" >async (</span>
+export const sendEmailWithAttachment = async (
   request: EmailRequest
 ): Promise&lt;EmailResponse&gt; =&gt; {
-<span class="cstat-no" title="statement not covered" >  try {</span>
-    const formData = <span class="cstat-no" title="statement not covered" >new FormData();</span>
-<span class="cstat-no" title="statement not covered" >    formData.append('toEmail', request.toEmail);</span>
-<span class="cstat-no" title="statement not covered" >    formData.append('subject', request.subject);</span>
-<span class="cstat-no" title="statement not covered" >    formData.append('body', request.body);</span>
+  try {
+    const formData = new FormData();
+    formData.append('toEmail', request.toEmail);
+    formData.append('subject', request.subject);
+    formData.append('body', request.body);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (request.attachment) {</span>
-<span class="cstat-no" title="statement not covered" >      formData.append(</span>
+    if (request.attachment) {
+      formData.append(
         'attachment',
         request.attachment,
-        request.attachmentName || 'attachment.pdf'
+        request.attachmentName || <span class="branch-1 cbranch-no" title="branch not covered" >'attachment.pdf'</span>
       );
     }
 &nbsp;
-    const response = <span class="cstat-no" title="statement not covered" >await fetch('/api/email/send-report', {</span>
+    const response = await fetch('/api/email/send-report', {
       method: 'POST',
       body: formData,
     });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (!response.ok) {</span>
-      const errorData = <span class="cstat-no" title="statement not covered" >await response.json().catch(<span class="fstat-no" title="function not covered" >() =&gt; (<span class="cstat-no" title="statement not covered" >{</span>}))</span>;</span>
-<span class="cstat-no" title="statement not covered" >      throw new Error(</span>
-        errorData.message || `HTTP error! status: ${response.status}`
+    if (!response.ok) {
+      const errorData = await response.json().catch(<span class="fstat-no" title="function not covered" >() =&gt; (<span class="cstat-no" title="statement not covered" >{</span>}))</span>;
+      throw new Error(
+        errorData.message || <span class="branch-1 cbranch-no" title="branch not covered" >`HTTP error! status: ${response.status}`</span>
       );
     }
 &nbsp;
-    const result = <span class="cstat-no" title="statement not covered" >await response.json();</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
+    const result = await response.json();
+    return {
       success: true,
-      message: result.message || 'Email sent successfully',
+      message: result.message || <span class="branch-1 cbranch-no" title="branch not covered" >'Email sent successfully',</span>
     };
   } catch (error) {
-<span class="cstat-no" title="statement not covered" >    console.error('Error sending email:', error);</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
+    console.error('Error sending email:', error);
+    return {
       success: false,
       message: error instanceof Error ? error.message : 'Failed to send email',
     };
@@ -340,7 +340,7 @@ Church Register System`;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-06T11:50:55.602Z
+                at 2026-03-07T12:36:13.323Z
             </div>
         <script src="../prettify.js"></script>
         <script>

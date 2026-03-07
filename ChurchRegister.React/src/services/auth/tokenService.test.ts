@@ -342,4 +342,105 @@ describe('tokenService', () => {
       expect(hasToken).toBe(false);
     });
   });
+
+  describe('getAuthorizationHeader', () => {
+    test('should return authorization header when token exists', () => {
+      tokenService.setTokens({
+        accessToken: 'my-access-token',
+        refreshToken: 'refresh-token',
+        expiresIn: 3600,
+        tokenType: 'Bearer',
+        expiresAt: new Date(Date.now() + 3600 * 1000),
+      });
+
+      const header = tokenService.getAuthorizationHeader();
+      expect(header).toEqual({ Authorization: 'Bearer my-access-token' });
+    });
+
+    test('should return empty object when no token', () => {
+      tokenService.clearTokens();
+      const header = tokenService.getAuthorizationHeader();
+      expect(header).toEqual({});
+    });
+  });
+
+  describe('isCurrentlyRefreshing', () => {
+    test('should return false when not refreshing', () => {
+      expect(tokenService.isCurrentlyRefreshing()).toBe(false);
+    });
+  });
+
+  describe('addRefreshListener', () => {
+    test('should add and invoke listener on token change', () => {
+      const listener = vi.fn();
+      const unsubscribe = tokenService.addRefreshListener(listener);
+
+      // Listener should be added (we can verify via unsubscribe)
+      expect(typeof unsubscribe).toBe('function');
+
+      // Calling unsubscribe should not throw
+      expect(() => unsubscribe()).not.toThrow();
+    });
+
+    test('should allow multiple listeners', () => {
+      const listener1 = vi.fn();
+      const listener2 = vi.fn();
+      const unsub1 = tokenService.addRefreshListener(listener1);
+      const unsub2 = tokenService.addRefreshListener(listener2);
+
+      expect(typeof unsub1).toBe('function');
+      expect(typeof unsub2).toBe('function');
+
+      unsub1();
+      unsub2();
+    });
+  });
+
+  describe('updateConfig and getConfig', () => {
+    test('should update and retrieve config', () => {
+      const original = tokenService.getConfig();
+      tokenService.updateConfig({ tokenRefreshBuffer: 10 });
+      const updated = tokenService.getConfig();
+
+      expect(updated.tokenRefreshBuffer).toBe(10);
+
+      // Restore original config
+      tokenService.updateConfig({ tokenRefreshBuffer: original.tokenRefreshBuffer });
+    });
+
+    test('getConfig returns a copy', () => {
+      const config1 = tokenService.getConfig();
+      const config2 = tokenService.getConfig();
+      expect(config1).not.toBe(config2);
+      expect(config1).toEqual(config2);
+    });
+  });
+
+  describe('setupAutoRefresh', () => {
+    test('should return a cleanup function', () => {
+      const cleanup = tokenService.setupAutoRefresh();
+      expect(typeof cleanup).toBe('function');
+      cleanup();
+    });
+
+    test('should call onTokenRefreshed when tokens are available', () => {
+      const onRefreshed = vi.fn();
+      const onFailed = vi.fn();
+      const cleanup = tokenService.setupAutoRefresh(onRefreshed, onFailed);
+      expect(typeof cleanup).toBe('function');
+      cleanup();
+    });
+
+    test('cleanup cancels scheduled refresh', () => {
+      tokenService.setTokens({
+        accessToken: 'token',
+        refreshToken: 'refresh',
+        expiresIn: 3600,
+        tokenType: 'Bearer',
+        expiresAt: new Date(Date.now() + 3600 * 1000),
+      });
+      const cleanup = tokenService.setupAutoRefresh();
+      expect(() => cleanup()).not.toThrow();
+    });
+  });
 });

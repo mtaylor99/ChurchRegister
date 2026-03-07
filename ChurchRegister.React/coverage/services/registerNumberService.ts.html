@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -193,7 +193,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -204,7 +204,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -214,13 +214,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { apiClient } from './api/ApiClient';
 &nbsp;
 // Type definitions for register number operations
@@ -271,8 +271,8 @@ class RegisterNumberService {
   /**
    * Preview register number assignments for a target year without saving
    */
-  async <span class="fstat-no" title="function not covered" >previewNumbers(y</span>ear: number): Promise&lt;PreviewRegisterNumbersResponse&gt; {
-<span class="cstat-no" title="statement not covered" >    return apiClient.get&lt;PreviewRegisterNumbersResponse&gt;(</span>
+  async previewNumbers(year: number): Promise&lt;PreviewRegisterNumbersResponse&gt; {
+    return apiClient.get&lt;PreviewRegisterNumbersResponse&gt;(
       `/api/register-numbers/preview/${year}`
     );
   }
@@ -280,10 +280,10 @@ class RegisterNumberService {
   /**
    * Generate and persist register numbers for all active members
    */
-  async <span class="fstat-no" title="function not covered" >generateNumbers(</span>
+  async generateNumbers(
     request: GenerateRegisterNumbersRequest
   ): Promise&lt;GenerateRegisterNumbersResponse&gt; {
-<span class="cstat-no" title="statement not covered" >    return apiClient.post&lt;GenerateRegisterNumbersResponse&gt;(</span>
+    return apiClient.post&lt;GenerateRegisterNumbersResponse&gt;(
       '/api/register-numbers/generate',
       request
     );
@@ -292,14 +292,14 @@ class RegisterNumberService {
   /**
    * Check if register numbers have been generated for a specific year
    */
-  async <span class="fstat-no" title="function not covered" >checkStatus(y</span>ear: number): Promise&lt;CheckGenerationStatusResponse&gt; {
-<span class="cstat-no" title="statement not covered" >    return apiClient.get&lt;CheckGenerationStatusResponse&gt;(</span>
+  async checkStatus(year: number): Promise&lt;CheckGenerationStatusResponse&gt; {
+    return apiClient.get&lt;CheckGenerationStatusResponse&gt;(
       `/api/register-numbers/status/${year}`
     );
   }
 }
 &nbsp;
-export const registerNumberService = <span class="cstat-no" title="statement not covered" >new RegisterNumberService();</span>
+export const registerNumberService = new RegisterNumberService();
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -307,7 +307,7 @@ export const registerNumberService = <span class="cstat-no" title="statement not
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-06T11:50:55.602Z
+                at 2026-03-07T12:36:13.323Z
             </div>
         <script src="../prettify.js"></script>
         <script>

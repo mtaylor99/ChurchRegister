@@ -52,7 +52,7 @@ public class MonthlyReportPackIntegrationTests : IAsyncLifetime
             ctx.SaveChanges();
 
             // Seed a reminder due soon
-            ctx.Reminders.Add(new Database.Entities.Reminder
+            ctx.Reminders.Add(new Reminder
             {
                 Description = "Upcoming report task",
                 DueDate = DateTime.UtcNow.AddDays(10),
@@ -97,7 +97,7 @@ public class MonthlyReportPackIntegrationTests : IAsyncLifetime
             ctx.RiskAssessmentCategories.Add(riskCat);
             ctx.SaveChanges();
 
-            var riskAssessment = new Database.Entities.RiskAssessment
+            var riskAssessment = new RiskAssessment
             {
                 Title = "Report Pack Risk Assessment",
                 CategoryId = riskCat.Id,

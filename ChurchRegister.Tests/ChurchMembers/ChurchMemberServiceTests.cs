@@ -722,6 +722,169 @@ public class ChurchMemberServiceTests : IDisposable
         result.BankReference.Should().BeNull();
     }
 
+    // ─── GetChurchMembersAsync filter coverage ────────────────────────────────
+
+    private ChurchMember MakeBasicMember(string first, string last, int statusId = 1) => new ChurchMember
+    {
+        FirstName = first, LastName = last, ChurchMemberStatusId = statusId,
+        MemberSince = DateTime.UtcNow.AddYears(-1),
+        Baptised = false, GiftAid = false, Envelopes = false, PastoralCareRequired = false,
+        CreatedBy = "test", CreatedDateTime = DateTime.UtcNow
+    };
+
+    [Fact]
+    public async Task GetChurchMembersAsync_WithStatusFilter_ReturnsOnlyMatchingStatus()
+    {
+        _context.ChurchMembers.AddRange(MakeBasicMember("A", "Active", 1), MakeBasicMember("B", "Inactive", 2));
+        await _context.SaveChangesAsync();
+        var result = await _service.GetChurchMembersAsync(new ChurchMemberGridQuery { StatusFilter = 1, Page = 1, PageSize = 10 });
+        result.TotalCount.Should().BeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task GetChurchMembersAsync_WithBaptisedFilter_ReturnsFilteredResults()
+    {
+        var baptised = MakeBasicMember("C", "Baptised"); baptised.Baptised = true;
+        _context.ChurchMembers.AddRange(baptised, MakeBasicMember("D", "NotBaptised"));
+        await _context.SaveChangesAsync();
+        var result = await _service.GetChurchMembersAsync(new ChurchMemberGridQuery { BaptisedFilter = true, Page = 1, PageSize = 10 });
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetChurchMembersAsync_WithGiftAidFilter_ReturnsFilteredResults()
+    {
+        var gifter = MakeBasicMember("E", "GiftAid"); gifter.GiftAid = true;
+        _context.ChurchMembers.AddRange(gifter, MakeBasicMember("F", "NoGiftAid"));
+        await _context.SaveChangesAsync();
+        var result = await _service.GetChurchMembersAsync(new ChurchMemberGridQuery { GiftAidFilter = true, Page = 1, PageSize = 10 });
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetChurchMembersAsync_WithPastoralCareFilter_ReturnsFilteredResults()
+    {
+        var pastoral = MakeBasicMember("G", "Pastoral"); pastoral.PastoralCareRequired = true;
+        _context.ChurchMembers.AddRange(pastoral, MakeBasicMember("H", "NoPastoral"));
+        await _context.SaveChangesAsync();
+        var result = await _service.GetChurchMembersAsync(new ChurchMemberGridQuery { PastoralCareRequired = true, Page = 1, PageSize = 10 });
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetChurchMembersAsync_WithNoBankReferenceFilter_ReturnsFilteredResults()
+    {
+        var noRef = MakeBasicMember("I", "NoBankRef");
+        var withRef = MakeBasicMember("J", "WithBankRef"); withRef.BankReference = "REF123";
+        _context.ChurchMembers.AddRange(noRef, withRef);
+        await _context.SaveChangesAsync();
+        var result = await _service.GetChurchMembersAsync(new ChurchMemberGridQuery { NoBankReferenceFilter = true, Page = 1, PageSize = 10 });
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetChurchMembersAsync_WithDistrictFilter_ReturnsFilteredResults()
+    {
+        var district = new ChurchRegister.Database.Entities.Districts
+        { Name = "D1", CreatedBy = "test", CreatedDateTime = DateTime.UtcNow };
+        _context.Districts.Add(district);
+        await _context.SaveChangesAsync();
+
+        var inDistrict = MakeBasicMember("K", "InDistrict"); inDistrict.DistrictId = district.Id;
+        _context.ChurchMembers.AddRange(inDistrict, MakeBasicMember("L", "OutDistrict"));
+        await _context.SaveChangesAsync();
+        var result = await _service.GetChurchMembersAsync(new ChurchMemberGridQuery { DistrictFilter = district.Id, Page = 1, PageSize = 10 });
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetChurchMembersAsync_WithUnassignedDistrictFilter_ReturnsFilteredResults()
+    {
+        var district = new ChurchRegister.Database.Entities.Districts
+        { Name = "D2", CreatedBy = "test", CreatedDateTime = DateTime.UtcNow };
+        _context.Districts.Add(district);
+        await _context.SaveChangesAsync();
+
+        var withDistrict = MakeBasicMember("M", "Assigned"); withDistrict.DistrictId = district.Id;
+        _context.ChurchMembers.AddRange(withDistrict, MakeBasicMember("N", "Unassigned"));
+        await _context.SaveChangesAsync();
+        var result = await _service.GetChurchMembersAsync(new ChurchMemberGridQuery { UnassignedDistrictFilter = true, Page = 1, PageSize = 10 });
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetChurchMembersAsync_WithDescendingSort_ReturnsResults()
+    {
+        _context.ChurchMembers.AddRange(MakeBasicMember("Z", "Zeta"), MakeBasicMember("A", "Alpha"));
+        await _context.SaveChangesAsync();
+        var result = await _service.GetChurchMembersAsync(new ChurchMemberGridQuery { SortBy = "FirstName", SortDirection = "desc", Page = 1, PageSize = 10 });
+        result.Should().NotBeNull();
+    }
+
+    // ─── CreateChurchMemberAsync error path coverage ──────────────────────────
+
+    [Fact]
+    public async Task CreateChurchMemberAsync_WithDuplicateBankReference_ThrowsValidationException()
+    {
+        var existing = MakeBasicMember("O", "Existing"); existing.BankReference = "MYREF";
+        _context.ChurchMembers.Add(existing);
+        await _context.SaveChangesAsync();
+
+        var request = new CreateChurchMemberRequest
+        {
+            FirstName = "New", LastName = "Member", StatusId = 1,
+            MemberSince = DateTime.UtcNow.AddYears(-1),
+            Baptised = false, GiftAid = false, Envelopes = false, PastoralCareRequired = false,
+            BankReference = "MYREF",
+            RoleIds = Array.Empty<int>()
+        };
+        await _service.Invoking(s => s.CreateChurchMemberAsync(request, "test"))
+            .Should().ThrowAsync<ChurchRegister.ApiService.Exceptions.ValidationException>();
+    }
+
+    [Fact]
+    public async Task CreateChurchMemberAsync_WithInvalidStatusId_ThrowsException()
+    {
+        var request = new CreateChurchMemberRequest
+        {
+            FirstName = "New", LastName = "Member", StatusId = 999,
+            MemberSince = DateTime.UtcNow.AddYears(-1),
+            Baptised = false, GiftAid = false, Envelopes = false, PastoralCareRequired = false,
+            RoleIds = Array.Empty<int>()
+        };
+        await _service.Invoking(s => s.CreateChurchMemberAsync(request, "test"))
+            .Should().ThrowAsync<InvalidOperationException>();
+    }
+
+    [Fact]
+    public async Task CreateChurchMemberAsync_WithRoles_AssignsRolesToMember()
+    {
+        var request = new CreateChurchMemberRequest
+        {
+            FirstName = "Roled", LastName = "Member", StatusId = 1,
+            MemberSince = DateTime.UtcNow.AddYears(-1),
+            Baptised = false, GiftAid = false, Envelopes = false, PastoralCareRequired = false,
+            RoleIds = [1]
+        };
+        var result = await _service.CreateChurchMemberAsync(request, "test");
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task CreateChurchMemberAsync_WithAddress_SetsAddress()
+    {
+        var request = new CreateChurchMemberRequest
+        {
+            FirstName = "Addressed", LastName = "Member", StatusId = 1,
+            MemberSince = DateTime.UtcNow.AddYears(-1),
+            Baptised = false, GiftAid = false, Envelopes = false, PastoralCareRequired = false,
+            RoleIds = Array.Empty<int>(),
+            Address = new AddressDto { AddressLineOne = "1 Test St", Town = "Testville", Postcode = "TE1 1ST" }
+        };
+        var result = await _service.CreateChurchMemberAsync(request, "test");
+        result.Should().NotBeNull();
+    }
+
     public void Dispose()
     {
         _context.Database.EnsureDeleted();

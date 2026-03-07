@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">72.13% </span>
+                <span class="strong">98.36% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>44/61</span>
+                <span class='fraction'>60/61</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.16% </span>
+                <span class="strong">93.54% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/31</span>
+                <span class='fraction'>29/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">93.75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>14/16</span>
+                <span class='fraction'>15/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.68% </span>
+                <span class="strong">98.27% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>41/58</span>
+                <span class='fraction'>57/58</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -358,37 +358,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -530,42 +530,42 @@ export const isValidRegisterNumber = <span class="fstat-no" title="function not 
 /**
  * Get error message for validation type
  */
-export const getValidationMessage = <span class="fstat-no" title="function not covered" >(</span>
+export const getValidationMessage = (
   field: string,
   validationType: string,
   value?: unknown
 ): string =&gt; {
-<span class="cstat-no" title="statement not covered" >  switch (validationType) {</span>
+  switch (validationType) {
     case 'required':
-<span class="cstat-no" title="statement not covered" >      return `${field} is required.`;</span>
+      return `${field} is required.`;
     case 'email':
-<span class="cstat-no" title="statement not covered" >      return `Please enter a valid email address.`;</span>
+      return `Please enter a valid email address.`;
     case 'phone':
-<span class="cstat-no" title="statement not covered" >      return `Please enter a valid UK phone number.`;</span>
+      return `Please enter a valid UK phone number.`;
     case 'postcode':
-<span class="cstat-no" title="statement not covered" >      return `Please enter a valid UK postcode.`;</span>
+      return `Please enter a valid UK postcode.`;
     case 'minLength':
-<span class="cstat-no" title="statement not covered" >      return `${field} must be at least ${value} characters.`;</span>
+      return `${field} must be at least ${value} characters.`;
     case 'maxLength':
-<span class="cstat-no" title="statement not covered" >      return `${field} must not exceed ${value} characters.`;</span>
+      return `${field} must not exceed ${value} characters.`;
     case 'numeric':
-<span class="cstat-no" title="statement not covered" >      return `${field} must be a number.`;</span>
+      return `${field} must be a number.`;
     case 'positive':
-<span class="cstat-no" title="statement not covered" >      return `${field} must be a positive number.`;</span>
+      return `${field} must be a positive number.`;
     case 'nonNegative':
-<span class="cstat-no" title="statement not covered" >      return `${field} must be zero or greater.`;</span>
+      return `${field} must be zero or greater.`;
     case 'futureDate':
-<span class="cstat-no" title="statement not covered" >      return `${field} cannot be in the future.`;</span>
+      return `${field} cannot be in the future.`;
     case 'pastDate':
-<span class="cstat-no" title="statement not covered" >      return `${field} cannot be in the past.`;</span>
+      return `${field} cannot be in the past.`;
     case 'currency':
-<span class="cstat-no" title="statement not covered" >      return `${field} must be a valid amount (e.g., 10.50).`;</span>
+      return `${field} must be a valid amount (e.g., 10.50).`;
     case 'bankReference':
-<span class="cstat-no" title="statement not covered" >      return `${field} must contain only letters, numbers, and hyphens.`;</span>
+      return `${field} must contain only letters, numbers, and hyphens.`;
     case 'registerNumber':
-<span class="cstat-no" title="statement not covered" >      return `${field} must be a numeric value.`;</span>
+      return `${field} must be a numeric value.`;
     default:
-<span class="cstat-no" title="statement not covered" >      return `${field} is invalid.`;</span>
+      return `${field} is invalid.`;
   }
 };
 &nbsp;
@@ -601,7 +601,7 @@ export const validate = (
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-06T11:50:55.483Z
+                at 2026-03-07T12:36:13.190Z
             </div>
         <script src="../prettify.js"></script>
         <script>

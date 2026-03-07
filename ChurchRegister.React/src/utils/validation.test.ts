@@ -17,6 +17,7 @@ import {
   isNotPastDate,
   isValidCurrencyAmount,
   isValidBankReference,
+  getValidationMessage,
   validate,
 } from './validation';
 
@@ -327,6 +328,68 @@ describe('validation utilities', () => {
 
       expect(result.isValid).toBe(true);
       expect(result.error).toBeUndefined();
+    });
+  });
+
+  describe('getValidationMessage', () => {
+    test('returns required message', () => {
+      expect(getValidationMessage('Email', 'required')).toBe('Email is required.');
+    });
+
+    test('returns email message', () => {
+      expect(getValidationMessage('Email', 'email')).toBe('Please enter a valid email address.');
+    });
+
+    test('returns phone message', () => {
+      expect(getValidationMessage('Phone', 'phone')).toBe('Please enter a valid UK phone number.');
+    });
+
+    test('returns postcode message', () => {
+      expect(getValidationMessage('Postcode', 'postcode')).toBe('Please enter a valid UK postcode.');
+    });
+
+    test('returns minLength message with value', () => {
+      expect(getValidationMessage('Name', 'minLength', 3)).toBe('Name must be at least 3 characters.');
+    });
+
+    test('returns maxLength message with value', () => {
+      expect(getValidationMessage('Bio', 'maxLength', 500)).toBe('Bio must not exceed 500 characters.');
+    });
+
+    test('returns numeric message', () => {
+      expect(getValidationMessage('Amount', 'numeric')).toBe('Amount must be a number.');
+    });
+
+    test('returns positive message', () => {
+      expect(getValidationMessage('Quantity', 'positive')).toBe('Quantity must be a positive number.');
+    });
+
+    test('returns nonNegative message', () => {
+      expect(getValidationMessage('Score', 'nonNegative')).toBe('Score must be zero or greater.');
+    });
+
+    test('returns futureDate message', () => {
+      expect(getValidationMessage('Date', 'futureDate')).toBe('Date cannot be in the future.');
+    });
+
+    test('returns pastDate message', () => {
+      expect(getValidationMessage('Date', 'pastDate')).toBe('Date cannot be in the past.');
+    });
+
+    test('returns currency message', () => {
+      expect(getValidationMessage('Amount', 'currency')).toBe('Amount must be a valid amount (e.g., 10.50).');
+    });
+
+    test('returns bankReference message', () => {
+      expect(getValidationMessage('Reference', 'bankReference')).toBe('Reference must contain only letters, numbers, and hyphens.');
+    });
+
+    test('returns registerNumber message', () => {
+      expect(getValidationMessage('Number', 'registerNumber')).toBe('Number must be a numeric value.');
+    });
+
+    test('returns default message for unknown type', () => {
+      expect(getValidationMessage('Field', 'unknown')).toBe('Field is invalid.');
     });
   });
 });
