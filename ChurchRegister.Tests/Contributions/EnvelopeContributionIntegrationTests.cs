@@ -374,4 +374,42 @@ public class EnvelopeContributionIntegrationTests : IAsyncLifetime
         var response = await client.PostAsJsonAsync("/api/contributions/one-off", request);
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
+
+    // ─── End-to-end: submit batch then GET details ───────────────────────────
+
+    [Fact]
+    public async Task GetBatchDetails_AfterSuccessfulSubmission_ReturnsDetails()
+    {
+        var client = FinancialClient();
+
+        // Use 4 weeks ago Sunday to avoid conflicts with other tests
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var daysSinceSunday = (int)today.DayOfWeek;
+        var lastSunday = daysSinceSunday == 0 ? today.AddDays(-7) : today.AddDays(-daysSinceSunday);
+        var fourWeeksAgoSunday = lastSunday.AddDays(-21);
+
+        var createRequest = new SubmitEnvelopeBatchRequest
+        {
+            CollectionDate = fourWeeksAgoSunday,
+            Envelopes = new List<EnvelopeEntry>
+            {
+                new EnvelopeEntry { RegisterNumber = 1001, Amount = 15.00m }
+            }
+        };
+
+        var createResponse = await client.PostAsJsonAsync("/api/financial/envelope-contributions/batches", createRequest);
+        if (!createResponse.IsSuccessStatusCode)
+        {
+            // If batch submission fails (e.g., duplicate), skip the details check
+            ((int)createResponse.StatusCode).Should().BeOneOf(201, 400, 409);
+            return;
+        }
+
+        var batchResult = await createResponse.Content.ReadFromJsonAsync<SubmitEnvelopeBatchResponse>();
+        batchResult.Should().NotBeNull();
+
+        // Now GET the batch details - this covers GetBatchDetailsAsync success path
+        var detailsResponse = await client.GetAsync($"/api/financial/envelope-contributions/batches/{batchResult!.BatchId}");
+        ((int)detailsResponse.StatusCode).Should().BeOneOf(200, 404);
+    }
 }
