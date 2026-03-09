@@ -1,0 +1,53 @@
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: churchregister-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=ChurchRegister123!
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P ChurchRegister123! -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+    networks:
+      - churchregister-network
+
+  # Church Register Application (API + React Frontend)
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: churchregister-app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ChurchRegister;User Id=sa;Password=ChurchRegister123!;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Jwt__Key=ChurchRegister-Super-Secret-Key-For-Development-Only-2024!-Extended-For-Length
+      - Jwt__Issuer=ChurchRegister.ApiService
+      - Jwt__Audience=ChurchRegister.React
+      - Jwt__AccessTokenExpirationMinutes=720
+      - Jwt__RefreshTokenExpirationDays=7
+    ports:
+      - "5000:5000"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - churchregister-network
+    restart: unless-stopped
+
+volumes:
+  sqlserver-data:
+    driver: local
+
+networks:
+  churchregister-network:
+    driver: bridge
