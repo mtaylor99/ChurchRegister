@@ -88,10 +88,11 @@ public class RegisterNumberService : IRegisterNumberService
         bool isBaptised,
         CancellationToken cancellationToken = default)
     {
-        // Load all numbers for the year and parse in memory (EF Core cannot translate int.Parse to SQL)
+        // Load register numbers for the year but only for ACTIVE members (StatusId = 1)
+        // This allows deleted member numbers to be reused
         var rawNumbers = await _context.ChurchMemberRegisterNumbers
             .AsNoTracking()
-            .Where(r => r.Year == year)
+            .Where(r => r.Year == year && r.ChurchMember.ChurchMemberStatusId == 1)
             .Select(r => r.Number)
             .ToListAsync(cancellationToken);
 

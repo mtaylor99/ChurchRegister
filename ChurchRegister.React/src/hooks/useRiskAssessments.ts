@@ -291,3 +291,26 @@ export const useDeleteRiskCategory = () => {
     },
   });
 };
+
+/**
+ * Hook to delete a risk assessment
+ * Removes the assessment and its approvals
+ * Invalidates risk assessment queries on success
+ */
+export const useDeleteRiskAssessment = () => {
+  const queryClient = useQueryClient();
+  const { showSuccess, showError } = useNotification();
+
+  return useMutation({
+    mutationFn: (id: number) => riskAssessmentsApi.deleteRiskAssessment(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: riskAssessmentQueryKeys.all,
+      });
+      showSuccess('Risk assessment deleted successfully');
+    },
+    onError: (error: unknown) => {
+      showError(extractErrorMessage(error, 'Failed to delete risk assessment'));
+    },
+  });
+};

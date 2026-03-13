@@ -385,6 +385,8 @@ builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Attendance.CreateEv
                            ChurchRegister.ApiService.UseCase.Attendance.CreateEvent.CreateEventUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Attendance.UpdateEvent.IUpdateEventUseCase,
                            ChurchRegister.ApiService.UseCase.Attendance.UpdateEvent.UpdateEventUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Attendance.DeleteEvent.IDeleteEventUseCase,
+                           ChurchRegister.ApiService.UseCase.Attendance.DeleteEvent.DeleteEventUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Attendance.EmailAttendanceAnalytics.IEmailAttendanceAnalyticsUseCase,
                            ChurchRegister.ApiService.UseCase.Attendance.EmailAttendanceAnalytics.EmailAttendanceAnalyticsUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Attendance.UploadAttendanceTemplate.IUploadAttendanceTemplateUseCase,
@@ -409,6 +411,8 @@ builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.TrainingCertificate
                            ChurchRegister.ApiService.UseCase.TrainingCertificates.CreateTrainingCertificateType.CreateTrainingCertificateTypeUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.TrainingCertificates.UpdateTrainingCertificateType.IUpdateTrainingCertificateTypeUseCase,
                            ChurchRegister.ApiService.UseCase.TrainingCertificates.UpdateTrainingCertificateType.UpdateTrainingCertificateTypeUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.TrainingCertificates.DeleteTrainingCertificate.IDeleteTrainingCertificateUseCase,
+                           ChurchRegister.ApiService.UseCase.TrainingCertificates.DeleteTrainingCertificate.DeleteTrainingCertificateUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.TrainingCertificates.GetDashboardTrainingSummary.IGetDashboardTrainingSummaryUseCase,
                            ChurchRegister.ApiService.UseCase.TrainingCertificates.GetDashboardTrainingSummary.GetDashboardTrainingSummaryUseCase>();
 
@@ -467,6 +471,8 @@ builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.Upd
                            ChurchRegister.ApiService.UseCase.RiskAssessments.UpdateRiskAssessmentCategory.UpdateRiskAssessmentCategoryUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.DeleteRiskAssessmentCategory.IDeleteRiskAssessmentCategoryUseCase,
                            ChurchRegister.ApiService.UseCase.RiskAssessments.DeleteRiskAssessmentCategory.DeleteRiskAssessmentCategoryUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.RiskAssessments.DeleteRiskAssessment.IDeleteRiskAssessmentUseCase,
+                           ChurchRegister.ApiService.UseCase.RiskAssessments.DeleteRiskAssessment.DeleteRiskAssessmentUseCase>();
 
 // Register Repositories
 builder.Services.AddScoped<ChurchRegister.Database.Interfaces.IRefreshTokenRepository,

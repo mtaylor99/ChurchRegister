@@ -39,7 +39,7 @@ public class TrainingCertificateUseCaseTests
         _updateLogger = new Mock<ILogger<UpdateTrainingCertificateUseCase>>();
         _updateTypeLogger = new Mock<ILogger<UpdateTrainingCertificateTypeUseCase>>();
     }
-
+    
     // ─── CreateTrainingCertificateUseCase ────────────────────────────────────
 
     [Fact]

@@ -8,6 +8,7 @@ using ChurchRegister.Database.Entities;
 using ChurchRegister.ApiService.UseCase.Attendance.GetEvents;
 using ChurchRegister.ApiService.UseCase.Attendance.CreateEvent;
 using ChurchRegister.ApiService.UseCase.Attendance.UpdateEvent;
+using ChurchRegister.ApiService.UseCase.Attendance.DeleteEvent;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 
@@ -125,6 +126,52 @@ public class UpdateEventEndpoint : Endpoint<UpdateEventRequest>
         catch (ArgumentException ex)
         {
             await Send.ResponseAsync(new { error = ex.Message }, statusCode: 400, cancellation: ct);
+        }
+    }
+}
+
+/// <summary>
+/// Request model for deleting an event
+/// </summary>
+public record DeleteEventRequest
+{
+    public int Id { get; init; }
+}
+
+/// <summary>
+/// Endpoint for deleting an event
+/// </summary>
+public class DeleteEventEndpoint : Endpoint<DeleteEventRequest>
+{
+    private readonly IDeleteEventUseCase _useCase;
+
+    public DeleteEventEndpoint(IDeleteEventUseCase useCase)
+    {
+        _useCase = useCase;
+    }
+
+    public override void Configure()
+    {
+        Delete("/api/events/{Id}");
+        Policies("Bearer");
+        Roles(SystemRoles.SystemAdministration, SystemRoles.AttendanceAdministrator);
+        Description(x => x
+            .WithName("DeleteEvent")
+            .WithSummary("Delete an event")
+            .WithDescription("Removes an event from the system")
+            .WithTags("Events"));
+    }
+
+    public override async Task HandleAsync(DeleteEventRequest req, CancellationToken ct)
+    {
+        try
+        {
+            await _useCase.ExecuteAsync(req.Id, ct);
+            await Send.NoContentAsync(ct);
+        }
+        catch (KeyNotFoundException)
+        {
+            await Send.NotFoundAsync(ct);
         }
     }
 }

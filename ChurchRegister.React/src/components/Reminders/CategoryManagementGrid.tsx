@@ -14,7 +14,11 @@ import {
   Alert,
   Typography,
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Block as BlockIcon,
+} from '@mui/icons-material';
 import {
   useReminderCategories,
   useDeleteCategory,
@@ -109,12 +113,25 @@ export const CategoryManagementGrid: React.FC<CategoryManagementGridProps> =
           getActions: (params) => {
             const canDelete =
               !params.row.isSystemCategory && params.row.reminderCount === 0;
-            const deleteTooltip = params.row.isSystemCategory
-              ? 'System categories cannot be deleted'
-              : params.row.reminderCount > 0
-                ? `Category has ${params.row.reminderCount} associated reminder(s)`
-                : 'Delete category';
 
+            // For system categories, only show the block icon (no menu)
+            if (params.row.isSystemCategory) {
+              return [
+                <GridActionsCellItem
+                  key="blocked"
+                  icon={
+                    <Tooltip title="Cannot amend system categories">
+                      <BlockIcon />
+                    </Tooltip>
+                  }
+                  label=""
+                  disabled
+                  showInMenu={false}
+                />,
+              ];
+            }
+
+            // For non-system categories, show edit and conditionally delete in menu
             const actions = [
               <GridActionsCellItem
                 key="edit"
@@ -129,25 +146,11 @@ export const CategoryManagementGrid: React.FC<CategoryManagementGridProps> =
               actions.push(
                 <GridActionsCellItem
                   key="delete"
-                  icon={<DeleteIcon />}
+                  icon={<DeleteIcon color="error" />}
                   label="Delete"
                   onClick={() => handleDeleteClick(params.row)}
                   showInMenu
                 />
-              );
-            } else {
-              actions.push(
-                <Tooltip title={deleteTooltip} key="delete">
-                  <span>
-                    <GridActionsCellItem
-                      icon={<DeleteIcon />}
-                      label="Delete"
-                      onClick={() => {}}
-                      disabled
-                      showInMenu
-                    />
-                  </span>
-                </Tooltip>
               );
             }
 

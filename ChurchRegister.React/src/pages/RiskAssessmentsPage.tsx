@@ -9,6 +9,11 @@ import {
   Tabs,
   Tab,
   Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
 import {
   Shield as ShieldIcon,
@@ -32,6 +37,7 @@ import {
   useRiskAssessment,
   useRiskAssessmentCategories,
   useStartReview,
+  useDeleteRiskAssessment,
 } from '../hooks/useRiskAssessments';
 import { exportRiskAssessmentsPdf } from '../utils/exportRiskAssessmentsPdf';
 
@@ -106,6 +112,12 @@ export function RiskAssessmentsPage() {
 
   // Mutations
   const startReviewMutation = useStartReview();
+  const deleteAssessmentMutation = useDeleteRiskAssessment();
+
+  // Delete confirmation state
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [assessmentToDelete, setAssessmentToDelete] =
+    useState<RiskAssessment | null>(null);
 
   // Tab change handler
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -136,11 +148,6 @@ export function RiskAssessmentsPage() {
     setEditDrawerOpen(true);
   };
 
-  const handleApproveClick = (assessment: RiskAssessment) => {
-    setSelectedAssessmentId(assessment.id);
-    setApproveDrawerOpen(true);
-  };
-
   const handleViewHistory = (assessment: RiskAssessment) => {
     setSelectedAssessmentId(assessment.id);
     setHistoryDrawerOpen(true);
@@ -152,6 +159,28 @@ export function RiskAssessmentsPage() {
     } catch (error) {
       console.error('Failed to start review:', error);
     }
+  };
+
+  const handleDeleteClick = (assessment: RiskAssessment) => {
+    setAssessmentToDelete(assessment);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (assessmentToDelete) {
+      try {
+        await deleteAssessmentMutation.mutateAsync(assessmentToDelete.id);
+        setDeleteConfirmOpen(false);
+        setAssessmentToDelete(null);
+      } catch (error) {
+        console.error('Failed to delete assessment:', error);
+      }
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmOpen(false);
+    setAssessmentToDelete(null);
   };
 
   const handleEditSuccess = () => {
@@ -325,7 +354,7 @@ export function RiskAssessmentsPage() {
             onFilterChange={handleFilterChange}
             onViewClick={handleViewClick}
             onEditClick={handleEditClick}
-            onApprove={handleApproveClick}
+            onDeleteClick={handleDeleteClick}
             onStartReview={handleStartReview}
             onViewHistory={handleViewHistory}
           />
@@ -373,6 +402,27 @@ export function RiskAssessmentsPage() {
         onClose={() => setHistoryDrawerOpen(false)}
         riskAssessmentId={selectedAssessmentId}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteConfirmOpen} onClose={handleCancelDelete}>
+        <DialogTitle>Delete Risk Assessment</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete the risk assessment "
+            {assessmentToDelete?.title}"? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete}>Cancel</Button>
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            disabled={deleteAssessmentMutation.isPending}
+          >
+            {deleteAssessmentMutation.isPending ? 'Deleting...' : 'Delete'}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Export Notifications */}
       <Snackbar

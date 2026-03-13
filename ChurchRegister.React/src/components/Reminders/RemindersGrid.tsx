@@ -231,7 +231,7 @@ export const RemindersGrid = React.memo(function RemindersGrid({
             />,
             <GridActionsCellItem
               key="delete"
-              icon={<DeleteIcon />}
+              icon={<DeleteIcon color="error" />}
               label="Delete"
               onClick={() => handleDeleteClick(params.row)}
               showInMenu

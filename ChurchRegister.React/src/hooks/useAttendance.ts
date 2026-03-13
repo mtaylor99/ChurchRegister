@@ -197,6 +197,25 @@ export function useUpdateEvent() {
   });
 }
 
+export function useDeleteEvent() {
+  const queryClient = useQueryClient();
+  const { showNotification } = useNotification();
+
+  return useMutation({
+    mutationFn: (id: number) => eventService.deleteEvent(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: attendanceQueryKeys.events() });
+      showNotification('Event deleted successfully', 'success');
+    },
+    onError: (error: unknown) => {
+      showNotification(
+        extractErrorMessage(error, 'Failed to delete event'),
+        'error'
+      );
+    },
+  });
+}
+
 // Analytics Hooks
 export function useEventAnalytics(eventId: number | undefined) {
   return useQuery({

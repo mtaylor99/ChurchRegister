@@ -27,6 +27,8 @@ import {
   Menu,
   Paper,
   TextField,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type {
@@ -39,6 +41,11 @@ import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ClearIcon from '@mui/icons-material/Clear';
+import ViewIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import HistoryIcon from '@mui/icons-material/History';
 import type {
   RiskAssessment,
   RiskAssessmentCategory,
@@ -55,8 +62,8 @@ export interface RiskAssessmentsGridProps {
   title: string;
   onViewClick: (assessment: RiskAssessment) => void;
   onEditClick: (assessment: RiskAssessment) => void;
+  onDeleteClick: (assessment: RiskAssessment) => void;
   onStartReview: (assessment: RiskAssessment) => void;
-  onApprove: (assessment: RiskAssessment) => void;
   onViewHistory: (assessment: RiskAssessment) => void;
   onFilterChange: (
     categoryId: number | null,
@@ -76,8 +83,8 @@ export const RiskAssessmentsGrid = React.memo(function RiskAssessmentsGrid({
   title,
   onViewClick,
   onEditClick,
+  onDeleteClick,
   onStartReview,
-  onApprove,
   onViewHistory,
   onFilterChange,
 }: RiskAssessmentsGridProps) {
@@ -479,7 +486,30 @@ export const RiskAssessmentsGrid = React.memo(function RiskAssessmentsGrid({
             handleActionClose();
           }}
         >
-          View Details
+          <ListItemIcon>
+            <ViewIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>View Details</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            if (selectedAssessment) onEditClick(selectedAssessment);
+            handleActionClose();
+          }}
+        >
+          <ListItemIcon>
+            <EditIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Edit Details</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={handleStartReviewClick}
+          disabled={selectedAssessment?.status !== 'Approved'}
+        >
+          <ListItemIcon>
+            <RefreshIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Start Review</ListItemText>
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -487,28 +517,22 @@ export const RiskAssessmentsGrid = React.memo(function RiskAssessmentsGrid({
             handleActionClose();
           }}
         >
-          View History
+          <ListItemIcon>
+            <HistoryIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>View History</ListItemText>
         </MenuItem>
-        {selectedAssessment?.status === 'Approved' && (
-          <MenuItem onClick={handleStartReviewClick}>Start Review</MenuItem>
-        )}
-        {selectedAssessment?.status === 'Under Review' && (
-          <MenuItem
-            onClick={() => {
-              if (selectedAssessment) onApprove(selectedAssessment);
-              handleActionClose();
-            }}
-          >
-            Approve
-          </MenuItem>
-        )}
         <MenuItem
           onClick={() => {
-            if (selectedAssessment) onEditClick(selectedAssessment);
+            if (selectedAssessment) onDeleteClick(selectedAssessment);
             handleActionClose();
           }}
+          sx={{ color: 'error.main' }}
         >
-          Edit Details
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Delete</ListItemText>
         </MenuItem>
       </Menu>
 

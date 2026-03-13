@@ -384,4 +384,63 @@ public class RiskAssessmentServiceIntegrationTests : IAsyncLifetime
         var response = await client.DeleteAsync($"/api/risk-assessment-categories/{_categoryId}");
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
+
+    // ─── DELETE /api/risk-assessments/{id} ──────────────────────────
+
+    [Fact]
+    public async Task DeleteRiskAssessment_WithValidId_ReturnsNoContent()
+    {
+        // Create an assessment first
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        
+        var createResponse = await client.PostAsJsonAsync("/api/risk-assessments", new
+        {
+            CategoryId = _categoryId,
+            Title = "Test Assessment for Deletion",
+            Description = "Test Description",
+            ReviewInterval = 1
+        });
+        
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var created = await createResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+        var newId = created.GetProperty("id").GetInt32();
+
+        // Now delete it
+        var deleteResponse = await client.DeleteAsync($"/api/risk-assessments/{newId}");
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        // Verify it's deleted
+        var getResponse = await client.GetAsync($"/api/risk-assessments/{newId}");
+        getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task DeleteRiskAssessment_WithApprovals_DeletesCascade()
+    {
+        // The existing _assessmentId has approvals, delete should cascade
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        
+        var deleteResponse = await client.DeleteAsync($"/api/risk-assessments/{_assessmentId}");
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        // Verify it's deleted along with approvals
+        var getResponse = await client.GetAsync($"/api/risk-assessments/{_assessmentId}");
+        getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task DeleteRiskAssessment_WithNonExistentId_ReturnsNotFound()
+    {
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.DeleteAsync("/api/risk-assessments/99999");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task DeleteRiskAssessment_Unauthorized_Returns401()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.DeleteAsync("/api/risk-assessments/1");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
 }

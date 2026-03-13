@@ -88,6 +88,13 @@ export class EventService {
   }
 
   /**
+   * Delete an event
+   */
+  async deleteEvent(id: number): Promise<void> {
+    return apiClient.delete<void>(`${this.basePath}/${id}`);
+  }
+
+  /**
    * Toggle event active status
    */
   async toggleEventStatus(id: number): Promise<void> {

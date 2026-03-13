@@ -375,9 +375,9 @@ export const AttendanceRecordsList: React.FC<AttendanceRecordsListProps> = ({
           </MenuItem>
           <MenuItem onClick={handleDeleteRecord} sx={{ color: 'error.main' }}>
             <ListItemIcon>
-              <DeleteIcon fontSize="small" color="error" />
+              <DeleteIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>Delete Record</ListItemText>
+            <ListItemText>Delete</ListItemText>
           </MenuItem>
         </Menu>
       </CardContent>

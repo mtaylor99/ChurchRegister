@@ -505,4 +505,49 @@ public class TrainingCertificateServiceIntegrationTests : IAsyncLifetime
         var response = await client.GetAsync("/api/training-certificates?sortBy=unknown&sortDirection=desc");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
+
+    // ─── DELETE /api/training-certificates/{id} ──────────────────────────
+
+    [Fact]
+    public async Task DeleteTrainingCertificate_WithValidId_ReturnsNoContent()
+    {
+        // Create a certificate first
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        
+        var createResponse = await client.PostAsJsonAsync("/api/training-certificates", new
+        {
+            ChurchMemberId = 1,
+            TrainingCertificateTypeId = 1,
+            Status = "In Validity",
+            Expires = DateTime.UtcNow.AddMonths(12)
+        });
+        
+        createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        var created = await createResponse.Content.ReadFromJsonAsync<System.Text.Json.JsonElement>();
+        var newId = created.GetProperty("id").GetInt32();
+
+        // Now delete it
+        var deleteResponse = await client.DeleteAsync($"/api/training-certificates/{newId}");
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        // Verify it's deleted
+        var getResponse = await client.GetAsync($"/api/training-certificates/{newId}");
+        getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task DeleteTrainingCertificate_WithNonExistentId_ReturnsNotFound()
+    {
+        var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
+        var response = await client.DeleteAsync("/api/training-certificates/99999");
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task DeleteTrainingCertificate_Unauthorized_Returns401()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.DeleteAsync("/api/training-certificates/1");
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
 }
