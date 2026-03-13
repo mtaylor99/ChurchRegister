@@ -367,6 +367,10 @@ builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Contributions.Assig
                            ChurchRegister.ApiService.UseCase.Contributions.AssignTransaction.AssignTransactionUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Contributions.ExcludeReference.IExcludeReferenceUseCase,
                            ChurchRegister.ApiService.UseCase.Contributions.ExcludeReference.ExcludeReferenceUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Contributions.EditContribution.IEditContributionUseCase,
+                           ChurchRegister.ApiService.UseCase.Contributions.EditContribution.EditContributionUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Contributions.DeleteContribution.IDeleteContributionUseCase,
+                           ChurchRegister.ApiService.UseCase.Contributions.DeleteContribution.DeleteContributionUseCase>();
 
 // Attendance Use Cases
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.Attendance.GetAttendance.IGetAttendanceUseCase,

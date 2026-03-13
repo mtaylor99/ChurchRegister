@@ -381,7 +381,7 @@ export const ContributionsPage: React.FC = () => {
           onViewContributions={handleViewContributions}
           initialQuery={{
             pageSize: 20,
-            sortBy: 'thisYearsContribution',
+            sortBy: 'lastContributionDate',
             sortDirection: 'desc',
           }}
         />

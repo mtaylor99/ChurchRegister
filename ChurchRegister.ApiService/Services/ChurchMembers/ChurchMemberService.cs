@@ -54,11 +54,16 @@ public class ChurchMemberService : IChurchMemberService
         if (!string.IsNullOrWhiteSpace(query.SearchTerm))
         {
             var searchTerm = query.SearchTerm.ToLower();
+            
+            // Try to parse search term as a number for member number search
+            var isNumericSearch = int.TryParse(query.SearchTerm, out var memberNumberSearch);
+            
             membersQuery = membersQuery.Where(m =>
                 m.FirstName.ToLower().Contains(searchTerm) ||
                 m.LastName.ToLower().Contains(searchTerm) ||
                 (m.EmailAddress != null && m.EmailAddress.ToLower().Contains(searchTerm)) ||
-                (m.PhoneNumber != null && m.PhoneNumber.ToLower().Contains(searchTerm)));
+                (m.PhoneNumber != null && m.PhoneNumber.ToLower().Contains(searchTerm)) ||
+                (isNumericSearch && m.RegisterNumbers.Any(r => r.Number == memberNumberSearch)));
         }
 
         // Apply status filter
