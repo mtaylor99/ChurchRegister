@@ -21,6 +21,7 @@ vi.mock('../hooks/useRiskAssessments', () => ({
   useRiskAssessment: () => ({ data: null, isLoading: false }),
   useRiskAssessmentCategories: () => ({ data: [], isLoading: false }),
   useStartReview: () => ({ mutate: vi.fn(), isPending: false }),
+  useDeleteRiskAssessment: () => ({ mutateAsync: vi.fn(), isPending: false }),
 }));
 
 vi.mock('../utils/exportRiskAssessmentsPdf', () => ({
@@ -29,9 +30,15 @@ vi.mock('../utils/exportRiskAssessmentsPdf', () => ({
 
 // Mock heavy sub-components
 vi.mock('../components/RiskAssessments/RiskAssessmentsGrid', () => ({
-  RiskAssessmentsGrid: ({ onViewAssessment }: { onViewAssessment?: (ra: unknown) => void }) => (
+  RiskAssessmentsGrid: ({
+    onViewAssessment,
+  }: {
+    onViewAssessment?: (ra: unknown) => void;
+  }) => (
     <div data-testid="risk-assessments-grid">
-      <button onClick={() => onViewAssessment?.({ id: 1, title: 'Test' })}>View</button>
+      <button onClick={() => onViewAssessment?.({ id: 1, title: 'Test' })}>
+        View
+      </button>
     </div>
   ),
 }));
@@ -74,7 +81,9 @@ describe('RiskAssessmentsPage', () => {
 
   test('renders the Risk Assessments heading', () => {
     render(<RiskAssessmentsPage />, { withRouter: true });
-    expect(screen.getByRole('heading', { name: /risk assessments/i })).toBeDefined();
+    expect(
+      screen.getByRole('heading', { name: /risk assessments/i })
+    ).toBeDefined();
   });
 
   test('renders two tabs: Risk Assessments and Categories', () => {
@@ -90,12 +99,16 @@ describe('RiskAssessmentsPage', () => {
 
   test('shows the Add Risk Assessment button', () => {
     render(<RiskAssessmentsPage />, { withRouter: true });
-    expect(screen.getByRole('button', { name: /add risk assessment/i })).toBeDefined();
+    expect(
+      screen.getByRole('button', { name: /add risk assessment/i })
+    ).toBeDefined();
   });
 
   test('opens add drawer when Add Risk Assessment button is clicked', () => {
     render(<RiskAssessmentsPage />, { withRouter: true });
-    fireEvent.click(screen.getByRole('button', { name: /add risk assessment/i }));
+    fireEvent.click(
+      screen.getByRole('button', { name: /add risk assessment/i })
+    );
     expect(screen.getByTestId('add-risk-drawer')).toBeDefined();
   });
 

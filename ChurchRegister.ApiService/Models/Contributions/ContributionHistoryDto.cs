@@ -49,4 +49,19 @@ public class ContributionHistoryDto
     /// Name of user who created the record
     /// </summary>
     public string CreatedByName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Indicates if this contribution can be edited/deleted (manual one-off contributions only)
+    /// </summary>
+    public bool IsEditable { get; set; }
+
+    /// <summary>
+    /// Indicates if this contribution is from a bank statement import
+    /// </summary>
+    public bool IsFromBankStatement { get; set; }
+
+    /// <summary>
+    /// Indicates if this contribution is from an envelope batch
+    /// </summary>
+    public bool IsFromEnvelopeBatch { get; set; }
 }

@@ -234,7 +234,7 @@ export const AttendanceGrid: React.FC<AttendanceGridProps> = React.memo(
           type: 'date',
           valueFormatter: (value) => {
             try {
-              return format(parseISO(value), 'PPP');
+              return format(parseISO(value), 'dd/MM/yyyy');
             } catch {
               return value;
             }
@@ -377,7 +377,7 @@ export const AttendanceGrid: React.FC<AttendanceGridProps> = React.memo(
               <ListItemIcon>
                 <ViewIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>View Details</ListItemText>
+              <ListItemText>View</ListItemText>
             </MenuItem>
 
             {canRecordAttendance && (
@@ -390,18 +390,19 @@ export const AttendanceGrid: React.FC<AttendanceGridProps> = React.memo(
                   <ListItemIcon>
                     <EditIcon fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText>Edit Record</ListItemText>
+                  <ListItemText>Edit</ListItemText>
                 </MenuItem>
 
                 <MenuItem
                   onClick={() =>
                     selectedRecord && handleDeleteRecord(selectedRecord)
                   }
+                  sx={{ color: 'error.main' }}
                 >
                   <ListItemIcon>
                     <DeleteIcon fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText>Delete Record</ListItemText>
+                  <ListItemText>Delete</ListItemText>
                 </MenuItem>
               </>
             )}

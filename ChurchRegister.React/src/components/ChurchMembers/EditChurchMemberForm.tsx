@@ -180,7 +180,12 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
     updateMutation.isPending || isLoadingRoles || isLoadingStatuses;
 
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      autoComplete="off"
+    >
       <Stack spacing={3}>
         {submitError && (
           <Alert severity="error" onClose={() => setSubmitError(null)}>
@@ -403,7 +408,9 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
                     type="number"
                     value={value ?? ''}
                     onChange={(e) =>
-                      onChange(e.target.value ? Number(e.target.value) : undefined)
+                      onChange(
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
                     }
                     label="Member Number"
                     placeholder="Leave blank to auto-generate"
@@ -519,6 +526,19 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
           <Controller
             name="roleIds"
             control={control}
+            rules={{
+              validate: (value) => {
+                const membershipRoles = roles.filter(
+                  (r) => r.type === 'Member' || r.type === 'Non-Member'
+                );
+                const hasMembershipRole = value.some((id) =>
+                  membershipRoles.some((r) => r.id === id)
+                );
+                return (
+                  hasMembershipRole || 'Please select Member or Non-Member'
+                );
+              },
+            }}
             render={({ field }) => {
               const membershipRoles = roles.filter(
                 (r) => r.type === 'Member' || r.type === 'Non-Member'
@@ -553,9 +573,7 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
                         <FormControlLabel
                           key={role.id}
                           value={role.id}
-                          control={
-                            <Radio disabled={isLoading || isViewMode} />
-                          }
+                          control={<Radio disabled={isLoading || isViewMode} />}
                           label={role.type}
                         />
                       ))}
@@ -593,9 +611,9 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
                       </FormGroup>
                     </Box>
                   )}
-                  <FormHelperText>
-                    Select whether this person is a Member or Non-Member, then
-                    assign any additional roles.
+                  <FormHelperText error={!!errors.roleIds}>
+                    {errors.roleIds?.message ||
+                      'Select whether this person is a Member or Non-Member, then assign any additional roles.'}
                   </FormHelperText>
                 </Box>
               );

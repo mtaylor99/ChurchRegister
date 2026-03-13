@@ -194,11 +194,11 @@ export const ChurchMemberGrid: React.FC<ChurchMemberGridProps> = React.memo(
           minWidth: 55,
           valueFormatter: (value) => value || '-',
         },
-        { field: 'fullName', headerName: 'Name', flex: 1.20, minWidth: 120 },
+        { field: 'fullName', headerName: 'Name', flex: 1.2, minWidth: 120 },
         {
           field: 'contact',
           headerName: 'Contact',
-          flex: 0.70,
+          flex: 0.7,
           minWidth: 130,
           sortable: false,
           renderCell: (params) => (
@@ -555,7 +555,7 @@ export const ChurchMemberGrid: React.FC<ChurchMemberGridProps> = React.memo(
             <ListItemIcon>
               <ViewIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>View Details</ListItemText>
+            <ListItemText>View</ListItemText>
           </MenuItem>
 
           <MenuItem
@@ -564,7 +564,7 @@ export const ChurchMemberGrid: React.FC<ChurchMemberGridProps> = React.memo(
             <ListItemIcon>
               <EditIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>Edit Member</ListItemText>
+            <ListItemText>Edit</ListItemText>
           </MenuItem>
 
           {canManageChurchMembers && (
@@ -576,7 +576,7 @@ export const ChurchMemberGrid: React.FC<ChurchMemberGridProps> = React.memo(
               <ListItemIcon>
                 <DeleteIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Delete Member</ListItemText>
+              <ListItemText>Delete</ListItemText>
             </MenuItem>
           )}
 

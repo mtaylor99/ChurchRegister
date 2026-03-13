@@ -9,6 +9,11 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -26,6 +31,7 @@ import type { TrainingCertificateTypeGridHandle } from '../../components/Trainin
 import type { TrainingCertificateDto } from '../../types/trainingCertificates';
 import { trainingCertificatesApi } from '../../services/api';
 import { exportTrainingCertificatesToExcel } from '../../utils/excelExport';
+import { useDeleteTrainingCertificate } from '../../hooks/useDeleteTrainingCertificate';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,6 +78,12 @@ export const TrainingCertificatesPage: React.FC = () => {
   const [exportError, setExportError] = useState<string | null>(null);
   const [exportSuccess, setExportSuccess] = useState(false);
   const [showExpired, setShowExpired] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [certificateToDelete, setCertificateToDelete] =
+    useState<TrainingCertificateDto | null>(null);
+
+  // Delete mutation
+  const deleteCertificateMutation = useDeleteTrainingCertificate();
 
   // Handle tab change
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -105,6 +117,28 @@ export const TrainingCertificatesPage: React.FC = () => {
   const handleSuccess = () => {
     handleDrawerClose();
     // The grid will refresh automatically via React Query
+  };
+
+  const handleDeleteCertificate = (certificate: TrainingCertificateDto) => {
+    setCertificateToDelete(certificate);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (certificateToDelete) {
+      try {
+        await deleteCertificateMutation.mutateAsync(certificateToDelete.id);
+        setDeleteConfirmOpen(false);
+        setCertificateToDelete(null);
+      } catch (error) {
+        console.error('Failed to delete certificate:', error);
+      }
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmOpen(false);
+    setCertificateToDelete(null);
   };
 
   const handleFilterChange = (showExpiredValue: boolean) => {
@@ -185,7 +219,7 @@ export const TrainingCertificatesPage: React.FC = () => {
 
         {/* Actions - Show different buttons based on active tab */}
         <Box display="flex" gap={2}>
-        {tabValue === 0 && (
+          {tabValue === 0 && (
             <>
               <Button
                 variant="outlined"
@@ -267,6 +301,7 @@ export const TrainingCertificatesPage: React.FC = () => {
         <TrainingCertificateGrid
           onEditCertificate={handleEditCertificate}
           onViewCertificate={handleViewCertificate}
+          onDeleteCertificate={handleDeleteCertificate}
           onFilterChange={handleFilterChange}
         />
       </TabPanel>
@@ -284,6 +319,27 @@ export const TrainingCertificatesPage: React.FC = () => {
         certificate={selectedCertificate}
         onSuccess={handleSuccess}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteConfirmOpen} onClose={handleCancelDelete}>
+        <DialogTitle>Delete Training Certificate</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this training certificate? This
+            action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete}>Cancel</Button>
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            disabled={deleteCertificateMutation.isPending}
+          >
+            {deleteCertificateMutation.isPending ? 'Deleting...' : 'Delete'}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Export Success Snackbar */}
       <Snackbar

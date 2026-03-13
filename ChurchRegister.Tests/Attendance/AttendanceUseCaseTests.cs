@@ -3,6 +3,7 @@ using ChurchRegister.ApiService.Services.Security;
 using ChurchRegister.ApiService.UseCase.Attendance.CreateAttendance;
 using ChurchRegister.ApiService.UseCase.Attendance.CreateEvent;
 using ChurchRegister.ApiService.UseCase.Attendance.DeleteAttendance;
+using ChurchRegister.ApiService.UseCase.Attendance.DeleteEvent;
 using ChurchRegister.ApiService.UseCase.Attendance.GetAttendance;
 using ChurchRegister.ApiService.UseCase.Attendance.GetAttendanceAnalytics;
 using ChurchRegister.ApiService.UseCase.Attendance.GetEvents;
@@ -27,6 +28,7 @@ public class AttendanceUseCaseTests : IDisposable
     private readonly Mock<ILogger<GetEventsUseCase>> _getEventsLogger;
     private readonly Mock<ILogger<CreateEventUseCase>> _createEventLogger;
     private readonly Mock<ILogger<UpdateEventUseCase>> _updateEventLogger;
+    private readonly Mock<ILogger<DeleteEventUseCase>> _deleteEventLogger;
     private readonly Mock<ILogger<GetAttendanceAnalyticsUseCase>> _analyticsLogger;
 
     public AttendanceUseCaseTests()
@@ -43,6 +45,7 @@ public class AttendanceUseCaseTests : IDisposable
         _getEventsLogger = new Mock<ILogger<GetEventsUseCase>>();
         _createEventLogger = new Mock<ILogger<CreateEventUseCase>>();
         _updateEventLogger = new Mock<ILogger<UpdateEventUseCase>>();
+        _deleteEventLogger = new Mock<ILogger<DeleteEventUseCase>>();
         _analyticsLogger = new Mock<ILogger<GetAttendanceAnalyticsUseCase>>();
 
         SeedBaseData();
@@ -122,6 +125,35 @@ public class AttendanceUseCaseTests : IDisposable
 
         // Act & Assert
         await useCase.Invoking(u => u.ExecuteAsync(request, "editor"))
+            .Should().ThrowAsync<KeyNotFoundException>();
+    }
+
+    // ─── DeleteEventUseCase ───────────────────────────────────────────────────
+
+    [Fact]
+    public async Task DeleteEvent_WithExistingEvent_RemovesEvent()
+    {
+        // Arrange
+        var useCase = new DeleteEventUseCase(_context, _deleteEventLogger.Object);
+        var eventToDelete = await _context.Events.FindAsync(3); // Old Event
+        eventToDelete.Should().NotBeNull();
+
+        // Act
+        await useCase.ExecuteAsync(3);
+
+        // Assert
+        var deleted = await _context.Events.FindAsync(3);
+        deleted.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteEvent_WithNonExistingId_ThrowsKeyNotFoundException()
+    {
+        // Arrange
+        var useCase = new DeleteEventUseCase(_context, _deleteEventLogger.Object);
+
+        // Act & Assert
+        await useCase.Invoking(u => u.ExecuteAsync(999))
             .Should().ThrowAsync<KeyNotFoundException>();
     }
 

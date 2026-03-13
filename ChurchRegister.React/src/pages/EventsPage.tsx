@@ -34,6 +34,7 @@ import {
 import {
   Add as AddIcon,
   Edit as EditIcon,
+  Delete as DeleteIcon,
   MoreVert as MoreVertIcon,
   Event as EventIcon,
   Visibility as VisibilityIcon,
@@ -47,6 +48,7 @@ import {
   useEvents,
   useCreateEvent,
   useUpdateEvent,
+  useDeleteEvent,
 } from '../hooks/useAttendance';
 import { useRBAC } from '../hooks/useRBAC';
 import type {
@@ -104,6 +106,7 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
   const { data: events = [], isLoading, error } = useEvents();
   const createEventMutation = useCreateEvent();
   const updateEventMutation = useUpdateEvent();
+  const deleteEventMutation = useDeleteEvent();
 
   // Form handling
   const {
@@ -189,9 +192,20 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
     }
   };
 
+  const handleDeleteEvent = (event: Event) => {
+    setDeleteConfirmEvent(event);
+    handleCloseMenu();
+  };
+
   const confirmDelete = async () => {
-    // Delete functionality not implemented yet
-    setDeleteConfirmEvent(null);
+    if (!deleteConfirmEvent) return;
+
+    try {
+      await deleteEventMutation.mutateAsync(deleteConfirmEvent.id);
+      setDeleteConfirmEvent(null);
+    } catch (error) {
+      console.error('Failed to delete event:', error);
+    }
   };
 
   const getEventStatusColor = (
@@ -447,9 +461,15 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
           onClick={() => selectedEvent && handleEditEvent(selectedEvent)}
         >
           <EditIcon sx={{ mr: 1 }} />
-          Edit Event
+          Edit
         </MenuItem>
-        {/* Delete functionality not implemented yet */}
+        <MenuItem
+          onClick={() => selectedEvent && handleDeleteEvent(selectedEvent)}
+          sx={{ color: 'error.main' }}
+        >
+          <DeleteIcon sx={{ mr: 1 }} />
+          Delete
+        </MenuItem>
       </Menu>
 
       {/* Add/Edit Event Dialog */}
@@ -647,9 +667,9 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
             onClick={confirmDelete}
             color="error"
             variant="contained"
-            disabled={false}
+            disabled={deleteEventMutation.isPending}
           >
-            Delete Event
+            {deleteEventMutation.isPending ? 'Deleting...' : 'Delete Event'}
           </Button>
         </DialogActions>
       </Dialog>

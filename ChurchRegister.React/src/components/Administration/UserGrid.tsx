@@ -506,14 +506,14 @@ export const UserGrid: React.FC<UserGridProps> = React.memo(
               <ListItemIcon>
                 <ViewIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>View Details</ListItemText>
+              <ListItemText>View</ListItemText>
             </MenuItem>
 
             <MenuItem onClick={() => handleEditUser(actionMenu.user!)}>
               <ListItemIcon>
                 <EditIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Edit User</ListItemText>
+              <ListItemText>Edit</ListItemText>
             </MenuItem>
 
             {actionMenu.user &&

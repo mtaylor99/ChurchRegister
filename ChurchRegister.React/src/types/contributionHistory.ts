@@ -15,6 +15,9 @@ export interface ContributionHistoryDto {
   createdDateTime: string; // ISO date string
   createdBy: string; // User ID
   createdByName: string; // User's full name
+  isEditable: boolean; // Can this contribution be edited/deleted
+  isFromBankStatement: boolean; // From bank statement import
+  isFromEnvelopeBatch: boolean; // From envelope batch
 }
 
 /**

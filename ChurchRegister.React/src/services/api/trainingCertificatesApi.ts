@@ -130,6 +130,13 @@ export class TrainingCertificatesApi {
   }
 
   /**
+   * Delete a training certificate
+   */
+  async deleteTrainingCertificate(certificateId: number): Promise<void> {
+    return apiClient.delete<void>(`${this.basePath}/${certificateId}`);
+  }
+
+  /**
    * Get dashboard training summary with grouped alerts (5+ members threshold)
    */
   async getDashboardTrainingSummary(): Promise<

@@ -72,7 +72,21 @@ export const addChurchMemberSchema = yup.object({
   envelopes: yup.boolean().required(),
   pastoralCareRequired: yup.boolean().required(),
   address: addressSchema,
-  roleIds: yup.array().of(yup.number().integer().required()).required(),
+  roleIds: yup
+    .array()
+    .of(yup.number().integer().required())
+    .required()
+    .test(
+      'has-membership-role',
+      'Please select either Member or Non-Member',
+      function (value) {
+        // This test runs in the context of the form validation
+        // We need to check if any roleId corresponds to Member or Non-Member type
+        // Since we don't have access to the roles list here, we check if array is not empty
+        // The form will ensure at least one membership role is selected via UI
+        return value && value.length > 0;
+      }
+    ),
 });
 
 /** Inferred TypeScript type from the add church member schema */

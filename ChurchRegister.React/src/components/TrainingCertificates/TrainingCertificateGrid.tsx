@@ -25,9 +25,11 @@ import {
 import {
   Edit as EditIcon,
   Visibility as ViewIcon,
+  Delete as DeleteIcon,
   Clear as ClearIcon,
   MoreVert as MoreIcon,
 } from '@mui/icons-material';
+import { format, parseISO } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
 import { trainingCertificatesApi } from '../../services/api';
 import type {
@@ -42,6 +44,7 @@ import {
 export interface TrainingCertificateGridProps {
   onEditCertificate?: (certificate: TrainingCertificateDto) => void;
   onViewCertificate?: (certificate: TrainingCertificateDto) => void;
+  onDeleteCertificate?: (certificate: TrainingCertificateDto) => void;
   initialQuery?: Partial<TrainingCertificateGridQuery>;
   onFilterChange?: (showExpired: boolean) => void;
 }
@@ -51,6 +54,7 @@ export const TrainingCertificateGrid: React.FC<TrainingCertificateGridProps> =
     ({
       onEditCertificate,
       onViewCertificate,
+      onDeleteCertificate,
       initialQuery,
       onFilterChange,
     }) => {
@@ -292,7 +296,7 @@ export const TrainingCertificateGrid: React.FC<TrainingCertificateGridProps> =
             headerName: 'Expires',
             width: 120,
             valueFormatter: (value) =>
-              value ? new Date(value).toLocaleDateString() : 'N/A',
+              value ? format(parseISO(value), 'dd/MM/yyyy') : 'N/A',
           },
           {
             field: 'status',
@@ -472,7 +476,7 @@ export const TrainingCertificateGrid: React.FC<TrainingCertificateGridProps> =
               <ListItemIcon>
                 <ViewIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>View Details</ListItemText>
+              <ListItemText>View</ListItemText>
             </MenuItem>
 
             <MenuItem
@@ -484,8 +488,25 @@ export const TrainingCertificateGrid: React.FC<TrainingCertificateGridProps> =
               <ListItemIcon>
                 <EditIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText>Edit Training/Check</ListItemText>
+              <ListItemText>Edit</ListItemText>
             </MenuItem>
+
+            {onDeleteCertificate && (
+              <MenuItem
+                onClick={() => {
+                  if (selectedCertificate) {
+                    handleActionMenuClose();
+                    onDeleteCertificate(selectedCertificate);
+                  }
+                }}
+                sx={{ color: 'error.main' }}
+              >
+                <ListItemIcon>
+                  <DeleteIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>Delete</ListItemText>
+              </MenuItem>
+            )}
           </Menu>
         </Box>
       );

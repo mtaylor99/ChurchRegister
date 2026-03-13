@@ -62,7 +62,12 @@ public class GetContributionHistoryUseCase : IGetContributionHistoryUseCase
                     Description = contribution.Description,
                     CreatedDateTime = contribution.CreatedDateTime,
                     CreatedBy = contribution.CreatedBy,
-                    CreatedByName = $"{user.FirstName} {user.LastName}"
+                    CreatedByName = $"{user.FirstName} {user.LastName}",
+                    IsFromBankStatement = contribution.HSBCBankCreditTransactionId.HasValue,
+                    IsFromEnvelopeBatch = contribution.EnvelopeContributionBatchId.HasValue,
+                    IsEditable = contribution.ManualContribution 
+                        && !contribution.HSBCBankCreditTransactionId.HasValue 
+                        && !contribution.EnvelopeContributionBatchId.HasValue
                 })
             .ToListAsync(cancellationToken);
 

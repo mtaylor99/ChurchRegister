@@ -87,9 +87,9 @@ namespace ChurchRegister.Database.Data
                     FirstName = "System",
                     LastName = "Administrator",
                     JobTitle = "System Administrator",
-                    DateJoined = new DateTime(2024, 11, 1, 0, 0, 0, DateTimeKind.Utc),
+                    DateJoined = DateTime.UtcNow,
                     AccountStatus = UserAccountStatus.Active,
-                    CreatedDateTime = new DateTime(2024, 11, 1, 0, 0, 0, DateTimeKind.Utc),
+                    CreatedDateTime = DateTime.UtcNow,
                     CreatedBy = "System"
                 };
 

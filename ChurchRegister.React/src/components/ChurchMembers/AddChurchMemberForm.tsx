@@ -126,7 +126,10 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
       churchMembersApi.createChurchMember(data),
     onSuccess: (newMember) => {
       queryClient.invalidateQueries({ queryKey: ['churchMembers'] });
-      queryClient.invalidateQueries({ queryKey: ['nextAvailableMemberNumber'], exact: false });
+      queryClient.invalidateQueries({
+        queryKey: ['nextAvailableMemberNumber'],
+        exact: false,
+      });
       reset();
       onSuccess(newMember);
     },
@@ -147,7 +150,9 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
       email: formData.email || undefined,
       phone: formData.phone || undefined,
       bankReference: formData.bankReference || undefined,
-      memberNumber: formData.memberNumber ? Number(formData.memberNumber) : undefined,
+      memberNumber: formData.memberNumber
+        ? Number(formData.memberNumber)
+        : undefined,
       memberSince: formData.memberSince
         ? formData.memberSince.toISOString()
         : new Date().toISOString(),
@@ -168,7 +173,12 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
-      <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate autoComplete="off">
+      <Box
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        autoComplete="off"
+      >
         <Stack spacing={3}>
           {/* Personal Information Section */}
           <Box>
@@ -507,6 +517,19 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
             <Controller
               name="roleIds"
               control={control}
+              rules={{
+                validate: (value) => {
+                  const membershipRoles = roles.filter(
+                    (r) => r.type === 'Member' || r.type === 'Non-Member'
+                  );
+                  const hasMembershipRole = value.some((id) =>
+                    membershipRoles.some((r) => r.id === id)
+                  );
+                  return (
+                    hasMembershipRole || 'Please select Member or Non-Member'
+                  );
+                },
+              }}
               render={({ field }) => {
                 const membershipRoles = roles.filter(
                   (r) => r.type === 'Member' || r.type === 'Non-Member'
@@ -527,7 +550,9 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
                   field.onChange([...filtered, selectedId]);
                 };
                 return (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                  >
                     <Box>
                       <Typography variant="subtitle2" gutterBottom>
                         Member?
@@ -579,9 +604,9 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
                         </FormGroup>
                       </Box>
                     )}
-                    <FormHelperText>
-                      Select whether this person is a Member or Non-Member, then
-                      assign any additional roles.
+                    <FormHelperText error={!!errors.roleIds}>
+                      {errors.roleIds?.message ||
+                        'Select whether this person is a Member or Non-Member, then assign any additional roles.'}
                     </FormHelperText>
                   </Box>
                 );

@@ -35,4 +35,21 @@ export const contributionHistoryApi = {
     const response = await apiClient.get<ContributionHistoryDto[]>(url);
     return response;
   },
+
+  /**
+   * Edit a contribution amount
+   * @param id - The contribution ID
+   * @param amount - The new amount
+   */
+  async editContribution(id: number, amount: number): Promise<void> {
+    await apiClient.put(`/api/contributions/${id}`, { amount });
+  },
+
+  /**
+   * Delete a contribution
+   * @param id - The contribution ID
+   */
+  async deleteContribution(id: number): Promise<void> {
+    await apiClient.delete(`/api/contributions/${id}`);
+  },
 };

@@ -180,6 +180,14 @@ export class RiskAssessmentsApi {
   async deleteCategory(id: number): Promise<void> {
     return apiClient.delete<void>(`${this.categoriesPath}/${id}`);
   }
+
+  /**
+   * Delete a risk assessment
+   * Removes the assessment and its approvals
+   */
+  async deleteRiskAssessment(id: number): Promise<void> {
+    return apiClient.delete<void>(`${this.basePath}/${id}`);
+  }
 }
 
 // Export singleton instance
