@@ -22,7 +22,7 @@ const columns: GridColDef[] = [
   {
     field: 'memberSince',
     headerName: 'Since',
-    width: 120,
+    width: 100, // Restore to original width for dd/MM/yyyy
     sortable: false,
     renderCell: (params) => {
       if (!params.value) {
@@ -50,14 +50,14 @@ const columns: GridColDef[] = [
   {
     field: 'currentNumber',
     headerName: 'Current',
-    width: 70,
+    width: 66, // 5% reduction from 70
     sortable: false,
     renderCell: (params) => params.value || '—',
   },
   {
     field: 'registerNumber',
     headerName: 'New',
-    width: 60,
+    width: 57, // 5% reduction from 60
     sortable: false,
   },
 ];
@@ -76,7 +76,14 @@ function MiniGrid({
   return (
     <Paper
       variant="outlined"
-      sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}
+      sx={{
+        flex: 1,
+        minWidth: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden', // Prevent double scrollbars
+        maxWidth: '100%',
+      }}
     >
       <Box
         sx={{
@@ -94,7 +101,7 @@ function MiniGrid({
         </Typography>
         <Chip label={rows.length} size="small" color={color} />
       </Box>
-      <Box sx={{ flex: 1, minHeight: 0 }}>
+      <Box sx={{ flex: 1, minHeight: 0, overflow: 'hidden' }}>
         <DataGrid
           rows={rows}
           columns={columns}
@@ -104,10 +111,12 @@ function MiniGrid({
           disableRowSelectionOnClick
           pageSizeOptions={[25, 50, 100]}
           initialState={{
-            pagination: { paginationModel: { pageSize: 25, page: 0 } },
+            pagination: { paginationModel: { pageSize: 100, page: 0 } },
           }}
           sx={{
             border: 0,
+            maxWidth: '100%',
+            overflowX: 'auto',
             '& .MuiDataGrid-cell:focus': { outline: 'none' },
             '& .MuiDataGrid-row:hover': { backgroundColor: 'action.hover' },
           }}
