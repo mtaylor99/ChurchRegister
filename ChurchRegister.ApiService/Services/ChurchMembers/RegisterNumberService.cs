@@ -149,8 +149,7 @@ public class RegisterNumberService : IRegisterNumberService
             .Include(r => r.ChurchMember)
             .ThenInclude(m => m.Roles)
             .ThenInclude(role => role.ChurchMemberRoleType)
-            .OrderBy(r => r.ChurchMember.MemberSince)
-            .ThenBy(r => r.Number)
+            .OrderBy(r => r.Number)
             .ToListAsync(cancellationToken);
 
         var memberAssignments = new List<RegisterNumberAssignment>();
@@ -227,10 +226,9 @@ public class RegisterNumberService : IRegisterNumberService
             })
             .ToListAsync(cancellationToken);
 
-        // Sort by member since date, then by current number (nulls last)
+        // Sort by current number only (ascending)
         var sortedMembers = activeMembers
-            .OrderBy(m => m.MemberSince ?? DateTime.MaxValue)
-            .ThenBy(m => m.CurrentNumber ?? int.MaxValue)
+            .OrderBy(m => m.CurrentNumber ?? int.MaxValue)
             .ToList();
 
         var currentYearNumbers = sortedMembers
@@ -321,10 +319,9 @@ public class RegisterNumberService : IRegisterNumberService
             })
             .ToListAsync(cancellationToken);
 
-        // Sort by member since date, then by current number (nulls last)
+        // Sort by current number only (ascending)
         var sortedMembers = activeMembers
-            .OrderBy(m => m.MemberSince ?? DateTime.MaxValue)
-            .ThenBy(m => m.CurrentNumber ?? int.MaxValue)
+            .OrderBy(m => m.CurrentNumber ?? int.MaxValue)
             .ToList();
 
         if (sortedMembers.Count == 0)

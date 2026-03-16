@@ -121,7 +121,7 @@ const getDataProtectionIcon = (
   if (grantedCount === 0) {
     return {
       icon: <CancelIcon fontSize="small" />,
-      color: 'grey',
+      color: 'error.main',
       tooltip: renderDataProtectionTooltip(dataProtection),
     };
   }
