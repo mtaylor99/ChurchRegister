@@ -1,9 +1,7 @@
 name: Playwright E2E Tests
 
 on:
-  pull_request:
-    branches: [main]
-  workflow_dispatch: # Allow manual trigger
+  workflow_dispatch: # Allow manual trigger only, no PR runs
 
 env:
   DOTNET_VERSION: "10.0.x"
