@@ -1,0 +1,60 @@
+# Git
+.git
+.github
+.gitignore
+.gitattributes
+
+# CI/CD
+*.yml
+*.yaml
+.github/
+
+# Documentation
+*.md
+docs/
+plan/
+spec/
+
+# Test results
+TestResults/
+test-results/
+playwright-report/
+coverage/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.userprefs
+.idea/
+.aspire/
+.azure/
+
+# Build outputs - IMPORTANT: Excludes Windows-specific NuGet cache
+**/bin/
+**/obj/
+**/dist/
+**/build/
+**/out/
+
+# Node modules
+**/node_modules/
+
+# React specific
+ChurchRegister.React/node_modules/
+ChurchRegister.React/.env
+ChurchRegister.React/.env.local
+ChurchRegister.React/coverage/
+ChurchRegister.React/test-results/
+ChurchRegister.React/playwright-report/
+
+# .NET specific
+**/*.docx
+**/*.xlsx
+
+# SQL Scripts
+SQL Scripts/
+
+# Package files that might have been downloaded
+package-lock.json
