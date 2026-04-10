@@ -51,7 +51,7 @@ public class UpdateChurchMemberEndpoint : Endpoint<UpdateChurchMemberRequest, Ch
             // Bank reference capacity reached - return 409 with clear message
             ThrowError(ex.Message, 409);
         }
-        catch (ValidationException ex)
+        catch (ChurchRegister.ApiService.Exceptions.ValidationException ex)
         {
             // Validation error - return 400
             ThrowError(ex.Message, 400);
