@@ -1,0 +1,374 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build API Service with Clean Architecture",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.ApiService/ChurchRegister.ApiService.csproj",
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Add Initial Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add InitialCreate --project ChurchRegister.Database --startup-project ChurchRegister.ApiService",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Add Initial Migration (From Database Project)",
+			"type": "shell",
+			"command": "cd ChurchRegister.Database && dotnet ef migrations add InitialCreate --startup-project ../ChurchRegister.ApiService",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Add Initial Migration Verbose",
+			"type": "shell",
+			"command": "dotnet ef migrations add InitialCreate --context ChurchRegisterWebContext --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --verbose",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Update Database",
+			"type": "shell",
+			"command": "dotnet ef database update --project ChurchRegister.Database --startup-project ChurchRegister.ApiService",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Test Application Startup",
+			"type": "shell",
+			"command": "dotnet run --project ChurchRegister.ApiService",
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Drop Database",
+			"type": "shell",
+			"command": "dotnet ef database drop --force --project ChurchRegister.Database --startup-project ChurchRegister.ApiService",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Create Initial Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add InitialChurchRegisterMigration --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --context ChurchRegisterWebContext --output-dir Migrations",
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Add Envelope Contribution Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add AddEnvelopeContributionBatch --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --context ChurchRegisterWebContext",
+			"group": "build"
+		},
+		{
+			"label": "Add Envelope Contribution Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add AddEnvelopeContributionBatch --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --context ChurchRegisterWebContext",
+			"group": "build"
+		},
+		{
+			"label": "Add Pastoral Care Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add AddPastoralCareRequired --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --context ChurchRegisterWebContext",
+			"group": "build"
+		},
+		{
+			"label": "Update Database - Pastoral Care",
+			"type": "shell",
+			"command": "dotnet ef database update --project ChurchRegister.Database --startup-project ChurchRegister.ApiService",
+			"group": "build"
+		},
+		{
+			"label": "Remove All Migrations",
+			"type": "shell",
+			"command": "cd ChurchRegister.Database && dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService && dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService && dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService"
+		},
+		{
+			"label": "Remove All Migrations",
+			"type": "shell",
+			"command": "cd ChurchRegister.Database; dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService; dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService; dotnet ef migrations remove --force --startup-project ../ChurchRegister.ApiService"
+		},
+		{
+			"label": "Build Tests Project",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.Tests/ChurchRegister.Tests.csproj"
+		},
+		{
+			"label": "Run All Tests",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --no-build --logger \"console;verbosity=minimal\""
+		},
+		{
+			"label": "Run Tests Summary",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --logger trx --verbosity normal 2>&1 | Select-String -Pattern 'passed|failed|skipped|error|Passed|Failed|Skipped|Error|Total'"
+		},
+		{
+			"label": "Run Tests Errors Only",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity normal 2>&1 | Select-String -Pattern 'Failed|Error Message|Expected|Actual|Stack' -Context 0,3"
+		},
+		{
+			"label": "Run Failed Tests",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --logger \"trx;LogFileName=testresults.trx\" --filter \"FullyQualifiedName~CreateChurchMember|FullyQualifiedName~SubmitEnvelopeBatch|FullyQualifiedName~GetContributionHistory_WithDate|FullyQualifiedName~GetContributionHistory_WithContributions|FullyQualifiedName~DuplicateBankReference|FullyQualifiedName~AnotherMembersBankReference\""
+		},
+		{
+			"label": "Run All Tests Final",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal"
+		},
+		{
+			"label": "Add HSBCExcludedReferences Migration",
+			"type": "shell",
+			"command": "dotnet ef migrations add AddHsbcExcludedReferences --project ChurchRegister.Database --startup-project ChurchRegister.ApiService --context ChurchRegisterWebContext",
+			"group": "build"
+		},
+		{
+			"label": "Run District Export Test Only",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --filter \"FullyQualifiedName~ExportDistrictsMemberList_ReturnsOk\" --verbosity normal"
+		},
+		{
+			"label": "npm run build",
+			"type": "shell",
+			"command": "cd ChurchRegister.React && npm run build 2>&1"
+		},
+		{
+			"label": "npm run build React",
+			"type": "shell",
+			"command": "cd ChurchRegister.React; npm run build"
+		},
+		{
+			"label": "Run dotnet outdated",
+			"type": "shell",
+			"command": "dotnet tool install -g dotnet-outdated-tool 2>&1; dotnet outdated ChurchRegister.sln 2>&1"
+		},
+		{
+			"label": "Build full solution after upgrades",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.sln 2>&1"
+		},
+		{
+			"label": "Build full solution after dependency fix",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.sln 2>&1"
+		},
+		{
+			"label": "Build check - errors and warnings",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.sln --no-incremental 2>&1 | Select-String -Pattern 'error|warning|Build succeeded|FAILED|Error' | Out-String"
+		},
+		{
+			"label": "Test results summary",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal 2>&1 | Select-String -Pattern 'passed|failed|skipped|Error|Passed|Failed|Total' | Out-String"
+		},
+		{
+			"label": "Check dotnet SDKs",
+			"type": "shell",
+			"command": "dotnet --list-sdks 2>&1"
+		},
+		{
+			"label": "dotnet outdated on net10.0",
+			"type": "shell",
+			"command": "dotnet outdated ChurchRegister.sln 2>&1"
+		},
+		{
+			"label": "Build net10 - errors check",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.sln --no-incremental 2>&1 | Select-String -Pattern '^.*error|Build succeeded|FAILED|Error\\(' | Out-String"
+		},
+		{
+			"label": "Restore and build net10",
+			"type": "shell",
+			"command": "dotnet restore ChurchRegister.sln 2>&1; if ($LASTEXITCODE -eq 0) { dotnet build ChurchRegister.sln 2>&1 | Select-String 'error|Build succeeded|Error\\(' } else { Write-Host 'RESTORE FAILED' }"
+		},
+		{
+			"label": "Test net10 results",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal 2>&1 | Select-String -Pattern 'passed|failed|skipped|Error|Passed|Failed|Total' | Out-String"
+		},
+		{
+			"label": "Run tests on net10.0",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj 2>&1 | tail -5"
+		},
+		{
+			"label": "Clean test net10 final",
+			"type": "shell",
+			"command": "dotnet clean ChurchRegister.sln 2>&1 | Out-Null; dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal 2>&1 | Select-String 'net10|succeeded|failed|total|passed|Total|Passed|Failed|Error'"
+		},
+		{
+			"label": "Rename FastEndpoints Send methods",
+			"type": "shell",
+			"command": "$files = Get-ChildItem -Path 'ChurchRegister.ApiService\\Endpoints' -Filter '*.cs' -Recurse; $renames = @('OkAsync','NoContentAsync','NotFoundAsync','UnauthorizedAsync','ForbiddenAsync','BytesAsync','ErrorsAsync','CreatedAtAsync','StringAsync'); $total = 0; foreach ($file in $files) { $content = Get-Content $file.FullName -Raw; $changed = $false; foreach ($m in $renames) { $old = \"await Send$m(\"; $new = \"await Send.$m(\"; if ($content -match [regex]::Escape($old)) { $content = $content -replace [regex]::Escape($old), $new; $changed = $true; $total++ } }; if ($changed) { Set-Content $file.FullName $content -NoNewline; Write-Host \"Updated: $($file.Name)\" } }; Write-Host \"Done. $total method rename(s) applied.\""
+		},
+		{
+			"label": "Build after major upgrades",
+			"type": "shell",
+			"command": "dotnet restore ChurchRegister.sln 2>&1 | Select-String 'error|warning|Restore'; dotnet build ChurchRegister.sln --no-incremental 2>&1 | Select-String 'error CS|Build succeeded|FAILED|Error\\('"
+		},
+		{
+			"label": "Mass rename FastEndpoints Send methods",
+			"type": "shell",
+			"command": "$script = @'\n$path = 'C:\\GitHub\\ChurchRegister\\ChurchRegister.ApiService\\Endpoints'\n$files = Get-ChildItem -Path $path -Filter '*.cs' -Recurse\n$methods = @('OkAsync','NoContentAsync','NotFoundAsync','UnauthorizedAsync','ForbiddenAsync','BytesAsync','ErrorsAsync','CreatedAtAsync','StringAsync','Async')\n$total = 0\nforeach ($file in $files) {\n    $content = [System.IO.File]::ReadAllText($file.FullName)\n    $orig = $content\n    foreach ($m in $methods) {\n        $old = 'await Send' + $m + '('\n        $new = 'await Send.' + $m + '('\n        $content = $content.Replace($old, $new)\n    }\n    if ($content -ne $orig) {\n        [System.IO.File]::WriteAllText($file.FullName, $content)\n        Write-Host (\"Updated: \" + $file.Name)\n        $total++\n    }\n}\nWrite-Host (\"Done. \" + $total + \" file(s) updated.\")\n'@\n$script | Out-File -FilePath 'rename_send_methods.ps1' -Encoding utf8\npowershell -ExecutionPolicy Bypass -File rename_send_methods.ps1\nRemove-Item rename_send_methods.ps1"
+		},
+		{
+			"label": "Build ApiService post rename",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.ApiService/ChurchRegister.ApiService.csproj 2>&1 | Select-String 'error CS|Build succeeded|FAILED' | Select-Object -Last 20 | Out-String"
+		},
+		{
+			"label": "Build post all major upgrades",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.sln 2>&1 | Where-Object { $_ -match 'error CS|Build succeeded|FAILED|Error\\(' } | Select-Object -Last 20"
+		},
+		{
+			"label": "Clean build ApiService v2",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.ApiService/ChurchRegister.ApiService.csproj --no-incremental 2>&1 | Where-Object { $_ -match 'error CS|warning CS|Build succeeded|FAILED' } | Select-Object -Last 30"
+		},
+		{
+			"label": "Fix remaining FastEndpoints issues",
+			"type": "shell",
+			"command": "$script = @\"\n`$path = 'C:\\GitHub\\ChurchRegister\\ChurchRegister.ApiService\\Endpoints'\n`$files = Get-ChildItem -Path `$path -Filter '*.cs' -Recurse\n`$count = 0\nforeach (`$file in `$files) {\n    `$c = [System.IO.File]::ReadAllText(`$file.FullName)\n    `$orig = `$c\n    `$c = `$c.Replace('await SendCreatedAtAsync<', 'await Send.CreatedAtAsync<')\n    `$c = `$c.Replace('await Send.Async(', 'await Send.ResponseAsync(')\n    if (`$c -ne `$orig) {\n        [System.IO.File]::WriteAllText(`$file.FullName, `$c)\n        `$count++\n    }\n}\nWrite-Host \"Fixed `$count file(s)\"\n\"@\n$script | Set-Content fix_remaining.ps1 -Encoding utf8\npowershell -ExecutionPolicy Bypass -File fix_remaining.ps1\nRemove-Item fix_remaining.ps1"
+		},
+		{
+			"label": "Fix FastEndpoints Send patterns",
+			"type": "shell",
+			"command": "$path = 'C:\\GitHub\\ChurchRegister\\ChurchRegister.ApiService\\Endpoints'; $files = Get-ChildItem -Path $path -Filter '*.cs' -Recurse; $count = 0; foreach ($file in $files) { $c = [System.IO.File]::ReadAllText($file.FullName); $orig = $c; $c = $c.Replace('await SendCreatedAtAsync<', 'await Send.CreatedAtAsync<'); $c = $c.Replace('await Send.Async(', 'await Send.ResponseAsync('); if ($c -ne $orig) { [System.IO.File]::WriteAllText($file.FullName, $c); $count++ } }; Write-Output \"Fixed $count file(s)\""
+		},
+		{
+			"label": "Run fix_fastendpoints.ps1",
+			"type": "shell",
+			"command": "powershell -ExecutionPolicy Bypass -File fix_fastendpoints.ps1"
+		},
+		{
+			"label": "Fresh API Build Check",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.ApiService/ChurchRegister.ApiService.csproj 2>&1 | Select-String -Pattern 'error CS|Build succeeded|FAILED|Error'"
+		},
+		{
+			"label": "Test Summary Check",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal 2>&1 | Select-String -Pattern 'passed|failed|skipped|error|Passed|Failed|Skipped|Total'"
+		},
+		{
+			"label": "Test Failures Detail",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity normal 2>&1 | Select-String -Pattern 'FAILED|Failed|Error Message|Expected|Actual|Assert' -Context 0,2"
+		},
+		{
+			"label": "Failed Test Names",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity normal 2>&1 | Select-String -Pattern '\\[FAIL\\]|Failed \\w'"
+		},
+		{
+			"label": "Get Failed Test TRX",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --logger \"trx;LogFileName=results.trx\" --verbosity quiet; Select-String -Path 'ChurchRegister.Tests/TestResults/results.trx' -Pattern 'outcome=\"Failed\"' | Select-Object -First 20"
+		},
+		{
+			"label": "Get FAIL lines",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj 2>&1 | Where-Object { $_ -match 'FAIL' }"
+		},
+		{
+			"label": "Full Test Run After EPPlus Fix",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal 2>&1 | Select-String -Pattern 'total:|failed:|succeeded:|Build succeeded|Build FAILED|error CS'"
+		},
+		{
+			"label": "Test with TRX",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --logger \"trx;LogFileName=results.trx\" --verbosity quiet; $trx = 'ChurchRegister.Tests/TestResults/results.trx'; if (Test-Path $trx) { $x = [xml](Get-Content $trx); $summary = $x.TestRun.ResultSummary.Counters; Write-Output \"Total:$($summary.total) Passed:$($summary.passed) Failed:$($summary.failed)\" } else { Write-Output 'No TRX' }"
+		},
+		{
+			"label": "Test to file",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal > C:/GitHub/ChurchRegister/test_output.txt 2>&1; Get-Content C:/GitHub/ChurchRegister/test_output.txt | Select-String 'failed:|passed:|Total|FAIL|error' | Select-Object -Last 20"
+		},
+		{
+			"label": "Final Test Run",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal > C:/GitHub/ChurchRegister/test_output.txt 2>&1; Get-Content C:/GitHub/ChurchRegister/test_output.txt | Select-String 'Failed|Passed|Total|failed|passed' | Select-Object -Last 5"
+		},
+		{
+			"label": "Run Single Failing Test",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --filter \"FullyQualifiedName~ExcludesActiveMembersWithEnvelopesFalse\" --verbosity detailed > C:/GitHub/ChurchRegister/onetest_output.txt 2>&1; Get-Content C:/GitHub/ChurchRegister/onetest_output.txt"
+		},
+		{
+			"label": "Run Tests Twice",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal > C:/GitHub/ChurchRegister/test_run2.txt 2>&1; dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal >> C:/GitHub/ChurchRegister/test_run2.txt 2>&1; Get-Content C:/GitHub/ChurchRegister/test_run2.txt | Select-String 'Failed!|Passed!|total:'"
+		},
+		{
+			"label": "Cleanup temp files",
+			"type": "shell",
+			"command": "Remove-Item C:/GitHub/ChurchRegister/test_output.txt, C:/GitHub/ChurchRegister/test_run2.txt, C:/GitHub/ChurchRegister/onetest_output.txt, C:/GitHub/ChurchRegister/fix_fastendpoints.ps1 -ErrorAction SilentlyContinue; Write-Output 'Cleaned up'"
+		},
+		{
+			"label": "Build AppHost",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.AppHost/ChurchRegister.AppHost.csproj 2>&1 | Select-String -Pattern 'error CS|Build succeeded|FAILED|Error\\('"
+		},
+		{
+			"label": "Build AppHost No Dependencies",
+			"type": "shell",
+			"command": "dotnet build ChurchRegister.AppHost/ChurchRegister.AppHost.csproj --no-dependencies 2>&1 | Select-String -Pattern 'error CS|error MSB4018|Build succeeded|FAILED'"
+		},
+		{
+			"label": "Restore AppHost",
+			"type": "shell",
+			"command": "dotnet restore ChurchRegister.AppHost/ChurchRegister.AppHost.csproj 2>&1; Write-Output 'Restore done'"
+		},
+		{
+			"label": "Test xunit.v3",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal 2>&1 | Select-String -Pattern 'total:|passed|failed|error CS|Build FAILED|succeeded'"
+		},
+		{
+			"label": "xunit.v3 test run",
+			"type": "shell",
+			"command": "dotnet test ChurchRegister.Tests/ChurchRegister.Tests.csproj --verbosity minimal 2>&1 | Select-String -Pattern 'total:|Failed!|Passed!|error CS'"
+		},
+		{
+			"label": "Run Vitest with coverage",
+			"type": "shell",
+			"command": "cd ChurchRegister.React && npx vitest run --reporter=verbose 2>&1 | Select-String -Pattern 'PASS|FAIL|Tests |test files|passed|failed|error' | Select-Object -Last 30"
+		},
+		{
+			"label": "Vitest quick run",
+			"type": "shell",
+			"command": "cd ChurchRegister.React && npx vitest run 2>&1 | Select-String -Pattern 'FAIL|PASS|Tests |error TS|✓|×' | Select-Object -Last 50"
+		},
+		{
+			"label": "Run Vitest",
+			"type": "shell",
+			"command": "cd ChurchRegister.React && npx vitest run 2>&1 | Select-String -Pattern 'FAIL |PASS |Tests |test files' | Select-Object -Last 40"
+		},
+		{
+			"label": "Vitest run PS",
+			"type": "shell",
+			"command": "Set-Location ChurchRegister.React; npx vitest run 2>&1 | Select-String -Pattern 'FAIL |PASS |Tests |test files|passed|failed' | Select-Object -Last 50"
+		},
+		{
+			"label": "Vitest results check",
+			"type": "shell",
+			"command": "Set-Location ChurchRegister.React; npx vitest run 2>&1 | Select-String -Pattern 'FAIL |PASS |Tests |test files|passed|failed|RUN ' | Select-Object -Last 60"
+		},
+		{
+			"label": "Vitest to file",
+			"type": "shell",
+			"command": "Set-Location ChurchRegister.React; npx vitest run 2>&1 > C:/GitHub/ChurchRegister/vitest_output.txt; Select-String -Path C:/GitHub/ChurchRegister/vitest_output.txt -Pattern 'FAIL |PASS |Tests |test files|passed|failed' | Select-Object -Last 40"
+		}
+	]
+}

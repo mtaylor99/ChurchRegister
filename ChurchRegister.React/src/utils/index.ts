@@ -1,0 +1,47 @@
+/**
+ * Utility Functions Barrel Export
+ *
+ * Provides a centralized export point for all utility functions and helpers.
+ * Import utilities from this file for cleaner imports throughout the application.
+ *
+ * @example
+ * ```typescript
+ * import { logger, validatePassword, getErrorMessage } from '@utils';
+ * ```
+ */
+
+// Authentication Errors
+export * from './authErrors';
+
+// Error Utilities
+export * from './errorUtils';
+
+// Export Utilities
+export * from './exportUtils';
+
+// Logger
+export { logger } from './logger';
+
+// Notification Manager
+export { notificationManager } from './notificationManager';
+
+// Date Utilities
+export { formatDateToISO, getTodayISO } from './dateUtils';
+
+// Password Security
+export * from './passwordSecurity';
+
+// Query Keys
+export * from './queryKeys';
+
+// RBAC (Role-Based Access Control)
+export * from './rbac';
+
+// Type Guards & Runtime Validation
+export * from './typeGuards';
+
+// Validation
+export * from './validation';
+
+// Higher-Order Component
+export { withErrorBoundary } from './withErrorBoundary';
