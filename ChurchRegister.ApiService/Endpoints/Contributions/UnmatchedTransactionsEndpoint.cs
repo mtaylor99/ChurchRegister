@@ -101,7 +101,7 @@ public class AssignTransactionEndpoint : Endpoint<AssignTransactionRequest, Assi
             var result = await _useCase.ExecuteAsync(id, req, assignedBy, ct);
             await Send.OkAsync(result, ct);
         }
-        catch (ValidationException ex)
+        catch (ChurchRegister.ApiService.Exceptions.ValidationException ex)
         {
             _logger.LogWarning(ex, "Validation error");
             AddError(ex.Message);
