@@ -77,18 +77,26 @@ export default defineConfig({
               return 'vendor-charts';
             }
 
-            // MUI Core, Lab, Emotion, and related (combine to avoid circular deps)
+            // MUI Core and Material only (keep separate from others to avoid circular deps)
+            if (id.includes('@mui/material')) {
+              return 'mui-material';
+            }
+
+            // Emotion packages (separate to avoid initialization issues)
+            if (id.includes('@emotion/')) {
+              return 'vendor-emotion';
+            }
+
+            // Other MUI packages (system, utils, base, lab, etc.)
             if (
-              id.includes('@mui/material') ||
               id.includes('@mui/system') ||
               id.includes('@mui/utils') ||
               id.includes('@mui/base') ||
               id.includes('@mui/lab') ||
               id.includes('@mui/private-theming') ||
-              id.includes('@emotion/') ||
               id.includes('stylis')
             ) {
-              return 'mui-core';
+              return 'mui-system';
             }
 
             // Form libraries
