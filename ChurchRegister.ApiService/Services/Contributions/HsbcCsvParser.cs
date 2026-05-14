@@ -5,8 +5,14 @@ using System.Text;
 namespace ChurchRegister.ApiService.Services.Contributions;
 
 /// <summary>
-/// Implementation of HSBC CSV parser with automatic column detection
+/// Implementation of HSBC CSV parser for v2 format with automatic column detection
 /// </summary>
+/// <remarks>
+/// Parses HSBC bank statement CSV files in v2 format exported from HSBC Online Banking.
+/// Expected columns: Date, Type, Description, Paid Out, Paid In, Balance.
+/// Only imports CR (Credit) transactions; BP (Bank Payment) and DD (Direct Debit) are excluded.
+/// References are taken directly from the Description field without extraction.
+/// </remarks>
 public class HsbcCsvParser : IHsbcCsvParser
 {
     public async Task<HsbcParseResult> ParseAsync(Stream csvStream, CancellationToken cancellationToken = default)
@@ -52,17 +58,22 @@ public class HsbcCsvParser : IHsbcCsvParser
                     if (cols.Length == 0)
                         continue;
 
+                    // v2 format: Filter by transaction type - only import CR (credit) transactions
+                    var transactionType = Get(cols, colIndex, "type");
+                    if (!string.Equals(transactionType, "CR", StringComparison.OrdinalIgnoreCase))
+                        continue; // Skip BP (Bank Payment) and DD (Direct Debit) transactions
+
                     var tx = new HsbcTransaction
                     {
                         Date = ParseDate(cols, colIndex, "date"),
                         Description = Get(cols, colIndex, "description"),
-                        MoneyIn = ParseDecimal(cols, colIndex, "money in", "credit amount", "credit") ?? 0
+                        MoneyIn = ParseDecimal(cols, colIndex, "paid in") ?? 0
                     };
 
-                    // Extract reference from description
-                    tx.Reference = HsbcReferenceExtractor.ExtractReference(tx.Description);
+                    // v2 format: Use description directly as reference (no extraction needed)
+                    tx.Reference = tx.Description.Trim();
 
-                    // Only add if it's a credit transaction
+                    // Only add if it's a credit transaction with positive amount
                     if (tx.MoneyIn > 0)
                     {
                         result.Transactions.Add(tx);
@@ -88,14 +99,18 @@ public class HsbcCsvParser : IHsbcCsvParser
     {
         missingColumns = new List<string>();
 
-        if (!colIndex.ContainsKey("date") && !colIndex.ContainsKey("transaction date"))
+        // v2 format: Date, Type, Description, Paid Out, Paid In, Balance
+        if (!colIndex.ContainsKey("date"))
             missingColumns.Add("Date");
 
-        if (!colIndex.ContainsKey("description") && !colIndex.ContainsKey("transaction description"))
+        if (!colIndex.ContainsKey("type"))
+            missingColumns.Add("Type");
+
+        if (!colIndex.ContainsKey("description"))
             missingColumns.Add("Description");
 
-        if (!colIndex.ContainsKey("money in") && !colIndex.ContainsKey("credit amount") && !colIndex.ContainsKey("credit"))
-            missingColumns.Add("Money In");
+        if (!colIndex.ContainsKey("paid in"))
+            missingColumns.Add("Paid In");
 
         return !missingColumns.Any();
     }
@@ -112,16 +127,12 @@ public class HsbcCsvParser : IHsbcCsvParser
 
     private static DateTime ParseDate(string[] cols, Dictionary<string, int> map, string key)
     {
-        var alternateKeys = new[] { key, "transaction date" };
-
-        foreach (var k in alternateKeys)
+        if (map.TryGetValue(key, out int idx) && idx < cols.Length)
         {
-            if (map.TryGetValue(k, out int idx) && idx < cols.Length)
-            {
-                var dateStr = cols[idx].Trim();
-                if (DateTime.TryParse(dateStr, CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var dt))
-                    return dt;
-            }
+            var dateStr = cols[idx].Trim();
+            // Support both v1 format (DD/MM/YYYY) and v2 format (DD-MMM-YY)
+            if (DateTime.TryParse(dateStr, CultureInfo.GetCultureInfo("en-GB"), DateTimeStyles.None, out var dt))
+                return dt;
         }
 
         return DateTime.MinValue;
