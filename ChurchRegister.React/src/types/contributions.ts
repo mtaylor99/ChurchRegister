@@ -37,6 +37,7 @@ export interface ContributionGridQuery {
   sortDirection?: 'asc' | 'desc';
   envelopeNumberFilter?: string;
   year?: number; // Optional year filter for contributions
+  envelopesFilter?: boolean; // Optional filter for contribution method (true = envelopes only, false = bank credit only, undefined = all)
 }
 
 /**

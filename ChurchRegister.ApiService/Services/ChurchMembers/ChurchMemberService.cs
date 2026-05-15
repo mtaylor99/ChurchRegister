@@ -89,6 +89,12 @@ public class ChurchMemberService : IChurchMemberService
             membersQuery = membersQuery.Where(m => m.GiftAid == query.GiftAidFilter.Value);
         }
 
+        // Apply envelopes filter
+        if (query.EnvelopesFilter.HasValue)
+        {
+            membersQuery = membersQuery.Where(m => m.Envelopes == query.EnvelopesFilter.Value);
+        }
+
         // Apply pastoral care required filter
         if (query.PastoralCareRequired.HasValue)
         {
@@ -451,6 +457,28 @@ public class ChurchMemberService : IChurchMemberService
         member.ModifiedBy = modifiedBy;
         member.ModifiedDateTime = DateTime.UtcNow;
 
+        // Clear bank reference if status is "In Glory" (ID = 3) AND another active member shares it
+        // This ensures future payments are fully allocated to the surviving active member
+        // and gift aid is not claimed on behalf of the deceased
+        if (request.StatusId == 3 && !string.IsNullOrWhiteSpace(member.BankReference))
+        {
+            var hasOtherActiveMemberWithSameRef = await _context.ChurchMembers
+                .AnyAsync(m => m.Id != member.Id &&
+                              m.BankReference != null &&
+                              m.BankReference.ToLower().Trim() == member.BankReference.ToLower().Trim() &&
+                              m.ChurchMemberStatusId == 1, // Active status
+                        cancellationToken);
+
+            if (hasOtherActiveMemberWithSameRef)
+            {
+                _logger.LogInformation(
+                    "Clearing bank reference '{BankReference}' for member {MemberId} due to status change to 'In Glory'. " +
+                    "Another active member shares this reference.",
+                    member.BankReference, member.Id);
+                member.BankReference = null;
+            }
+        }
+
         // Update address
         if (request.Address != null && !IsAddressEmpty(request.Address))
         {
@@ -588,6 +616,28 @@ public class ChurchMemberService : IChurchMemberService
         member.ChurchMemberStatusId = request.StatusId;
         member.ModifiedBy = modifiedBy;
         member.ModifiedDateTime = DateTime.UtcNow;
+
+        // Clear bank reference if status is "In Glory" (ID = 3) AND another active member shares it
+        // This ensures future payments are fully allocated to the surviving active member
+        // and gift aid is not claimed on behalf of the deceased
+        if (request.StatusId == 3 && !string.IsNullOrWhiteSpace(member.BankReference))
+        {
+            var hasOtherActiveMemberWithSameRef = await _context.ChurchMembers
+                .AnyAsync(m => m.Id != memberId &&
+                              m.BankReference != null &&
+                              m.BankReference.ToLower().Trim() == member.BankReference.ToLower().Trim() &&
+                              m.ChurchMemberStatusId == 1, // Active status
+                        cancellationToken);
+
+            if (hasOtherActiveMemberWithSameRef)
+            {
+                _logger.LogInformation(
+                    "Clearing bank reference '{BankReference}' for member {MemberId} due to status change to 'In Glory'. " +
+                    "Another active member shares this reference.",
+                    member.BankReference, memberId);
+                member.BankReference = null;
+            }
+        }
 
         await _context.SaveChangesAsync(cancellationToken);
 

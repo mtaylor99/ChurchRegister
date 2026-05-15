@@ -37,6 +37,9 @@ export class ContributionsApi {
         sortBy: query.sortBy || 'lastContributionDate',
         sortDirection: query.sortDirection || 'desc',
         ...(query.year && { year: query.year }), // Include year if provided
+        ...(query.envelopesFilter !== undefined && {
+          envelopesFilter: query.envelopesFilter,
+        }), // Include envelopes filter if provided
       };
 
       // Define the response type from the church members API

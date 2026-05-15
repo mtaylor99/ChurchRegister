@@ -151,7 +151,6 @@ const AssignTransactionDialog: React.FC<AssignDialogProps> = ({
   const splitAmount = secondaryMember
     ? Math.round((transaction.amount / 2) * 100) / 100
     : transaction.amount;
-  const remainder = secondaryMember ? transaction.amount - splitAmount : 0;
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
@@ -235,7 +234,7 @@ const AssignTransactionDialog: React.FC<AssignDialogProps> = ({
           <Alert severity="info" sx={{ mt: 2 }}>
             £{transaction.amount.toFixed(2)} will be split equally: £
             {splitAmount.toFixed(2)} to {selectedMember.fullName}, £
-            {(remainder + splitAmount).toFixed(2)} to {secondaryMember.fullName}
+            {splitAmount.toFixed(2)} to {secondaryMember.fullName}
           </Alert>
         )}
       </DialogContent>

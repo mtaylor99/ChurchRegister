@@ -17,7 +17,7 @@ import { Download as DownloadIcon } from '@mui/icons-material';
 export interface YearSelectionModalProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: (year: number) => void;
+  onConfirm: (year: number, envelopesFilter?: boolean) => void;
   isExporting?: boolean;
 }
 
@@ -34,17 +34,27 @@ export const YearSelectionModal: React.FC<YearSelectionModalProps> = ({
 }) => {
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [memberType, setMemberType] = useState<string>('all');
 
   // Generate array of last 5 years including current year
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
   const handleConfirm = () => {
-    onConfirm(selectedYear);
+    // Map member type selection to envelopesFilter value
+    const envelopesFilter =
+      memberType === 'envelopes'
+        ? true
+        : memberType === 'bankCredit'
+          ? false
+          : undefined; // 'all' -> undefined (no filter)
+
+    onConfirm(selectedYear, envelopesFilter);
   };
 
   const handleClose = () => {
-    // Reset to current year when closing
+    // Reset to defaults when closing
     setSelectedYear(currentYear);
+    setMemberType('all');
     onClose();
   };
 
@@ -54,9 +64,10 @@ export const YearSelectionModal: React.FC<YearSelectionModalProps> = ({
       <DialogContent>
         <Box sx={{ pt: 2 }}>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Select the year for which you want to export member contributions.
+            Select the year and contribution type for which you want to export
+            member contributions.
           </Typography>
-          <FormControl fullWidth>
+          <FormControl fullWidth sx={{ mb: 2 }}>
             <InputLabel id="year-select-label">Year</InputLabel>
             <Select
               labelId="year-select-label"
@@ -70,6 +81,20 @@ export const YearSelectionModal: React.FC<YearSelectionModalProps> = ({
                   {year}
                 </MenuItem>
               ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="member-type-label">Contribution Type</InputLabel>
+            <Select
+              labelId="member-type-label"
+              id="member-type-select"
+              value={memberType}
+              label="Contribution Type"
+              onChange={(e) => setMemberType(e.target.value)}
+            >
+              <MenuItem value="all">All Contributions</MenuItem>
+              <MenuItem value="envelopes">Envelopes Only</MenuItem>
+              <MenuItem value="bankCredit">Bank Credit Only</MenuItem>
             </Select>
           </FormControl>
         </Box>

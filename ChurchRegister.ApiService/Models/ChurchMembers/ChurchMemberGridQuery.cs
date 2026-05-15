@@ -55,6 +55,11 @@ public class ChurchMemberGridQuery
     public bool? GiftAidFilter { get; set; }
 
     /// <summary>
+    /// Filter by envelopes usage (null = show all, true = envelopes only, false = bank credit only)
+    /// </summary>
+    public bool? EnvelopesFilter { get; set; }
+
+    /// <summary>
     /// Filter by pastoral care required status (null = show all, true = show only requiring care, false = show only not requiring care)
     /// </summary>
     public bool? PastoralCareRequired { get; set; }

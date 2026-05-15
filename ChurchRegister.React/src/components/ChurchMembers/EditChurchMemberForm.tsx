@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckIcon from '@mui/icons-material/Check';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LoadingButton } from '../Administration/LoadingButton';
 import { churchMembersApi } from '@services/api';
@@ -48,6 +48,8 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [bankReferenceClearedWarning, setBankReferenceClearedWarning] =
+    useState(false);
 
   const isViewMode = mode === 'view';
 
@@ -68,6 +70,7 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
     control,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isValid, isDirty },
   } = useForm<UpdateChurchMemberRequest>({
     mode: 'onChange',
@@ -99,6 +102,24 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
         : undefined,
     },
   });
+
+  // Watch status and bank reference for "In Glory" handling
+  const watchedStatusId = useWatch({ control, name: 'statusId' });
+  const watchedBankReference = useWatch({ control, name: 'bankReference' });
+
+  // Clear bank reference when status changes to "In Glory" (ID = 3)
+  // Gift aid cannot be claimed for deceased members
+  useEffect(() => {
+    if (!isViewMode && watchedStatusId === 3 && watchedBankReference) {
+      setValue('bankReference', '', {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+      setBankReferenceClearedWarning(true);
+    } else if (watchedStatusId !== 3) {
+      setBankReferenceClearedWarning(false);
+    }
+  }, [watchedStatusId, watchedBankReference, setValue, isViewMode]);
 
   // Reset form when member prop changes
   useEffect(() => {
@@ -190,6 +211,18 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
         {submitError && (
           <Alert severity="error" onClose={() => setSubmitError(null)}>
             {submitError}
+          </Alert>
+        )}
+
+        {bankReferenceClearedWarning && (
+          <Alert
+            severity="info"
+            onClose={() => setBankReferenceClearedWarning(false)}
+          >
+            Bank reference will be cleared because this member is being marked
+            as "In Glory" (deceased). If another active member shares this bank
+            reference, future payments will be fully allocated to them, and gift
+            aid cannot be claimed for deceased members.
           </Alert>
         )}
 
