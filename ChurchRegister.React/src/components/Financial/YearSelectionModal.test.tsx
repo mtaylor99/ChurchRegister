@@ -29,23 +29,27 @@ describe('YearSelectionModal', () => {
     render(<YearSelectionModal {...defaultProps} />);
 
     const currentYear = new Date().getFullYear();
-    const yearSelect = screen.getByLabelText('Year');
-    const memberTypeSelect = screen.getByLabelText('Contribution Type');
-
-    expect(yearSelect).toHaveValue(currentYear.toString());
-    expect(memberTypeSelect).toHaveTextContent('All Contributions');
+    
+    // Check year - MUI Select stores value in hidden input
+    const yearInput = screen.getByRole('combobox', { name: /year/i });
+    expect(yearInput).toHaveTextContent(currentYear.toString());
+    
+    // Check member type - should show "All Contributions" as default
+    const memberTypeInput = screen.getByRole('combobox', { name: /contribution type/i });
+    expect(memberTypeInput).toHaveTextContent('All Contributions');
   });
 
   test('shows contribution type options', async () => {
     render(<YearSelectionModal {...defaultProps} />);
 
-    const memberTypeSelect = screen.getByLabelText('Contribution Type');
+    const memberTypeSelect = screen.getByRole('combobox', { name: /contribution type/i });
     fireEvent.mouseDown(memberTypeSelect);
 
+    // MUI renders menu items in a portal, so we need to search globally
     await waitFor(() => {
-      expect(screen.getByText('All Contributions')).toBeInTheDocument();
-      expect(screen.getByText('Envelopes Only')).toBeInTheDocument();
-      expect(screen.getByText('Bank Credit Only')).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'All Contributions' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Envelopes Only' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Bank Credit Only' })).toBeInTheDocument();
     });
   });
 
@@ -63,11 +67,11 @@ describe('YearSelectionModal', () => {
     render(<YearSelectionModal {...defaultProps} />);
 
     // Select "Envelopes Only"
-    const memberTypeSelect = screen.getByLabelText('Contribution Type');
+    const memberTypeSelect = screen.getByRole('combobox', { name: /contribution type/i });
     fireEvent.mouseDown(memberTypeSelect);
 
     await waitFor(() => {
-      const envelopesOption = screen.getByText('Envelopes Only');
+      const envelopesOption = screen.getByRole('option', { name: 'Envelopes Only' });
       fireEvent.click(envelopesOption);
     });
 
@@ -82,11 +86,11 @@ describe('YearSelectionModal', () => {
     render(<YearSelectionModal {...defaultProps} />);
 
     // Select "Bank Credit Only"
-    const memberTypeSelect = screen.getByLabelText('Contribution Type');
+    const memberTypeSelect = screen.getByRole('combobox', { name: /contribution type/i });
     fireEvent.mouseDown(memberTypeSelect);
 
     await waitFor(() => {
-      const bankCreditOption = screen.getByText('Bank Credit Only');
+      const bankCreditOption = screen.getByRole('option', { name: 'Bank Credit Only' });
       fireEvent.click(bankCreditOption);
     });
 
@@ -98,18 +102,23 @@ describe('YearSelectionModal', () => {
   });
 
   test('resets to defaults when closing', async () => {
-    render(<YearSelectionModal {...defaultProps} />);
+    const { rerender } = render(<YearSelectionModal {...defaultProps} />);
 
     // Change year
-    const yearSelect = screen.getByLabelText('Year');
-    fireEvent.change(yearSelect, { target: { value: '2023' } });
+    const yearSelect = screen.getByRole('combobox', { name: /year/i });
+    fireEvent.mouseDown(yearSelect);
+    
+    await waitFor(() => {
+      const year2023 = screen.getByRole('option', { name: '2023' });
+      fireEvent.click(year2023);
+    });
 
     // Change member type
-    const memberTypeSelect = screen.getByLabelText('Contribution Type');
+    const memberTypeSelect = screen.getByRole('combobox', { name: /contribution type/i });
     fireEvent.mouseDown(memberTypeSelect);
 
     await waitFor(() => {
-      const envelopesOption = screen.getByText('Envelopes Only');
+      const envelopesOption = screen.getByRole('option', { name: 'Envelopes Only' });
       fireEvent.click(envelopesOption);
     });
 
@@ -118,6 +127,16 @@ describe('YearSelectionModal', () => {
     fireEvent.click(cancelButton);
 
     expect(mockOnClose).toHaveBeenCalled();
+    
+    // Reopen modal to verify reset
+    rerender(<YearSelectionModal {...defaultProps} open={true} />);
+    
+    const currentYear = new Date().getFullYear();
+    const yearInput = screen.getByRole('combobox', { name: /year/i });
+    const memberTypeInput = screen.getByRole('combobox', { name: /contribution type/i });
+    
+    expect(yearInput).toHaveTextContent(currentYear.toString());
+    expect(memberTypeInput).toHaveTextContent('All Contributions');
   });
 
   test('disables buttons when exporting', () => {
