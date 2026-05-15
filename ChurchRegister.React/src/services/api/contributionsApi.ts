@@ -33,7 +33,7 @@ export class ContributionsApi {
         page: query.page,
         pageSize: query.pageSize,
         searchTerm: query.searchTerm,
-        statusFilter: 1, // Always filter to Active members only for contributions
+        // No statusFilter - show all members including "In Glory" to display their contribution history
         sortBy: query.sortBy || 'lastContributionDate',
         sortDirection: query.sortDirection || 'desc',
         ...(query.year && { year: query.year }), // Include year if provided
