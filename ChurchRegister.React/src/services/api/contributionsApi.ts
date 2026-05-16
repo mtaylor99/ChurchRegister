@@ -40,6 +40,9 @@ export class ContributionsApi {
         ...(query.envelopesFilter !== undefined && {
           envelopesFilter: query.envelopesFilter,
         }), // Include envelopes filter if provided
+        ...(query.giftAidFilter !== undefined && {
+          giftAidFilter: query.giftAidFilter,
+        }), // Include gift aid filter if provided
       };
 
       // Define the response type from the church members API

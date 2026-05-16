@@ -38,6 +38,7 @@ export interface ContributionGridQuery {
   envelopeNumberFilter?: string;
   year?: number; // Optional year filter for contributions
   envelopesFilter?: boolean; // Optional filter for contribution method (true = envelopes only, false = bank credit only, undefined = all)
+  giftAidFilter?: boolean; // Optional filter for gift aid (true = gift aid members only, undefined = all)
 }
 
 /**

@@ -193,7 +193,8 @@ export const ContributionsPage: React.FC = () => {
    */
   const handleConfirmYearExport = async (
     year: number,
-    envelopesFilter?: boolean
+    envelopesFilter?: boolean,
+    giftAidFilter?: boolean
   ) => {
     try {
       setIsExporting(true);
@@ -205,6 +206,7 @@ export const ContributionsPage: React.FC = () => {
         sortDirection: 'asc',
         year, // Pass selected year
         envelopesFilter, // Pass selected contribution type filter
+        giftAidFilter, // Pass selected gift aid filter
       });
 
       let allMembers = [...firstResponse.items];
@@ -222,6 +224,7 @@ export const ContributionsPage: React.FC = () => {
               sortDirection: 'asc',
               year, // Pass selected year
               envelopesFilter, // Pass selected contribution type filter
+              giftAidFilter, // Pass selected gift aid filter
             })
           );
         }

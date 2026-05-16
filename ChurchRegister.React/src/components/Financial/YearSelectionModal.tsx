@@ -11,13 +11,19 @@ import {
   MenuItem,
   Typography,
   Box,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import { Download as DownloadIcon } from '@mui/icons-material';
 
 export interface YearSelectionModalProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: (year: number, envelopesFilter?: boolean) => void;
+  onConfirm: (
+    year: number,
+    envelopesFilter?: boolean,
+    giftAidFilter?: boolean
+  ) => void;
   isExporting?: boolean;
 }
 
@@ -35,6 +41,7 @@ export const YearSelectionModal: React.FC<YearSelectionModalProps> = ({
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
   const [memberType, setMemberType] = useState<string>('all');
+  const [giftAidOnly, setGiftAidOnly] = useState<boolean>(false);
 
   // Generate array of last 5 years including current year
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
@@ -48,13 +55,17 @@ export const YearSelectionModal: React.FC<YearSelectionModalProps> = ({
           ? false
           : undefined; // 'all' -> undefined (no filter)
 
-    onConfirm(selectedYear, envelopesFilter);
+    // Only pass giftAidFilter if checkbox is checked
+    const giftAidFilter = giftAidOnly ? true : undefined;
+
+    onConfirm(selectedYear, envelopesFilter, giftAidFilter);
   };
 
   const handleClose = () => {
     // Reset to defaults when closing
     setSelectedYear(currentYear);
     setMemberType('all');
+    setGiftAidOnly(false);
     onClose();
   };
 
@@ -83,7 +94,7 @@ export const YearSelectionModal: React.FC<YearSelectionModalProps> = ({
               ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth>
+          <FormControl fullWidth sx={{ mb: 2 }}>
             <InputLabel id="member-type-label">Contribution Type</InputLabel>
             <Select
               labelId="member-type-label"
@@ -97,6 +108,15 @@ export const YearSelectionModal: React.FC<YearSelectionModalProps> = ({
               <MenuItem value="bankCredit">Bank Credit Only</MenuItem>
             </Select>
           </FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={giftAidOnly}
+                onChange={(e) => setGiftAidOnly(e.target.checked)}
+              />
+            }
+            label="Gift Aid only"
+          />
         </Box>
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2 }}>
