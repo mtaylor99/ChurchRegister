@@ -92,6 +92,17 @@ public class NextAvailableMemberNumberResponse
 {
     public int NextNumber { get; set; }
     public int Year { get; set; }
+
+    /// <summary>
+    /// The next available number for the following year, populated only when the following
+    /// year's register numbers have already been generated. Null otherwise.
+    /// </summary>
+    public int? NextYearNumber { get; set; }
+
+    /// <summary>
+    /// The following year, populated only when <see cref="NextYearNumber"/> is set.
+    /// </summary>
+    public int? NextYear { get; set; }
 }
 
 /// <summary>
@@ -123,17 +134,32 @@ public class GetNextAvailableMemberNumberEndpoint : Endpoint<NextMemberNumberReq
     public override async Task HandleAsync(NextMemberNumberRequest req, CancellationToken ct)
     {
         var currentYear = DateTime.UtcNow.Year;
+        var isMember = req.IsMember ?? true;
+        var isBaptised = req.IsBaptised ?? true;
+
         // Returns next available number based on member type and baptism status:
         // isMember=true,  isBaptised=true  → range 1 to NonBaptisedMemberStartNumber-1
         // isMember=true,  isBaptised=false → range NonBaptisedMemberStartNumber to NonMemberStartNumber-1
         // isMember=false                   → range NonMemberStartNumber and above
         var nextNumber = await _registerNumberService.GetNextAvailableNumberForRoleAsync(
-            currentYear, isMember: req.IsMember ?? true, isBaptised: req.IsBaptised ?? true, ct);
+            currentYear, isMember, isBaptised, ct);
 
-        await Send.OkAsync(new NextAvailableMemberNumberResponse
+        var response = new NextAvailableMemberNumberResponse
         {
             NextNumber = nextNumber,
             Year = currentYear
-        }, ct);
+        };
+
+        // If next year's numbers have already been generated, also return the next-year allocation
+        // so the user can see the member will receive a number for both years.
+        var nextYear = currentYear + 1;
+        if (await _registerNumberService.HasBeenGeneratedForYearAsync(nextYear, ct))
+        {
+            response.NextYearNumber = await _registerNumberService.GetNextAvailableNumberForRoleAsync(
+                nextYear, isMember, isBaptised, ct);
+            response.NextYear = nextYear;
+        }
+
+        await Send.OkAsync(response, ct);
     }
 }

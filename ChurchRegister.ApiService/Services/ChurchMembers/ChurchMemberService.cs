@@ -322,9 +322,15 @@ public class ChurchMemberService : IChurchMemberService
             // Assign member number for current year if member is Active (StatusId = 1)
             if (member.ChurchMemberStatusId == 1)
             {
+                var currentYear = DateTime.UtcNow.Year;
+
+                // Determine the member's group once; reused for both current-year and next-year allocation
+                var isMember = await _context.ChurchMemberRoleTypes
+                    .AnyAsync(rt => request.RoleIds.Contains(rt.Id) && rt.Type == "Member", cancellationToken);
+                var roleTypeLabel = isMember ? (request.Baptised ? "Baptised Member" : "Non-Baptised Member") : "Non-Member";
+
                 try
                 {
-                    var currentYear = DateTime.UtcNow.Year;
                     int? memberNumber = null;
 
                     if (request.MemberNumber.HasValue)
@@ -337,14 +343,11 @@ public class ChurchMemberService : IChurchMemberService
                     else
                     {
                         // Auto-generate: assign next available number from the correct range based on role/baptism
-                        var isMember = await _context.ChurchMemberRoleTypes
-                            .AnyAsync(rt => request.RoleIds.Contains(rt.Id) && rt.Type == "Member", cancellationToken);
-
                         var nextNumber = await _registerNumberService.GetNextAvailableNumberForRoleAsync(currentYear, isMember, isBaptised: request.Baptised, cancellationToken);
                         memberNumber = nextNumber;
                         _logger.LogInformation(
                             "Auto-generated {RoleType} register number {Number} for year {Year} for new active member {MemberId}",
-                            isMember ? (request.Baptised ? "Baptised Member" : "Non-Baptised Member") : "Non-Member", memberNumber, currentYear, member.Id);
+                            roleTypeLabel, memberNumber, currentYear, member.Id);
                     }
 
                     if (memberNumber.HasValue)
@@ -366,6 +369,37 @@ public class ChurchMemberService : IChurchMemberService
                 {
                     // Log error but don't fail member creation if number assignment fails
                     _logger.LogError(ex, "Failed to assign register number to new member {MemberId}. Member created successfully but without register number.", member.Id);
+                }
+
+                // If next year's numbers have already been generated, allocate one for the new member too.
+                // A manually provided number applies to the current year only; next year is always auto-allocated.
+                try
+                {
+                    var nextYear = currentYear + 1;
+                    if (await _registerNumberService.HasBeenGeneratedForYearAsync(nextYear, cancellationToken))
+                    {
+                        var nextYearNumber = await _registerNumberService.GetNextAvailableNumberForRoleAsync(
+                            nextYear, isMember, isBaptised: request.Baptised, cancellationToken);
+
+                        _context.ChurchMemberRegisterNumbers.Add(new ChurchMemberRegisterNumber
+                        {
+                            ChurchMemberId = member.Id,
+                            Number = nextYearNumber,
+                            Year = nextYear,
+                            CreatedBy = createdBy,
+                            CreatedDateTime = DateTime.UtcNow
+                        });
+                        await _context.SaveChangesAsync(cancellationToken);
+
+                        _logger.LogInformation(
+                            "Auto-generated {RoleType} register number {Number} for next year {Year} for new active member {MemberId}",
+                            roleTypeLabel, nextYearNumber, nextYear, member.Id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log error but don't fail member creation if next-year number assignment fails
+                    _logger.LogError(ex, "Failed to assign next-year register number to new member {MemberId}. Member created successfully but without a next-year register number.", member.Id);
                 }
             }
 

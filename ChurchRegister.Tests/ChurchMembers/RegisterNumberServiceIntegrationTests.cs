@@ -226,4 +226,61 @@ public class RegisterNumberServiceIntegrationTests : IAsyncLifetime
         var response = await client.PostAsJsonAsync("/api/register-numbers/generate", request);
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
+
+    // ─── GET /api/administration/church-members/next-member-number ────────────
+
+    private sealed record NextNumberDto(int NextNumber, int Year, int? NextYearNumber, int? NextYear);
+
+    [Fact]
+    public async Task GetNextMemberNumber_WhenNextYearNotGenerated_OmitsNextYearFields()
+    {
+        // Base seed has no register numbers, so the following year is not generated.
+        var response = await AdminClient()
+            .GetAsync("/api/administration/church-members/next-member-number?isMember=true&isBaptised=true");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var body = await response.Content.ReadFromJsonAsync<NextNumberDto>();
+        body.Should().NotBeNull();
+        body!.Year.Should().Be(DateTime.UtcNow.Year);
+        body.NextYearNumber.Should().BeNull();
+        body.NextYear.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetNextMemberNumber_WhenNextYearGenerated_ReturnsNextYearAllocation()
+    {
+        // Simulate next year already generated: an active member holds a baptised-range
+        // number (< 250) for the following year.
+        await _factory.SeedDatabaseAsync(ctx =>
+        {
+            var member = new ChurchMember
+            {
+                FirstName = "NextYear", LastName = "Seed",
+                ChurchMemberStatusId = 1,
+                CreatedBy = "system", CreatedDateTime = DateTime.UtcNow
+            };
+            ctx.ChurchMembers.Add(member);
+            ctx.SaveChanges();
+
+            ctx.ChurchMemberRegisterNumbers.Add(new ChurchMemberRegisterNumber
+            {
+                ChurchMemberId = member.Id,
+                Number = 5,
+                Year = TargetYear,
+                CreatedBy = "system", CreatedDateTime = DateTime.UtcNow
+            });
+            ctx.SaveChanges();
+        });
+
+        var response = await AdminClient()
+            .GetAsync("/api/administration/church-members/next-member-number?isMember=true&isBaptised=true");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var body = await response.Content.ReadFromJsonAsync<NextNumberDto>();
+        body.Should().NotBeNull();
+        body!.Year.Should().Be(DateTime.UtcNow.Year);
+        body.NextYear.Should().Be(TargetYear);
+        // Next available in the baptised range for the following year is 5 + 1.
+        body.NextYearNumber.Should().Be(6);
+    }
 }

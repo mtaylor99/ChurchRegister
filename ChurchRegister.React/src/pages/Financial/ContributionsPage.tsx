@@ -457,7 +457,12 @@ export const ContributionsPage: React.FC = () => {
       {/* Envelopes Upload Modal */}
       <Dialog
         open={batchEntryModalOpen}
-        onClose={() => setBatchEntryModalOpen(false)}
+        onClose={(_event, reason) => {
+          if (reason === 'backdropClick') {
+            return;
+          }
+          setBatchEntryModalOpen(false);
+        }}
         maxWidth={false}
         fullWidth
         sx={{

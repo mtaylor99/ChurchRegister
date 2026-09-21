@@ -16,6 +16,7 @@ namespace ChurchRegister.Tests.Contributions;
 /// <summary>
 /// Integration tests for shared bank reference assignment functionality
 /// </summary>
+[Collection("IntegrationTests")]
 public class AssignSharedTransactionTests : IAsyncLifetime
 {
     private TestWebApplicationFactory<Program> _factory = null!;
