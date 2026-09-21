@@ -89,6 +89,12 @@ public class ChurchMemberService : IChurchMemberService
             membersQuery = membersQuery.Where(m => m.GiftAid == query.GiftAidFilter.Value);
         }
 
+        // Apply envelopes filter
+        if (query.EnvelopesFilter.HasValue)
+        {
+            membersQuery = membersQuery.Where(m => m.Envelopes == query.EnvelopesFilter.Value);
+        }
+
         // Apply pastoral care required filter
         if (query.PastoralCareRequired.HasValue)
         {
@@ -316,9 +322,15 @@ public class ChurchMemberService : IChurchMemberService
             // Assign member number for current year if member is Active (StatusId = 1)
             if (member.ChurchMemberStatusId == 1)
             {
+                var currentYear = DateTime.UtcNow.Year;
+
+                // Determine the member's group once; reused for both current-year and next-year allocation
+                var isMember = await _context.ChurchMemberRoleTypes
+                    .AnyAsync(rt => request.RoleIds.Contains(rt.Id) && rt.Type == "Member", cancellationToken);
+                var roleTypeLabel = isMember ? (request.Baptised ? "Baptised Member" : "Non-Baptised Member") : "Non-Member";
+
                 try
                 {
-                    var currentYear = DateTime.UtcNow.Year;
                     int? memberNumber = null;
 
                     if (request.MemberNumber.HasValue)
@@ -331,14 +343,11 @@ public class ChurchMemberService : IChurchMemberService
                     else
                     {
                         // Auto-generate: assign next available number from the correct range based on role/baptism
-                        var isMember = await _context.ChurchMemberRoleTypes
-                            .AnyAsync(rt => request.RoleIds.Contains(rt.Id) && rt.Type == "Member", cancellationToken);
-
                         var nextNumber = await _registerNumberService.GetNextAvailableNumberForRoleAsync(currentYear, isMember, isBaptised: request.Baptised, cancellationToken);
                         memberNumber = nextNumber;
                         _logger.LogInformation(
                             "Auto-generated {RoleType} register number {Number} for year {Year} for new active member {MemberId}",
-                            isMember ? (request.Baptised ? "Baptised Member" : "Non-Baptised Member") : "Non-Member", memberNumber, currentYear, member.Id);
+                            roleTypeLabel, memberNumber, currentYear, member.Id);
                     }
 
                     if (memberNumber.HasValue)
@@ -360,6 +369,37 @@ public class ChurchMemberService : IChurchMemberService
                 {
                     // Log error but don't fail member creation if number assignment fails
                     _logger.LogError(ex, "Failed to assign register number to new member {MemberId}. Member created successfully but without register number.", member.Id);
+                }
+
+                // If next year's numbers have already been generated, allocate one for the new member too.
+                // A manually provided number applies to the current year only; next year is always auto-allocated.
+                try
+                {
+                    var nextYear = currentYear + 1;
+                    if (await _registerNumberService.HasBeenGeneratedForYearAsync(nextYear, cancellationToken))
+                    {
+                        var nextYearNumber = await _registerNumberService.GetNextAvailableNumberForRoleAsync(
+                            nextYear, isMember, isBaptised: request.Baptised, cancellationToken);
+
+                        _context.ChurchMemberRegisterNumbers.Add(new ChurchMemberRegisterNumber
+                        {
+                            ChurchMemberId = member.Id,
+                            Number = nextYearNumber,
+                            Year = nextYear,
+                            CreatedBy = createdBy,
+                            CreatedDateTime = DateTime.UtcNow
+                        });
+                        await _context.SaveChangesAsync(cancellationToken);
+
+                        _logger.LogInformation(
+                            "Auto-generated {RoleType} register number {Number} for next year {Year} for new active member {MemberId}",
+                            roleTypeLabel, nextYearNumber, nextYear, member.Id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log error but don't fail member creation if next-year number assignment fails
+                    _logger.LogError(ex, "Failed to assign next-year register number to new member {MemberId}. Member created successfully but without a next-year register number.", member.Id);
                 }
             }
 
@@ -450,6 +490,28 @@ public class ChurchMemberService : IChurchMemberService
         member.PastoralCareRequired = request.PastoralCareRequired;
         member.ModifiedBy = modifiedBy;
         member.ModifiedDateTime = DateTime.UtcNow;
+
+        // Clear bank reference if status is "In Glory" (ID = 3) AND another active member shares it
+        // This ensures future payments are fully allocated to the surviving active member
+        // and gift aid is not claimed on behalf of the deceased
+        if (request.StatusId == 3 && !string.IsNullOrWhiteSpace(member.BankReference))
+        {
+            var hasOtherActiveMemberWithSameRef = await _context.ChurchMembers
+                .AnyAsync(m => m.Id != member.Id &&
+                              m.BankReference != null &&
+                              m.BankReference.ToLower().Trim() == member.BankReference.ToLower().Trim() &&
+                              m.ChurchMemberStatusId == 1, // Active status
+                        cancellationToken);
+
+            if (hasOtherActiveMemberWithSameRef)
+            {
+                _logger.LogInformation(
+                    "Clearing bank reference '{BankReference}' for member {MemberId} due to status change to 'In Glory'. " +
+                    "Another active member shares this reference.",
+                    member.BankReference, member.Id);
+                member.BankReference = null;
+            }
+        }
 
         // Update address
         if (request.Address != null && !IsAddressEmpty(request.Address))
@@ -588,6 +650,28 @@ public class ChurchMemberService : IChurchMemberService
         member.ChurchMemberStatusId = request.StatusId;
         member.ModifiedBy = modifiedBy;
         member.ModifiedDateTime = DateTime.UtcNow;
+
+        // Clear bank reference if status is "In Glory" (ID = 3) AND another active member shares it
+        // This ensures future payments are fully allocated to the surviving active member
+        // and gift aid is not claimed on behalf of the deceased
+        if (request.StatusId == 3 && !string.IsNullOrWhiteSpace(member.BankReference))
+        {
+            var hasOtherActiveMemberWithSameRef = await _context.ChurchMembers
+                .AnyAsync(m => m.Id != memberId &&
+                              m.BankReference != null &&
+                              m.BankReference.ToLower().Trim() == member.BankReference.ToLower().Trim() &&
+                              m.ChurchMemberStatusId == 1, // Active status
+                        cancellationToken);
+
+            if (hasOtherActiveMemberWithSameRef)
+            {
+                _logger.LogInformation(
+                    "Clearing bank reference '{BankReference}' for member {MemberId} due to status change to 'In Glory'. " +
+                    "Another active member shares this reference.",
+                    member.BankReference, memberId);
+                member.BankReference = null;
+            }
+        }
 
         await _context.SaveChangesAsync(cancellationToken);
 

@@ -154,6 +154,62 @@ describe('ContributionsApi', () => {
       expect(result.currentPage).toBe(2);
       expect(result.totalPages).toBe(5);
     });
+
+    test('includes envelopesFilter when provided as true', async () => {
+      vi.mocked(apiClient.get).mockResolvedValue(makeApiResponse([]));
+      await api.getContributionMembers({
+        page: 1,
+        pageSize: 20,
+        sortBy: 'name',
+        sortDirection: 'asc',
+        envelopesFilter: true,
+      });
+      expect(vi.mocked(apiClient.get)).toHaveBeenCalledWith(
+        '/api/church-members',
+        expect.objectContaining({
+          params: expect.objectContaining({
+            envelopesFilter: true,
+          }),
+        })
+      );
+    });
+
+    test('includes envelopesFilter when provided as false', async () => {
+      vi.mocked(apiClient.get).mockResolvedValue(makeApiResponse([]));
+      await api.getContributionMembers({
+        page: 1,
+        pageSize: 20,
+        sortBy: 'name',
+        sortDirection: 'asc',
+        envelopesFilter: false,
+      });
+      expect(vi.mocked(apiClient.get)).toHaveBeenCalledWith(
+        '/api/church-members',
+        expect.objectContaining({
+          params: expect.objectContaining({
+            envelopesFilter: false,
+          }),
+        })
+      );
+    });
+
+    test('omits envelopesFilter when undefined', async () => {
+      vi.mocked(apiClient.get).mockResolvedValue(makeApiResponse([]));
+      await api.getContributionMembers({
+        page: 1,
+        pageSize: 20,
+        sortBy: 'name',
+        sortDirection: 'asc',
+      });
+      expect(vi.mocked(apiClient.get)).toHaveBeenCalledWith(
+        '/api/church-members',
+        expect.objectContaining({
+          params: expect.not.objectContaining({
+            envelopesFilter: expect.anything(),
+          }),
+        })
+      );
+    });
   });
 
   // ─── addOneOffContribution ────────────────────────────────────────────────

@@ -490,9 +490,20 @@ export const EnvelopeBatchEntry: React.FC<EnvelopeBatchEntryProps> = ({
           isValidating: false,
           error: undefined,
         });
-        // Focus on amount field
+        // Focus on amount field and scroll row into view
         setTimeout(() => {
-          document.getElementById(`amount-${rowId}`)?.focus();
+          const amountField = document.getElementById(`amount-${rowId}`);
+          amountField?.focus();
+
+          // Scroll the row into view smoothly, accounting for sticky footer
+          const tableRow = amountField?.closest('tr');
+          if (tableRow && gridContainerRef.current) {
+            tableRow.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'nearest',
+            });
+          }
         }, 100);
       } else {
         updateEnvelope(rowId, {
@@ -573,11 +584,20 @@ export const EnvelopeBatchEntry: React.FC<EnvelopeBatchEntryProps> = ({
         if (currentIndex < envelopes.length - 1) {
           // Focus next row's member number
           setTimeout(() => {
-            document
-              .getElementById(
-                `registerNumber-${envelopes[currentIndex + 1].id}`
-              )
-              ?.focus();
+            const nextRegisterField = document.getElementById(
+              `registerNumber-${envelopes[currentIndex + 1].id}`
+            );
+            nextRegisterField?.focus();
+
+            // Scroll the next row into view
+            const tableRow = nextRegisterField?.closest('tr');
+            if (tableRow && gridContainerRef.current) {
+              tableRow.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest',
+              });
+            }
           }, 100);
         } else {
           // Add new row and focus it
@@ -594,7 +614,20 @@ export const EnvelopeBatchEntry: React.FC<EnvelopeBatchEntryProps> = ({
             },
           ]);
           setTimeout(() => {
-            document.getElementById(`registerNumber-${newId}`)?.focus();
+            const newRegisterField = document.getElementById(
+              `registerNumber-${newId}`
+            );
+            newRegisterField?.focus();
+
+            // Scroll the new row into view
+            const tableRow = newRegisterField?.closest('tr');
+            if (tableRow && gridContainerRef.current) {
+              tableRow.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest',
+              });
+            }
           }, 100);
         }
       }
@@ -615,6 +648,21 @@ export const EnvelopeBatchEntry: React.FC<EnvelopeBatchEntryProps> = ({
         isValid: false,
       },
     ]);
+
+    // Scroll new row into view after it's rendered
+    setTimeout(() => {
+      const newRegisterField = document.getElementById(
+        `registerNumber-${newId}`
+      );
+      const tableRow = newRegisterField?.closest('tr');
+      if (tableRow && gridContainerRef.current) {
+        tableRow.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'nearest',
+        });
+      }
+    }, 100);
   };
 
   // Delete row
@@ -919,7 +967,7 @@ export const EnvelopeBatchEntry: React.FC<EnvelopeBatchEntryProps> = ({
         {/* Envelope Entry Grid */}
         <TableContainer
           component={Paper}
-          sx={{ mb: 3, maxHeight: '500px', overflow: 'auto' }}
+          sx={{ mb: 3, maxHeight: '500px', overflow: 'auto', pb: 2 }}
           ref={gridContainerRef}
         >
           <Table size="small">
@@ -1010,50 +1058,68 @@ export const EnvelopeBatchEntry: React.FC<EnvelopeBatchEntryProps> = ({
           </Table>
         </TableContainer>
 
-        {/* Totals and Actions */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 3 }}>
-          <Chip
-            label={`Total Envelopes: ${totalEnvelopes}`}
-            color="primary"
-            variant="outlined"
-          />
-          <Chip
-            label={`Total Amount: £${totalAmount.toFixed(2)}`}
-            color="primary"
-            variant="outlined"
-          />
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            disabled={!canSubmit()}
-            size="large"
+        {/* Sticky Footer with Totals, Keyboard Shortcuts and Actions */}
+        <Box
+          sx={{
+            position: 'sticky',
+            bottom: 0,
+            backgroundColor: 'background.paper',
+            borderTop: 1,
+            borderColor: 'divider',
+            pt: 2,
+            pb: 2,
+            mt: -2,
+            zIndex: 10,
+          }}
+        >
+          {/* Keyboard Shortcuts */}
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            display="block"
+            sx={{ mb: 2 }}
           >
-            {isSubmitting ? (
-              <CircularProgress size={24} />
-            ) : isValidating ? (
-              'Validating...'
-            ) : (
-              'Submit Upload'
-            )}
-          </Button>
-          {onCancel && (
-            <Button
-              variant="outlined"
-              onClick={onCancel}
-              disabled={isSubmitting}
-              size="large"
-            >
-              Cancel
-            </Button>
-          )}
-        </Box>
-
-        {/* Instructions */}
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="caption" color="text.secondary" display="block">
             <strong>Keyboard Shortcuts:</strong> Tab = Next Field | Enter = Next
             Row
           </Typography>
+
+          {/* Totals and Submit Button */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+            <Chip
+              label={`Total Envelopes: ${totalEnvelopes}`}
+              color="primary"
+              variant="outlined"
+            />
+            <Chip
+              label={`Total Amount: £${totalAmount.toFixed(2)}`}
+              color="primary"
+              variant="outlined"
+            />
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={!canSubmit()}
+              size="large"
+            >
+              {isSubmitting ? (
+                <CircularProgress size={24} />
+              ) : isValidating ? (
+                'Validating...'
+              ) : (
+                'Submit Upload'
+              )}
+            </Button>
+            {onCancel && (
+              <Button
+                variant="outlined"
+                onClick={onCancel}
+                disabled={isSubmitting}
+                size="large"
+              >
+                Cancel
+              </Button>
+            )}
+          </Box>
         </Box>
       </Box>
     </LocalizationProvider>

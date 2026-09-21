@@ -3,6 +3,13 @@ namespace ChurchRegister.ApiService.Services.Contributions;
 /// <summary>
 /// Static utility for extracting payment references from HSBC transaction descriptions
 /// </summary>
+/// <remarks>
+/// NOTE: This extractor is NOT used for v2 HSBC CSV format parsing.
+/// The v2 format (Date, Type, Description, Paid In, etc.) provides clean references
+/// directly in the Description field, eliminating the need for extraction.
+/// This class is preserved for backward compatibility or other use cases that may
+/// require parsing references from verbose descriptions.
+/// </remarks>
 public static class HsbcReferenceExtractor
 {
     private static readonly string[] TrailingTokens =

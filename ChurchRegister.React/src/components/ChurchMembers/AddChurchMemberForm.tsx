@@ -512,6 +512,15 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
                   <strong>{nextMemberNumber.nextNumber}</strong> for the year{' '}
                   {nextMemberNumber.year}.
                 </Typography>
+                {nextMemberNumber.nextYearNumber != null &&
+                  nextMemberNumber.nextYear != null && (
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                      Numbers for {nextMemberNumber.nextYear} have already been
+                      generated, so this member will also be assigned membership
+                      number <strong>{nextMemberNumber.nextYearNumber}</strong>{' '}
+                      for the year {nextMemberNumber.nextYear}.
+                    </Typography>
+                  )}
               </Alert>
             )}
             <Controller

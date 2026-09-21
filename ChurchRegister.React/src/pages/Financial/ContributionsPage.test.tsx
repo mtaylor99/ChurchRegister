@@ -48,7 +48,11 @@ vi.mock('../../components/Contributions', () => ({
       <button onClick={() => onMemberClick?.({ id: 1, fullName: 'John Doe' })}>Member</button>
     </div>
   ),
-  FinancialActionsHeader: () => <div data-testid="financial-actions-header">Actions</div>,
+  FinancialActionsHeader: ({ onEnterBatch }: { onEnterBatch?: () => void }) => (
+    <div data-testid="financial-actions-header">
+      <button onClick={onEnterBatch}>Upload Envelopes</button>
+    </div>
+  ),
 }));
 
 vi.mock('../../components/ChurchMembers/ContributionHistoryDialog', () => ({
@@ -101,5 +105,20 @@ describe('ContributionsPage', () => {
     // Click the second tab (Unmatched HSBC)
     fireEvent.click(tabs[1]);
     expect(screen.getByTestId('unmatched-transactions-page')).toBeDefined();
+  });
+
+  test('keeps the envelope upload dialog open when the backdrop is clicked', () => {
+    render(<ContributionsPage />, { withRouter: true });
+
+    fireEvent.click(screen.getByRole('button', { name: /upload envelopes/i }));
+
+    expect(screen.getByRole('heading', { name: /upload envelopes/i })).toBeDefined();
+
+    const backdrop = document.querySelector('.MuiBackdrop-root');
+    expect(backdrop).not.toBeNull();
+
+    fireEvent.click(backdrop!);
+
+    expect(screen.getByRole('heading', { name: /upload envelopes/i })).toBeDefined();
   });
 });

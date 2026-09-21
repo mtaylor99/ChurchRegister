@@ -12,10 +12,13 @@ import {
   Stack,
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { enGB } from 'date-fns/locale';
 import { contributionsApi, churchMembersApi } from '@services/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { ChurchMemberDto } from '../../types/churchMembers';
-import { getTodayISO } from '../../utils/dateUtils';
 
 export interface AddOneOffContributionDrawerProps {
   open: boolean;
@@ -35,7 +38,7 @@ export const AddOneOffContributionDrawer: React.FC<
     null
   );
   const [amount, setAmount] = useState('');
-  const [date, setDate] = useState(getTodayISO());
+  const [date, setDate] = useState<Date | null>(new Date());
   const [description, setDescription] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
@@ -116,7 +119,7 @@ export const AddOneOffContributionDrawer: React.FC<
     addContributionMutation.mutate({
       memberId: selectedMember.id,
       amount: amountValue,
-      date,
+      date: date.toISOString().split('T')[0],
       description: description.trim(),
     });
   };
@@ -124,7 +127,7 @@ export const AddOneOffContributionDrawer: React.FC<
   const handleReset = () => {
     setSelectedMember(null);
     setAmount('');
-    setDate(getTodayISO());
+    setDate(new Date());
     setDescription('');
     setSearchTerm('');
     setError('');
@@ -177,7 +180,8 @@ export const AddOneOffContributionDrawer: React.FC<
 
         {/* Form */}
         <Box component="form" onSubmit={handleSubmit}>
-          <Stack spacing={3}>
+          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
+            <Stack spacing={3}>
             {/* Error Alert */}
             {error && (
               <Alert severity="error" onClose={() => setError('')}>
@@ -239,14 +243,17 @@ export const AddOneOffContributionDrawer: React.FC<
             />
 
             {/* Date */}
-            <TextField
+            <DatePicker
               label="Date"
-              type="date"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
+              onChange={(newValue) => setDate(newValue)}
               disabled={addContributionMutation.isPending}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{
+                textField: {
+                  required: true,
+                  fullWidth: true,
+                },
+              }}
             />
 
             {/* Description */}
@@ -288,6 +295,7 @@ export const AddOneOffContributionDrawer: React.FC<
               </Button>
             </Stack>
           </Stack>
+          </LocalizationProvider>
         </Box>
       </Box>
     </Drawer>

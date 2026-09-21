@@ -268,6 +268,185 @@ public class ChurchMemberServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task CreateChurchMemberAsync_WhenNextYearGenerated_CreatesNumbersForBothYears()
+    {
+        // Arrange
+        var currentYear = DateTime.UtcNow.Year;
+        var nextYear = currentYear + 1;
+        _mockRegisterNumberService
+            .Setup(x => x.GetNextAvailableNumberForRoleAsync(currentYear, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(10);
+        _mockRegisterNumberService
+            .Setup(x => x.HasBeenGeneratedForYearAsync(nextYear, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        _mockRegisterNumberService
+            .Setup(x => x.GetNextAvailableNumberForRoleAsync(nextYear, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(11);
+
+        var request = new CreateChurchMemberRequest
+        {
+            FirstName = "Late",
+            LastName = "Joiner",
+            Email = "late@test.com",
+            MemberSince = DateTime.UtcNow,
+            StatusId = 1,
+            Baptised = true,
+            RoleIds = new[] { 3 }
+        };
+
+        // Act
+        var result = await _service.CreateChurchMemberAsync(request, "testuser");
+
+        // Assert
+        var numbers = await _context.ChurchMemberRegisterNumbers
+            .Where(r => r.ChurchMemberId == result.Id)
+            .ToListAsync();
+        numbers.Should().HaveCount(2);
+        numbers.Should().ContainSingle(r => r.Year == currentYear && r.Number == 10);
+        numbers.Should().ContainSingle(r => r.Year == nextYear && r.Number == 11);
+    }
+
+    [Fact]
+    public async Task CreateChurchMemberAsync_WhenNextYearNotGenerated_CreatesCurrentYearNumberOnly()
+    {
+        // Arrange — default mock returns HasBeenGeneratedForYearAsync == false
+        var currentYear = DateTime.UtcNow.Year;
+        _mockRegisterNumberService
+            .Setup(x => x.GetNextAvailableNumberForRoleAsync(currentYear, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(7);
+
+        var request = new CreateChurchMemberRequest
+        {
+            FirstName = "Current",
+            LastName = "Only",
+            Email = "current@test.com",
+            MemberSince = DateTime.UtcNow,
+            StatusId = 1,
+            Baptised = true,
+            RoleIds = new[] { 3 }
+        };
+
+        // Act
+        var result = await _service.CreateChurchMemberAsync(request, "testuser");
+
+        // Assert
+        var numbers = await _context.ChurchMemberRegisterNumbers
+            .Where(r => r.ChurchMemberId == result.Id)
+            .ToListAsync();
+        numbers.Should().ContainSingle();
+        numbers[0].Year.Should().Be(currentYear);
+        numbers[0].Number.Should().Be(7);
+    }
+
+    [Fact]
+    public async Task CreateChurchMemberAsync_WithManualNumber_UsesManualForCurrentYearAndAutoForNextYear()
+    {
+        // Arrange
+        var currentYear = DateTime.UtcNow.Year;
+        var nextYear = currentYear + 1;
+        _mockRegisterNumberService
+            .Setup(x => x.HasBeenGeneratedForYearAsync(nextYear, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        _mockRegisterNumberService
+            .Setup(x => x.GetNextAvailableNumberForRoleAsync(nextYear, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(300);
+
+        var request = new CreateChurchMemberRequest
+        {
+            FirstName = "Manual",
+            LastName = "Number",
+            Email = "manual@test.com",
+            MemberSince = DateTime.UtcNow,
+            StatusId = 1,
+            Baptised = true,
+            MemberNumber = 42,
+            RoleIds = new[] { 3 }
+        };
+
+        // Act
+        var result = await _service.CreateChurchMemberAsync(request, "testuser");
+
+        // Assert
+        var numbers = await _context.ChurchMemberRegisterNumbers
+            .Where(r => r.ChurchMemberId == result.Id)
+            .ToListAsync();
+        numbers.Should().HaveCount(2);
+        numbers.Should().ContainSingle(r => r.Year == currentYear && r.Number == 42);
+        numbers.Should().ContainSingle(r => r.Year == nextYear && r.Number == 300);
+    }
+
+    [Fact]
+    public async Task CreateChurchMemberAsync_WhenNextYearAllocationFails_StillCreatesMemberWithCurrentYearNumber()
+    {
+        // Arrange
+        var currentYear = DateTime.UtcNow.Year;
+        var nextYear = currentYear + 1;
+        _mockRegisterNumberService
+            .Setup(x => x.GetNextAvailableNumberForRoleAsync(currentYear, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(5);
+        _mockRegisterNumberService
+            .Setup(x => x.HasBeenGeneratedForYearAsync(nextYear, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        _mockRegisterNumberService
+            .Setup(x => x.GetNextAvailableNumberForRoleAsync(nextYear, It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidOperationException("next-year allocation failed"));
+
+        var request = new CreateChurchMemberRequest
+        {
+            FirstName = "Resilient",
+            LastName = "Member",
+            Email = "resilient@test.com",
+            MemberSince = DateTime.UtcNow,
+            StatusId = 1,
+            Baptised = true,
+            RoleIds = new[] { 3 }
+        };
+
+        // Act
+        var result = await _service.CreateChurchMemberAsync(request, "testuser");
+
+        // Assert — member created, only the current-year number persisted
+        result.Id.Should().BeGreaterThan(0);
+        var numbers = await _context.ChurchMemberRegisterNumbers
+            .Where(r => r.ChurchMemberId == result.Id)
+            .ToListAsync();
+        numbers.Should().ContainSingle();
+        numbers[0].Year.Should().Be(currentYear);
+        numbers[0].Number.Should().Be(5);
+    }
+
+    [Fact]
+    public async Task CreateChurchMemberAsync_WhenInactive_CreatesNoRegisterNumbers()
+    {
+        // Arrange — next year generated, but member is inactive so no numbers should be created
+        var currentYear = DateTime.UtcNow.Year;
+        var nextYear = currentYear + 1;
+        _mockRegisterNumberService
+            .Setup(x => x.HasBeenGeneratedForYearAsync(nextYear, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        var request = new CreateChurchMemberRequest
+        {
+            FirstName = "Inactive",
+            LastName = "Member",
+            Email = "inactive@test.com",
+            MemberSince = DateTime.UtcNow,
+            StatusId = 2,
+            Baptised = true,
+            RoleIds = new[] { 3 }
+        };
+
+        // Act
+        var result = await _service.CreateChurchMemberAsync(request, "testuser");
+
+        // Assert
+        var numbers = await _context.ChurchMemberRegisterNumbers
+            .Where(r => r.ChurchMemberId == result.Id)
+            .ToListAsync();
+        numbers.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task UpdateChurchMemberAsync_Envelopes_CanBeToggledFalseToTrue()
     {
         // Arrange — member starts with Envelopes = false

@@ -156,14 +156,21 @@ export class ChurchMembersApi {
   }): Promise<{
     nextNumber: number;
     year: number;
+    nextYearNumber?: number | null;
+    nextYear?: number | null;
   }> {
     const query = new URLSearchParams();
-    if (params?.isMember !== undefined) query.set('isMember', String(params.isMember));
-    if (params?.isBaptised !== undefined) query.set('isBaptised', String(params.isBaptised));
+    if (params?.isMember !== undefined)
+      query.set('isMember', String(params.isMember));
+    if (params?.isBaptised !== undefined)
+      query.set('isBaptised', String(params.isBaptised));
     const qs = query.toString() ? `?${query.toString()}` : '';
-    return apiClient.get<{ nextNumber: number; year: number }>(
-      `/api/administration/church-members/next-member-number${qs}`
-    );
+    return apiClient.get<{
+      nextNumber: number;
+      year: number;
+      nextYearNumber?: number | null;
+      nextYear?: number | null;
+    }>(`/api/administration/church-members/next-member-number${qs}`);
   }
 
   /**

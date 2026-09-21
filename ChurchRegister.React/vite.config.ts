@@ -77,19 +77,8 @@ export default defineConfig({
               return 'vendor-charts';
             }
 
-            // MUI Core, Lab, Emotion, and related (combine to avoid circular deps)
-            if (
-              id.includes('@mui/material') ||
-              id.includes('@mui/system') ||
-              id.includes('@mui/utils') ||
-              id.includes('@mui/base') ||
-              id.includes('@mui/lab') ||
-              id.includes('@mui/private-theming') ||
-              id.includes('@emotion/') ||
-              id.includes('stylis')
-            ) {
-              return 'mui-core';
-            }
+            // Let Vite handle MUI Core + Emotion automatically to avoid circular deps
+            // These packages are deeply interdependent and should not be split manually
 
             // Form libraries
             if (

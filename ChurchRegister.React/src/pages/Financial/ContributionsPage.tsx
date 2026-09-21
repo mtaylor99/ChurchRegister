@@ -191,7 +191,11 @@ export const ContributionsPage: React.FC = () => {
   /**
    * Handle exporting member contributions to Excel for selected year
    */
-  const handleConfirmYearExport = async (year: number) => {
+  const handleConfirmYearExport = async (
+    year: number,
+    envelopesFilter?: boolean,
+    giftAidFilter?: boolean
+  ) => {
     try {
       setIsExporting(true);
       // Fetch all contribution members by paginating through results (max page size 100)
@@ -201,6 +205,8 @@ export const ContributionsPage: React.FC = () => {
         sortBy: 'firstName',
         sortDirection: 'asc',
         year, // Pass selected year
+        envelopesFilter, // Pass selected contribution type filter
+        giftAidFilter, // Pass selected gift aid filter
       });
 
       let allMembers = [...firstResponse.items];
@@ -217,6 +223,8 @@ export const ContributionsPage: React.FC = () => {
               sortBy: 'firstName',
               sortDirection: 'asc',
               year, // Pass selected year
+              envelopesFilter, // Pass selected contribution type filter
+              giftAidFilter, // Pass selected gift aid filter
             })
           );
         }
@@ -449,7 +457,12 @@ export const ContributionsPage: React.FC = () => {
       {/* Envelopes Upload Modal */}
       <Dialog
         open={batchEntryModalOpen}
-        onClose={() => setBatchEntryModalOpen(false)}
+        onClose={(_event, reason) => {
+          if (reason === 'backdropClick') {
+            return;
+          }
+          setBatchEntryModalOpen(false);
+        }}
         maxWidth={false}
         fullWidth
         sx={{

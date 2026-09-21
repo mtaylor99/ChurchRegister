@@ -33,10 +33,16 @@ export class ContributionsApi {
         page: query.page,
         pageSize: query.pageSize,
         searchTerm: query.searchTerm,
-        statusFilter: 1, // Always filter to Active members only for contributions
+        // No statusFilter - show all members including "In Glory" to display their contribution history
         sortBy: query.sortBy || 'lastContributionDate',
         sortDirection: query.sortDirection || 'desc',
         ...(query.year && { year: query.year }), // Include year if provided
+        ...(query.envelopesFilter !== undefined && {
+          envelopesFilter: query.envelopesFilter,
+        }), // Include envelopes filter if provided
+        ...(query.giftAidFilter !== undefined && {
+          giftAidFilter: query.giftAidFilter,
+        }), // Include gift aid filter if provided
       };
 
       // Define the response type from the church members API
