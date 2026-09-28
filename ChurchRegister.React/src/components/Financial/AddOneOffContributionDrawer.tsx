@@ -10,8 +10,13 @@ import {
   Alert,
   CircularProgress,
   Stack,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
+import {
+  Close as CloseIcon,
+  CheckCircle as CheckCircleIcon,
+} from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -19,6 +24,14 @@ import { enGB } from 'date-fns/locale';
 import { contributionsApi, churchMembersApi } from '@services/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { ChurchMemberDto } from '../../types/churchMembers';
+import { envelopeContributionService } from '../../services/attendanceService';
+
+interface LastYearLookupState {
+  status: 'idle' | 'loading' | 'valid' | 'invalid';
+  memberId?: number;
+  memberName?: string;
+  error?: string;
+}
 
 export interface AddOneOffContributionDrawerProps {
   open: boolean;
@@ -42,6 +55,14 @@ export const AddOneOffContributionDrawer: React.FC<
   const [description, setDescription] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
+
+  // Last year's envelope number lookup (January transition period only)
+  const showLastYearOption = new Date().getMonth() === 0;
+  const [isLastYearNumber, setIsLastYearNumber] = useState(false);
+  const [lastYearRegisterNumber, setLastYearRegisterNumber] = useState('');
+  const [lastYearLookup, setLastYearLookup] = useState<LastYearLookupState>({
+    status: 'idle',
+  });
 
   // Fetch active members for autocomplete
   const { data: membersData, isLoading: isMembersLoading } = useQuery({
@@ -89,13 +110,75 @@ export const AddOneOffContributionDrawer: React.FC<
     },
   });
 
+  // Resolve last year's envelope/register number to a member
+  const handleLastYearNumberBlur = async () => {
+    if (!lastYearRegisterNumber) return;
+
+    const registerNumber = parseInt(lastYearRegisterNumber, 10);
+    if (isNaN(registerNumber)) {
+      setLastYearLookup({
+        status: 'invalid',
+        error: 'Invalid envelope number',
+      });
+      return;
+    }
+
+    setLastYearLookup({ status: 'loading' });
+
+    try {
+      const lastYear = new Date().getFullYear() - 1;
+      const result = await envelopeContributionService.validateRegisterNumber(
+        registerNumber,
+        lastYear
+      );
+
+      if (result.valid && result.memberId) {
+        setLastYearLookup({
+          status: 'valid',
+          memberId: result.memberId,
+          memberName: result.memberName,
+        });
+      } else {
+        setLastYearLookup({
+          status: 'invalid',
+          error: result.error || 'Envelope number not found',
+        });
+      }
+    } catch (_error) {
+      setLastYearLookup({ status: 'invalid', error: 'Validation failed' });
+    }
+  };
+
+  const handleLastYearNumberChange = (value: string) => {
+    setLastYearRegisterNumber(value);
+    setLastYearLookup({ status: 'idle' });
+  };
+
+  const handleToggleLastYear = (checked: boolean) => {
+    setIsLastYearNumber(checked);
+    setLastYearRegisterNumber('');
+    setLastYearLookup({ status: 'idle' });
+    setSelectedMember(null);
+    setSearchTerm('');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     // Validation
-    if (!selectedMember) {
-      setError('Please select a member');
+    const memberId = isLastYearNumber
+      ? lastYearLookup.status === 'valid'
+        ? lastYearLookup.memberId
+        : undefined
+      : selectedMember?.id;
+
+    if (!memberId) {
+      setError(
+        isLastYearNumber
+          ? "Please enter a valid last year's envelope number"
+          : 'Please select a member'
+      );
       return;
     }
 
@@ -117,7 +200,7 @@ export const AddOneOffContributionDrawer: React.FC<
 
     // Submit
     addContributionMutation.mutate({
-      memberId: selectedMember.id,
+      memberId,
       amount: amountValue,
       date: date.toISOString().split('T')[0],
       description: description.trim(),
@@ -131,6 +214,9 @@ export const AddOneOffContributionDrawer: React.FC<
     setDescription('');
     setSearchTerm('');
     setError('');
+    setIsLastYearNumber(false);
+    setLastYearRegisterNumber('');
+    setLastYearLookup({ status: 'idle' });
   };
 
   const handleClose = () => {
@@ -180,121 +266,167 @@ export const AddOneOffContributionDrawer: React.FC<
 
         {/* Form */}
         <Box component="form" onSubmit={handleSubmit}>
-          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
+          <LocalizationProvider
+            dateAdapter={AdapterDateFns}
+            adapterLocale={enGB}
+          >
             <Stack spacing={3}>
-            {/* Error Alert */}
-            {error && (
-              <Alert severity="error" onClose={() => setError('')}>
-                {error}
-              </Alert>
-            )}
+              {/* Error Alert */}
+              {error && (
+                <Alert severity="error" onClose={() => setError('')}>
+                  {error}
+                </Alert>
+              )}
 
-            {/* Member Autocomplete */}
-            <Autocomplete
-              value={selectedMember}
-              onChange={(_event, newValue) => setSelectedMember(newValue)}
-              inputValue={searchTerm}
-              onInputChange={(_event, newInputValue) =>
-                setSearchTerm(newInputValue)
-              }
-              options={membersData || []}
-              getOptionLabel={(option) => {
-                const number = option.memberNumber
-                  ? ` (${option.memberNumber})`
-                  : '';
-                return `${option.fullName}${number}`;
-              }}
-              loading={isMembersLoading}
-              disabled={addContributionMutation.isPending}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Member"
-                  required
-                  placeholder="Search by name or number..."
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <>
-                        {isMembersLoading ? (
-                          <CircularProgress size={20} />
-                        ) : null}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
-                  }}
+              {/* Last Year's Envelope Number toggle (January transition period only) */}
+              {showLastYearOption && (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isLastYearNumber}
+                      onChange={(e) => handleToggleLastYear(e.target.checked)}
+                      disabled={addContributionMutation.isPending}
+                    />
+                  }
+                  label="This relates to last year's envelope number"
                 />
               )}
-            />
 
-            {/* Amount */}
-            <TextField
-              label="Amount"
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              required
-              inputProps={{ min: 0.01, step: 0.01 }}
-              disabled={addContributionMutation.isPending}
-              placeholder="0.00"
-              InputProps={{
-                startAdornment: <Typography sx={{ mr: 1 }}>£</Typography>,
-              }}
-            />
+              {isLastYearNumber ? (
+                <TextField
+                  label="Last Year's Envelope Number"
+                  type="number"
+                  value={lastYearRegisterNumber}
+                  onChange={(e) => handleLastYearNumberChange(e.target.value)}
+                  onBlur={handleLastYearNumberBlur}
+                  required
+                  disabled={addContributionMutation.isPending}
+                  placeholder="Enter the number from last year's envelope"
+                  InputProps={{
+                    endAdornment:
+                      lastYearLookup.status === 'loading' ? (
+                        <CircularProgress size={20} />
+                      ) : lastYearLookup.status === 'valid' ? (
+                        <CheckCircleIcon color="success" fontSize="small" />
+                      ) : null,
+                  }}
+                  error={lastYearLookup.status === 'invalid'}
+                  helperText={
+                    lastYearLookup.status === 'valid'
+                      ? lastYearLookup.memberName
+                      : lastYearLookup.status === 'invalid'
+                        ? lastYearLookup.error
+                        : ' '
+                  }
+                />
+              ) : (
+                /* Member Autocomplete */
+                <Autocomplete
+                  value={selectedMember}
+                  onChange={(_event, newValue) => setSelectedMember(newValue)}
+                  inputValue={searchTerm}
+                  onInputChange={(_event, newInputValue) =>
+                    setSearchTerm(newInputValue)
+                  }
+                  options={membersData || []}
+                  getOptionLabel={(option) => {
+                    const number = option.memberNumber
+                      ? ` (${option.memberNumber})`
+                      : '';
+                    return `${option.fullName}${number}`;
+                  }}
+                  loading={isMembersLoading}
+                  disabled={addContributionMutation.isPending}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Member"
+                      required
+                      placeholder="Search by name or number..."
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {isMembersLoading ? (
+                              <CircularProgress size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                      }}
+                    />
+                  )}
+                />
+              )}
 
-            {/* Date */}
-            <DatePicker
-              label="Date"
-              value={date}
-              onChange={(newValue) => setDate(newValue)}
-              disabled={addContributionMutation.isPending}
-              slotProps={{
-                textField: {
-                  required: true,
-                  fullWidth: true,
-                },
-              }}
-            />
-
-            {/* Description */}
-            <TextField
-              label="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-              multiline
-              rows={3}
-              disabled={addContributionMutation.isPending}
-              placeholder="Enter description of this contribution..."
-              inputProps={{ maxLength: 500 }}
-              helperText={`${description.length}/500 characters`}
-            />
-
-            {/* Action Buttons */}
-            <Stack direction="row" spacing={2} justifyContent="flex-end">
-              <Button
-                variant="outlined"
-                onClick={handleClose}
+              {/* Amount */}
+              <TextField
+                label="Amount"
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                required
+                inputProps={{ min: 0.01, step: 0.01 }}
                 disabled={addContributionMutation.isPending}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
+                placeholder="0.00"
+                InputProps={{
+                  startAdornment: <Typography sx={{ mr: 1 }}>£</Typography>,
+                }}
+              />
+
+              {/* Date */}
+              <DatePicker
+                label="Date"
+                value={date}
+                onChange={(newValue) => setDate(newValue)}
                 disabled={addContributionMutation.isPending}
-                startIcon={
-                  addContributionMutation.isPending ? (
-                    <CircularProgress size={20} />
-                  ) : null
-                }
-              >
-                {addContributionMutation.isPending
-                  ? 'Adding...'
-                  : 'Add Contribution'}
-              </Button>
+                slotProps={{
+                  textField: {
+                    required: true,
+                    fullWidth: true,
+                  },
+                }}
+              />
+
+              {/* Description */}
+              <TextField
+                label="Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+                multiline
+                rows={3}
+                disabled={addContributionMutation.isPending}
+                placeholder="Enter description of this contribution..."
+                inputProps={{ maxLength: 500 }}
+                helperText={`${description.length}/500 characters`}
+              />
+
+              {/* Action Buttons */}
+              <Stack direction="row" spacing={2} justifyContent="flex-end">
+                <Button
+                  variant="outlined"
+                  onClick={handleClose}
+                  disabled={addContributionMutation.isPending}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={addContributionMutation.isPending}
+                  startIcon={
+                    addContributionMutation.isPending ? (
+                      <CircularProgress size={20} />
+                    ) : null
+                  }
+                >
+                  {addContributionMutation.isPending
+                    ? 'Adding...'
+                    : 'Add Contribution'}
+                </Button>
+              </Stack>
             </Stack>
-          </Stack>
           </LocalizationProvider>
         </Box>
       </Box>
