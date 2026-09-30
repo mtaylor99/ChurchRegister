@@ -11,10 +11,16 @@ import {
   CircularProgress,
   IconButton,
 } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
+import {
+  Close as CloseIcon,
+  FileDownload as FileDownloadIcon,
+} from '@mui/icons-material';
 import { RegisterNumberPreviewGrid } from './RegisterNumberPreviewGrid';
 import { ConfirmationModal } from './ConfirmationModal';
 import { useRegisterNumbers } from '../../hooks/useRegisterNumbers';
+import { registerNumberService } from '../../services/registerNumberService';
+import { useNotification } from '../../hooks/useNotification';
+import { extractErrorMessage } from '../../utils/typeGuards';
 
 export interface RegisterNumberGenerationDialogProps {
   open: boolean;
@@ -31,6 +37,8 @@ export const RegisterNumberGenerationDialog: React.FC<
 
   const [showPreview, setShowPreview] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const { showError } = useNotification();
 
   // Load preview and status when dialog opens
   useEffect(() => {
@@ -82,6 +90,19 @@ export const RegisterNumberGenerationDialog: React.FC<
     (preview.data?.totalMembers ?? 0) +
     (preview.data?.totalNonBaptisedMembers ?? 0) +
     (preview.data?.totalNonMembers ?? 0);
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      await registerNumberService.exportToExcel(targetYear);
+    } catch (error) {
+      showError(
+        extractErrorMessage(error, 'Failed to export register numbers')
+      );
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const handleClose = () => {
     if (!generate.isPending) {
@@ -192,6 +213,23 @@ export const RegisterNumberGenerationDialog: React.FC<
         </DialogContent>
 
         <DialogActions sx={{ p: 2, gap: 1 }}>
+          {preview.data && (
+            <Button
+              onClick={handleExport}
+              disabled={exporting || generate.isPending}
+              variant="outlined"
+              startIcon={
+                exporting ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  <FileDownloadIcon />
+                )
+              }
+              sx={{ mr: 'auto' }}
+            >
+              {exporting ? 'Exporting...' : 'Export to Excel'}
+            </Button>
+          )}
           <Button
             onClick={handleClose}
             disabled={generate.isPending}

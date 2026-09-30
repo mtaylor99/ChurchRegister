@@ -3,13 +3,14 @@
  */
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 
-const { mockGet, mockPost } = vi.hoisted(() => ({
+const { mockGet, mockPost, mockGetBlob } = vi.hoisted(() => ({
   mockGet: vi.fn(),
   mockPost: vi.fn(),
+  mockGetBlob: vi.fn(),
 }));
 
 vi.mock('./api/ApiClient', () => ({
-  apiClient: { get: mockGet, post: mockPost },
+  apiClient: { get: mockGet, post: mockPost, getBlob: mockGetBlob },
 }));
 
 import { registerNumberService } from './registerNumberService';
@@ -19,7 +20,15 @@ const mockPreview = {
   totalMembers: 30,
   totalNonMembers: 20,
   previewGenerated: '2024-01-01T00:00:00Z',
-  members: [{ registerNumber: 1, memberId: 1, memberName: 'John Smith', memberSince: '2020-01-01', memberType: 'Member' as const }],
+  members: [
+    {
+      registerNumber: 1,
+      memberId: 1,
+      memberName: 'John Smith',
+      memberSince: '2020-01-01',
+      memberType: 'Member' as const,
+    },
+  ],
   nonMembers: [],
 };
 
@@ -46,13 +55,17 @@ describe('registerNumberService', () => {
     test('calls GET endpoint and returns preview data', async () => {
       mockGet.mockResolvedValue(mockPreview);
       const result = await registerNumberService.previewNumbers(2024);
-      expect(mockGet).toHaveBeenCalledWith('/api/register-numbers/preview/2024');
+      expect(mockGet).toHaveBeenCalledWith(
+        '/api/register-numbers/preview/2024'
+      );
       expect(result).toEqual(mockPreview);
     });
 
     test('propagates errors from apiClient', async () => {
       mockGet.mockRejectedValue(new Error('Network error'));
-      await expect(registerNumberService.previewNumbers(2024)).rejects.toThrow('Network error');
+      await expect(registerNumberService.previewNumbers(2024)).rejects.toThrow(
+        'Network error'
+      );
     });
   });
 
@@ -61,18 +74,29 @@ describe('registerNumberService', () => {
       mockPost.mockResolvedValue(mockGenerateResult);
       const request = { targetYear: 2024, confirmGeneration: true };
       const result = await registerNumberService.generateNumbers(request);
-      expect(mockPost).toHaveBeenCalledWith('/api/register-numbers/generate', request);
+      expect(mockPost).toHaveBeenCalledWith(
+        '/api/register-numbers/generate',
+        request
+      );
       expect(result).toEqual(mockGenerateResult);
     });
 
     test('propagates errors from apiClient', async () => {
       mockPost.mockRejectedValue(new Error('Conflict'));
-      await expect(registerNumberService.generateNumbers({ targetYear: 2024, confirmGeneration: true })).rejects.toThrow('Conflict');
+      await expect(
+        registerNumberService.generateNumbers({
+          targetYear: 2024,
+          confirmGeneration: true,
+        })
+      ).rejects.toThrow('Conflict');
     });
 
     test('returns correct totalMembersAssigned and totalNonMembersAssigned', async () => {
       mockPost.mockResolvedValue(mockGenerateResult);
-      const result = await registerNumberService.generateNumbers({ targetYear: 2024, confirmGeneration: true });
+      const result = await registerNumberService.generateNumbers({
+        targetYear: 2024,
+        confirmGeneration: true,
+      });
       expect(result.totalMembersAssigned).toBe(30);
       expect(result.totalNonMembersAssigned).toBe(20);
       expect(result.year).toBe(2024);
@@ -88,7 +112,13 @@ describe('registerNumberService', () => {
     });
 
     test('returns status with isGenerated false when not yet generated', async () => {
-      const notGeneratedStatus = { ...mockStatus, isGenerated: false, totalAssignments: 0, generatedBy: null, generatedDateTime: null };
+      const notGeneratedStatus = {
+        ...mockStatus,
+        isGenerated: false,
+        totalAssignments: 0,
+        generatedBy: null,
+        generatedDateTime: null,
+      };
       mockGet.mockResolvedValue(notGeneratedStatus);
       const result = await registerNumberService.checkStatus(2025);
       expect(result.isGenerated).toBe(false);
@@ -96,7 +126,38 @@ describe('registerNumberService', () => {
 
     test('propagates errors from apiClient', async () => {
       mockGet.mockRejectedValue(new Error('Not found'));
-      await expect(registerNumberService.checkStatus(2024)).rejects.toThrow('Not found');
+      await expect(registerNumberService.checkStatus(2024)).rejects.toThrow(
+        'Not found'
+      );
+    });
+  });
+
+  describe('exportToExcel', () => {
+    beforeEach(() => {
+      vi.stubGlobal('URL', {
+        createObjectURL: vi.fn(() => 'blob:fake'),
+        revokeObjectURL: vi.fn(),
+      });
+      vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(
+        () => {}
+      );
+    });
+
+    test('downloads the export endpoint for the given year', async () => {
+      mockGetBlob.mockResolvedValue(new Blob(['data']));
+
+      await registerNumberService.exportToExcel(2027);
+
+      expect(mockGetBlob).toHaveBeenCalledWith(
+        '/api/register-numbers/export/2027'
+      );
+    });
+
+    test('propagates errors from apiClient', async () => {
+      mockGetBlob.mockRejectedValue(new Error('Forbidden'));
+      await expect(registerNumberService.exportToExcel(2027)).rejects.toThrow(
+        'Forbidden'
+      );
     });
   });
 });
