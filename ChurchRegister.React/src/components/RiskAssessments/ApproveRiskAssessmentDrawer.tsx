@@ -22,6 +22,10 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import IconButton from '@mui/material/IconButton';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import { enGB } from 'date-fns/locale';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useQuery } from '@tanstack/react-query';
 import type { RiskAssessmentDetail } from '../../types/riskAssessments';
 import type { ChurchMemberSummary } from '../../types';
@@ -47,20 +51,18 @@ export function ApproveRiskAssessmentDrawer({
     []
   );
   const [notes, setNotes] = useState('');
-  const [approvalDate, setApprovalDate] = useState(
-    format(new Date(), 'yyyy-MM-dd')
-  );
+  const [approvalDate, setApprovalDate] = useState<Date | null>(new Date());
   const [error, setError] = useState<string | null>(null);
 
   const approveMutation = useApproveRiskAssessment();
   const isApproving = approveMutation.isPending;
 
-  // Fetch active deacons
+  // Fetch active deacons and ministers
   const { data: deacons = [], isLoading: isLoadingDeacons } = useQuery<
     ChurchMemberSummary[]
   >({
-    queryKey: ['activeDeacons'],
-    queryFn: () => districtsApi.getActiveDeacons(),
+    queryKey: ['activeDeacons', 'includeMinisters'],
+    queryFn: () => districtsApi.getActiveDeacons(true),
     enabled: open,
   });
 
@@ -69,7 +71,7 @@ export function ApproveRiskAssessmentDrawer({
     if (riskAssessment) {
       setSelectedDeacons([]);
       setNotes('');
-      setApprovalDate(format(new Date(), 'yyyy-MM-dd'));
+      setApprovalDate(new Date());
       setError(null);
     }
   }, [riskAssessment]);
@@ -89,13 +91,19 @@ export function ApproveRiskAssessmentDrawer({
   const canApprove =
     selectedDeacons.length >= requiredApprovers &&
     !!approvalDate &&
+    !isNaN(approvalDate.getTime()) &&
     !isApproving;
 
   const handleApprove = async () => {
     if (selectedDeacons.length < requiredApprovers) {
       setError(
-        `Please select at least ${requiredApprovers} deacons who approved this assessment`
+        `Please select at least ${requiredApprovers} deacons or ministers who approved this assessment`
       );
+      return;
+    }
+
+    if (!approvalDate || isNaN(approvalDate.getTime())) {
+      setError('Please enter a valid approval date');
       return;
     }
 
@@ -111,7 +119,7 @@ export function ApproveRiskAssessmentDrawer({
         id: riskAssessment.id,
         request: {
           deaconMemberIds: selectedDeacons.map((d) => d.id),
-          approvalDate,
+          approvalDate: format(approvalDate, 'yyyy-MM-dd'),
           notes: notes.trim() || undefined,
         },
       });
@@ -143,8 +151,8 @@ export function ApproveRiskAssessmentDrawer({
           <ErrorAlert error={error} onDismiss={() => setError(null)} />
 
           <Alert severity="info">
-            Select the deacons who approved this risk assessment in the meeting.
-            This is for recording meeting decisions.
+            Select the deacons or ministers who approved this risk assessment
+            in the meeting. This is for recording meeting decisions.
           </Alert>
 
           {/* Assessment Summary */}
@@ -246,9 +254,9 @@ export function ApproveRiskAssessmentDrawer({
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Select Deacons Who Approved"
+                label="Select Deacons or Ministers Who Approved"
                 required
-                helperText={`Select at least ${requiredApprovers} deacons who approved this assessment`}
+                helperText={`Select at least ${requiredApprovers} deacons or ministers who approved this assessment`}
                 error={
                   selectedDeacons.length > 0 &&
                   selectedDeacons.length < requiredApprovers
@@ -279,16 +287,23 @@ export function ApproveRiskAssessmentDrawer({
           />
 
           {/* Approval Date */}
-          <TextField
-            label="Approval Date"
-            type="date"
-            value={approvalDate}
-            onChange={(e) => setApprovalDate(e.target.value)}
-            required
-            fullWidth
-            disabled={isApproving}
-            InputLabelProps={{ shrink: true }}
-          />
+          <LocalizationProvider
+            dateAdapter={AdapterDateFns}
+            adapterLocale={enGB}
+          >
+            <DatePicker
+              label="Approval Date"
+              value={approvalDate}
+              onChange={(newValue) => setApprovalDate(newValue)}
+              disabled={isApproving}
+              slotProps={{
+                textField: {
+                  required: true,
+                  fullWidth: true,
+                },
+              }}
+            />
+          </LocalizationProvider>
 
           {/* Approval Notes */}
           <TextField

@@ -31,7 +31,8 @@ public class GetActiveDeaconsEndpoint : EndpointWithoutRequest<List<ChurchMember
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var deacons = await _districtService.GetActiveDeaconsAsync();
+        var includeMinisters = Query<bool>("includeMinisters", isRequired: false);
+        var deacons = await _districtService.GetActiveDeaconsAsync(includeMinisters);
         await Send.OkAsync(deacons, ct);
     }
 }
