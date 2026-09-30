@@ -12,6 +12,9 @@ public class Reminder : IAuditableEntity
     [MaxLength(500)]
     public string Description { get; set; } = string.Empty;
     
+    [MaxLength(2000)]
+    public string? Notes { get; set; }
+    
     [Required]
     public DateTime DueDate { get; set; }
     

@@ -7,6 +7,7 @@ import type {
   CompleteReminderResponse,
   ReminderQueryParameters,
   DashboardReminderSummary,
+  AssignableUser,
 } from '../../types/reminders';
 
 /**
@@ -100,6 +101,13 @@ export class RemindersApi {
    */
   async deleteReminder(id: number): Promise<void> {
     return apiClient.delete<void>(`${this.basePath}/${id}`);
+  }
+
+  /**
+   * Get users a reminder can be assigned to
+   */
+  async getAssignableUsers(): Promise<AssignableUser[]> {
+    return apiClient.get<AssignableUser[]>(`${this.basePath}/assignable-users`);
   }
 
   /**

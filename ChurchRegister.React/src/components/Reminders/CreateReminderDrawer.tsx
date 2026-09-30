@@ -20,7 +20,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { enGB } from 'date-fns/locale';
-import { useCreateReminder } from '../../hooks/useReminders';
+import { useCreateReminder, useAssignableUsers } from '../../hooks/useReminders';
 import { useReminderCategories } from '../../hooks/useReminderCategories';
 
 export interface CreateReminderDrawerProps {
@@ -35,6 +35,7 @@ export function CreateReminderDrawer({
   onSuccess,
 }: CreateReminderDrawerProps) {
   const [description, setDescription] = useState('');
+  const [notes, setNotes] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
   const [assignedToUserId, setAssignedToUserId] = useState('');
   const [categoryId, setCategoryId] = useState<number | null>(null);
@@ -44,11 +45,14 @@ export function CreateReminderDrawer({
   const createMutation = useCreateReminder();
   const { data: categories, isPending: categoriesLoading } =
     useReminderCategories();
+  const { data: assignableUsers, isPending: usersLoading } =
+    useAssignableUsers();
 
   // Reset form when drawer closes
   useEffect(() => {
     if (!open) {
       setDescription('');
+      setNotes('');
       setDueDate(null);
       setAssignedToUserId('');
       setCategoryId(null);
@@ -79,6 +83,7 @@ export function CreateReminderDrawer({
     try {
       const payload = {
         description: description.trim(),
+        notes: notes.trim() || null,
         dueDate: dueDate.toISOString(),
         assignedToUserId,
         categoryId,
@@ -124,6 +129,17 @@ export function CreateReminderDrawer({
             helperText={`${description.length}/500 characters`}
           />
 
+          <TextField
+            label="Notes (Optional)"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            multiline
+            rows={4}
+            fullWidth
+            inputProps={{ maxLength: 2000 }}
+            helperText={`${notes.length}/2000 characters`}
+          />
+
           <LocalizationProvider
             dateAdapter={AdapterDateFns}
             adapterLocale={enGB}
@@ -148,9 +164,13 @@ export function CreateReminderDrawer({
               value={assignedToUserId}
               onChange={(e) => setAssignedToUserId(e.target.value)}
               label="Assigned To"
+              disabled={usersLoading}
             >
-              <MenuItem value="current-user">Current User (You)</MenuItem>
-              {/* Note: In production, this should fetch actual users with Reminders roles */}
+              {assignableUsers?.map((user) => (
+                <MenuItem key={user.id} value={user.id}>
+                  {user.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 

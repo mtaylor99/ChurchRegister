@@ -40,6 +40,16 @@ export const useReminders = (params: ReminderQueryParameters) => {
 };
 
 /**
+ * Hook to fetch users a reminder can be assigned to
+ */
+export const useAssignableUsers = () => {
+  return useQuery({
+    queryKey: reminderQueryKeys.assignableUsers(),
+    queryFn: () => remindersApi.getAssignableUsers(),
+  });
+};
+
+/**
  * Hook to fetch a single reminder by ID
  * @param id - Reminder ID
  */

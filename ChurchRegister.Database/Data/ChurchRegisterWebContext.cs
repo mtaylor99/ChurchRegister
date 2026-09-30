@@ -235,6 +235,7 @@ namespace ChurchRegister.Database.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Description).IsRequired().HasMaxLength(500);
+                entity.Property(e => e.Notes).HasMaxLength(2000);
                 entity.Property(e => e.DueDate).IsRequired();
                 entity.Property(e => e.Status).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Priority).IsRequired().HasDefaultValue(false);

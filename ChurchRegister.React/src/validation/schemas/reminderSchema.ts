@@ -13,6 +13,11 @@ export const createReminderSchema = yup.object({
     .string()
     .required('Description is required')
     .max(500, 'Description cannot exceed 500 characters'),
+  notes: yup
+    .string()
+    .max(2000, 'Notes cannot exceed 2000 characters')
+    .nullable()
+    .optional(),
   dueDate: yup.date().required('Due date is required').nullable(),
   assignedToUserId: yup.string().required('Assigned to is required'),
   categoryId: yup.number().integer().nullable().optional(),

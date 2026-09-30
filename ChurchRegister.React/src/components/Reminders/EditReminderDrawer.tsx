@@ -20,7 +20,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { enGB } from 'date-fns/locale';
-import { useUpdateReminder } from '../../hooks/useReminders';
+import { useUpdateReminder, useAssignableUsers } from '../../hooks/useReminders';
 import { useReminderCategories } from '../../hooks/useReminderCategories';
 import type { Reminder } from '../../types/reminders';
 
@@ -38,6 +38,7 @@ export function EditReminderDrawer({
   onSuccess,
 }: EditReminderDrawerProps) {
   const [description, setDescription] = useState('');
+  const [notes, setNotes] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
   const [assignedToUserId, setAssignedToUserId] = useState('');
   const [categoryId, setCategoryId] = useState<number | null>(null);
@@ -47,11 +48,14 @@ export function EditReminderDrawer({
   const updateMutation = useUpdateReminder();
   const { data: categories, isPending: categoriesLoading } =
     useReminderCategories();
+  const { data: assignableUsers, isPending: usersLoading } =
+    useAssignableUsers();
 
   // Populate form when reminder changes
   useEffect(() => {
     if (reminder) {
       setDescription(reminder.description);
+      setNotes(reminder.notes ?? '');
       setDueDate(new Date(reminder.dueDate));
       setAssignedToUserId(reminder.assignedToUserId);
       setCategoryId(reminder.categoryId);
@@ -86,6 +90,7 @@ export function EditReminderDrawer({
         id: reminder.id,
         request: {
           description: description.trim(),
+          notes: notes.trim() || null,
           dueDate: dueDate.toISOString(),
           assignedToUserId,
           categoryId,
@@ -104,6 +109,7 @@ export function EditReminderDrawer({
   const hasChanges =
     reminder &&
     (description !== reminder.description ||
+      notes !== (reminder.notes ?? '') ||
       (dueDate &&
         dueDate.toISOString() !== new Date(reminder.dueDate).toISOString()) ||
       assignedToUserId !== reminder.assignedToUserId ||
@@ -137,6 +143,17 @@ export function EditReminderDrawer({
             helperText={`${description.length}/500 characters`}
           />
 
+          <TextField
+            label="Notes (Optional)"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            multiline
+            rows={4}
+            fullWidth
+            inputProps={{ maxLength: 2000 }}
+            helperText={`${notes.length}/2000 characters`}
+          />
+
           <LocalizationProvider
             dateAdapter={AdapterDateFns}
             adapterLocale={enGB}
@@ -161,11 +178,18 @@ export function EditReminderDrawer({
               value={assignedToUserId}
               onChange={(e) => setAssignedToUserId(e.target.value)}
               label="Assigned To"
+              disabled={usersLoading}
             >
-              <MenuItem value={reminder.assignedToUserId}>
-                {reminder.assignedToUserName}
-              </MenuItem>
-              {/* Note: In production, this should fetch actual users with Reminders roles */}
+              {!assignableUsers?.some((u) => u.id === reminder.assignedToUserId) && (
+                <MenuItem value={reminder.assignedToUserId}>
+                  {reminder.assignedToUserName}
+                </MenuItem>
+              )}
+              {assignableUsers?.map((user) => (
+                <MenuItem key={user.id} value={user.id}>
+                  {user.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 

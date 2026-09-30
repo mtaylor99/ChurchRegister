@@ -7,6 +7,7 @@
 export interface Reminder {
   id: number;
   description: string;
+  notes?: string | null;
   dueDate: string; // ISO date string
   assignedToUserId: string;
   assignedToUserName: string;
@@ -29,6 +30,7 @@ export interface Reminder {
 // Create Reminder Request matching API contract
 export interface CreateReminderRequest {
   description: string;
+  notes?: string | null;
   dueDate: string; // ISO date string
   assignedToUserId: string;
   categoryId: number | null;
@@ -38,6 +40,7 @@ export interface CreateReminderRequest {
 // Update Reminder Request matching API contract
 export interface UpdateReminderRequest {
   description: string;
+  notes?: string | null;
   dueDate: string; // ISO date string
   assignedToUserId: string;
   categoryId: number | null;
@@ -48,7 +51,14 @@ export interface UpdateReminderRequest {
 export interface CompleteReminderRequest {
   completionNotes: string;
   createNext: boolean;
-  nextInterval: '3months' | '6months' | '12months' | 'custom' | null;
+  nextInterval:
+    | '3months'
+    | '6months'
+    | '12months'
+    | '24months'
+    | '36months'
+    | 'custom'
+    | null;
   customDueDate: string | null; // ISO date string
 }
 
@@ -70,4 +80,10 @@ export interface ReminderQueryParameters {
 // Dashboard Reminder Summary matching API contract
 export interface DashboardReminderSummary {
   upcomingCount: number;
+}
+
+// User a reminder can be assigned to
+export interface AssignableUser {
+  id: string;
+  name: string;
 }

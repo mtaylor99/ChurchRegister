@@ -1,7 +1,9 @@
 using ChurchRegister.ApiService.Exceptions;
 using ChurchRegister.ApiService.Models.Reminders;
 using ChurchRegister.Database.Data;
+using ChurchRegister.Database.Constants;
 using ChurchRegister.Database.Entities;
+using ChurchRegister.Database.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -103,6 +105,7 @@ public class ReminderService : IReminderService
         var reminder = new Reminder
         {
             Description = request.Description,
+            Notes = request.Notes,
             DueDate = request.DueDate,
             AssignedToUserId = request.AssignedToUserId,
             CategoryId = request.CategoryId,
@@ -141,6 +144,7 @@ public class ReminderService : IReminderService
         }
 
         reminder.Description = request.Description;
+        reminder.Notes = request.Notes;
         reminder.DueDate = request.DueDate;
         reminder.AssignedToUserId = request.AssignedToUserId;
         reminder.CategoryId = request.CategoryId;
@@ -205,6 +209,14 @@ public class ReminderService : IReminderService
             {
                 newDueDate = reminder.DueDate.AddMonths(12);
             }
+            else if (request.NextInterval == "24months")
+            {
+                newDueDate = reminder.DueDate.AddMonths(24);
+            }
+            else if (request.NextInterval == "36months")
+            {
+                newDueDate = reminder.DueDate.AddMonths(36);
+            }
             else if (request.NextInterval == "custom" && request.CustomDueDate.HasValue)
             {
                 newDueDate = request.CustomDueDate.Value;
@@ -217,6 +229,7 @@ public class ReminderService : IReminderService
             var nextReminder = new Reminder
             {
                 Description = reminder.Description,
+                Notes = reminder.Notes,
                 DueDate = newDueDate,
                 AssignedToUserId = reminder.AssignedToUserId,
                 CategoryId = reminder.CategoryId, // Inherit category
@@ -282,6 +295,41 @@ public class ReminderService : IReminderService
         };
     }
 
+    public async Task<List<AssignableUserDto>> GetAssignableUsersAsync()
+    {
+        var roles = new[]
+        {
+            SystemRoles.SystemAdministration,
+            SystemRoles.RemindersContributor,
+            SystemRoles.RemindersAdministrator
+        };
+
+        var users = new Dictionary<string, ChurchRegisterWebUser>();
+        foreach (var role in roles)
+        {
+            foreach (var user in await _userManager.GetUsersInRoleAsync(role))
+            {
+                if (user.AccountStatus == UserAccountStatus.Active)
+                {
+                    users[user.Id] = user;
+                }
+            }
+        }
+
+        return users.Values
+            .Select(u =>
+            {
+                var name = $"{u.FirstName} {u.LastName}".Trim();
+                return new AssignableUserDto
+                {
+                    Id = u.Id,
+                    Name = string.IsNullOrWhiteSpace(name) ? (u.UserName ?? u.Email ?? "Unknown") : name
+                };
+            })
+            .OrderBy(u => u.Name)
+            .ToList();
+    }
+
     private string CalculateAlertStatus(DateTime dueDate, string status)
     {
         if (status == "Completed")
@@ -320,6 +368,7 @@ public class ReminderService : IReminderService
         {
             Id = reminder.Id,
             Description = reminder.Description,
+            Notes = reminder.Notes,
             DueDate = reminder.DueDate,
             AssignedToUserId = reminder.AssignedToUserId,
             AssignedToUserName = userName,
