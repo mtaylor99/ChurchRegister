@@ -703,28 +703,40 @@ if (!app.Environment.IsEnvironment("Testing"))
         var dbContext = scope.ServiceProvider.GetRequiredService<ChurchRegisterWebContext>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
-        try
+        // A paused serverless database (e.g. Azure SQL free tier) fails the first connections while it resumes.
+        const int maxAttempts = 8;
+        for (var attempt = 1; ; attempt++)
         {
-            logger.LogInformation("Checking for pending database migrations...");
-            var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync();
+            try
+            {
+                logger.LogInformation("Checking for pending database migrations...");
+                var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync();
 
-            if (pendingMigrations.Any())
-            {
-                logger.LogInformation("Applying {Count} pending migrations: {Migrations}",
-                    pendingMigrations.Count(),
-                    string.Join(", ", pendingMigrations));
-                await dbContext.Database.MigrateAsync();
-                logger.LogInformation("Database migrations applied successfully");
+                if (pendingMigrations.Any())
+                {
+                    logger.LogInformation("Applying {Count} pending migrations: {Migrations}",
+                        pendingMigrations.Count(),
+                        string.Join(", ", pendingMigrations));
+                    await dbContext.Database.MigrateAsync();
+                    logger.LogInformation("Database migrations applied successfully");
+                }
+                else
+                {
+                    logger.LogInformation("Database is already up to date");
+                }
+
+                break;
             }
-            else
+            catch (Microsoft.Data.SqlClient.SqlException ex) when (attempt < maxAttempts)
             {
-                logger.LogInformation("Database is already up to date");
+                logger.LogWarning(ex, "Database not reachable (attempt {Attempt} of {Max}); retrying in 10 seconds", attempt, maxAttempts);
+                await Task.Delay(TimeSpan.FromSeconds(10));
             }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "An error occurred while applying database migrations");
-            throw;
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred while applying database migrations");
+                throw;
+            }
         }
     }
 }
