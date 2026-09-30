@@ -77,6 +77,23 @@ class RegisterNumberService {
       `/api/register-numbers/status/${year}`
     );
   }
+
+  /**
+   * Download the register number preview as a single-sheet Excel workbook
+   */
+  async exportToExcel(year: number): Promise<void> {
+    const blob = await apiClient.getBlob(
+      `/api/register-numbers/export/${year}`
+    );
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Register-Numbers-${year}.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
 }
 
 export const registerNumberService = new RegisterNumberService();
