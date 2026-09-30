@@ -17,8 +17,9 @@ public interface IDistrictService
     /// <summary>
     /// Get all active church members with Deacon role
     /// </summary>
+    /// <param name="includeMinisters">When true, active members with the Minister role are also returned</param>
     /// <returns>List of active deacons</returns>
-    Task<List<ChurchMemberSummaryDto>> GetActiveDeaconsAsync();
+    Task<List<ChurchMemberSummaryDto>> GetActiveDeaconsAsync(bool includeMinisters = false);
 
     /// <summary>
     /// Get all active church members with District Officer role
