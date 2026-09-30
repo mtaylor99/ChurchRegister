@@ -46,6 +46,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import HistoryIcon from '@mui/icons-material/History';
+import ApproveIcon from '@mui/icons-material/ThumbUp';
 import type {
   RiskAssessment,
   RiskAssessmentCategory,
@@ -64,6 +65,7 @@ export interface RiskAssessmentsGridProps {
   onEditClick: (assessment: RiskAssessment) => void;
   onDeleteClick: (assessment: RiskAssessment) => void;
   onStartReview: (assessment: RiskAssessment) => void;
+  onApproveClick: (assessment: RiskAssessment) => void;
   onViewHistory: (assessment: RiskAssessment) => void;
   onFilterChange: (
     categoryId: number | null,
@@ -85,6 +87,7 @@ export const RiskAssessmentsGrid = React.memo(function RiskAssessmentsGrid({
   onEditClick,
   onDeleteClick,
   onStartReview,
+  onApproveClick,
   onViewHistory,
   onFilterChange,
 }: RiskAssessmentsGridProps) {
@@ -501,6 +504,18 @@ export const RiskAssessmentsGrid = React.memo(function RiskAssessmentsGrid({
             <EditIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Edit</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            if (selectedAssessment) onApproveClick(selectedAssessment);
+            handleActionClose();
+          }}
+          disabled={selectedAssessment?.status !== 'Under Review'}
+        >
+          <ListItemIcon>
+            <ApproveIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Approve</ListItemText>
         </MenuItem>
         <MenuItem
           onClick={handleStartReviewClick}

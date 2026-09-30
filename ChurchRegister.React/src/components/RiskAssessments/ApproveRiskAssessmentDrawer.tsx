@@ -47,6 +47,9 @@ export function ApproveRiskAssessmentDrawer({
     []
   );
   const [notes, setNotes] = useState('');
+  const [approvalDate, setApprovalDate] = useState(
+    format(new Date(), 'yyyy-MM-dd')
+  );
   const [error, setError] = useState<string | null>(null);
 
   const approveMutation = useApproveRiskAssessment();
@@ -66,6 +69,7 @@ export function ApproveRiskAssessmentDrawer({
     if (riskAssessment) {
       setSelectedDeacons([]);
       setNotes('');
+      setApprovalDate(format(new Date(), 'yyyy-MM-dd'));
       setError(null);
     }
   }, [riskAssessment]);
@@ -77,13 +81,20 @@ export function ApproveRiskAssessmentDrawer({
     (riskAssessment.approvalCount / riskAssessment.minimumApprovalsRequired) *
     100;
 
-  // Validation - require at least 2 deacons
-  const canApprove = selectedDeacons.length >= 2 && !isApproving;
+  // Approvers still needed to reach the configured minimum
+  const requiredApprovers = Math.max(
+    1,
+    riskAssessment.minimumApprovalsRequired - riskAssessment.approvalCount
+  );
+  const canApprove =
+    selectedDeacons.length >= requiredApprovers &&
+    !!approvalDate &&
+    !isApproving;
 
   const handleApprove = async () => {
-    if (selectedDeacons.length < 2) {
+    if (selectedDeacons.length < requiredApprovers) {
       setError(
-        'Please select at least 2 deacons who approved this assessment in the meeting'
+        `Please select at least ${requiredApprovers} deacons who approved this assessment`
       );
       return;
     }
@@ -100,6 +111,7 @@ export function ApproveRiskAssessmentDrawer({
         id: riskAssessment.id,
         request: {
           deaconMemberIds: selectedDeacons.map((d) => d.id),
+          approvalDate,
           notes: notes.trim() || undefined,
         },
       });
@@ -236,8 +248,11 @@ export function ApproveRiskAssessmentDrawer({
                 {...params}
                 label="Select Deacons Who Approved"
                 required
-                helperText="Select at least 2 deacons who approved this assessment in the meeting"
-                error={selectedDeacons.length > 0 && selectedDeacons.length < 2}
+                helperText={`Select at least ${requiredApprovers} deacons who approved this assessment`}
+                error={
+                  selectedDeacons.length > 0 &&
+                  selectedDeacons.length < requiredApprovers
+                }
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -261,6 +276,18 @@ export function ApproveRiskAssessmentDrawer({
                 />
               ))
             }
+          />
+
+          {/* Approval Date */}
+          <TextField
+            label="Approval Date"
+            type="date"
+            value={approvalDate}
+            onChange={(e) => setApprovalDate(e.target.value)}
+            required
+            fullWidth
+            disabled={isApproving}
+            InputLabelProps={{ shrink: true }}
           />
 
           {/* Approval Notes */}

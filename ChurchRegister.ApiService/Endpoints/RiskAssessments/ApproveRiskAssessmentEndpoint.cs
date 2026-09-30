@@ -50,6 +50,7 @@ public class ApproveRiskAssessmentEndpoint : Endpoint<ApproveRiskAssessmentEndpo
         var request = new ApproveRiskAssessmentRequest
         {
             DeaconMemberIds = req.DeaconMemberIds,
+            ApprovalDate = req.ApprovalDate,
             Notes = req.Notes
         };
         var result = await _useCase.ExecuteAsync(req.Id, request, userId);
