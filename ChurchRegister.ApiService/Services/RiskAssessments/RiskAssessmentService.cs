@@ -273,7 +273,7 @@ public class RiskAssessmentService : IRiskAssessmentService
         }
 
         // Create approval records for each selected deacon
-        var approvalDate = DateTime.UtcNow;
+        var approvalDate = request.ApprovalDate?.Date ?? DateTime.UtcNow.Date;
         foreach (var deaconMemberId in request.DeaconMemberIds)
         {
             var approval = new RiskAssessmentApproval
@@ -301,7 +301,7 @@ public class RiskAssessmentService : IRiskAssessmentService
         if (totalApprovals >= minimumRequired)
         {
             assessment.Status = "Approved";
-            assessment.LastReviewDate = DateTime.UtcNow.Date;
+            assessment.LastReviewDate = approvalDate;
             assessment.NextReviewDate = assessment.LastReviewDate.Value.AddYears(assessment.ReviewInterval);
             assessment.ModifiedBy = approvedBy;
             assessment.ModifiedDateTime = DateTime.UtcNow;

@@ -87,6 +87,7 @@ export interface UpdateRiskAssessmentRequest {
 // Approve Risk Assessment Request matching API contract
 export interface ApproveRiskAssessmentRequest {
   deaconMemberIds: number[];
+  approvalDate?: string | null; // yyyy-MM-dd
   notes?: string | null;
 }
 

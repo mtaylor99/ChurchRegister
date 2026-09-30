@@ -161,6 +161,11 @@ export function RiskAssessmentsPage() {
     }
   };
 
+  const handleApproveClick = (assessment: RiskAssessment) => {
+    setSelectedAssessmentId(assessment.id);
+    setApproveDrawerOpen(true);
+  };
+
   const handleDeleteClick = (assessment: RiskAssessment) => {
     setAssessmentToDelete(assessment);
     setDeleteConfirmOpen(true);
@@ -356,6 +361,7 @@ export function RiskAssessmentsPage() {
             onEditClick={handleEditClick}
             onDeleteClick={handleDeleteClick}
             onStartReview={handleStartReview}
+            onApproveClick={handleApproveClick}
             onViewHistory={handleViewHistory}
           />
         )}
