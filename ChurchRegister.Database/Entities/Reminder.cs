@@ -12,10 +12,15 @@ public class Reminder : IAuditableEntity
     [MaxLength(500)]
     public string Description { get; set; } = string.Empty;
     
+    [MaxLength(2000)]
+    public string? Notes { get; set; }
+    
     [Required]
     public DateTime DueDate { get; set; }
     
     public string? AssignedToUserId { get; set; }
+    
+    public int? AssignedToChurchMemberId { get; set; }
     
     public bool Priority { get; set; }
     
@@ -33,6 +38,7 @@ public class Reminder : IAuditableEntity
     
     // Navigation Properties
     public virtual ReminderCategory? Category { get; set; }
+    public virtual ChurchMember? AssignedToChurchMember { get; set; }
     
     // Audit Fields
     public string CreatedBy { get; set; } = string.Empty;

@@ -74,8 +74,8 @@ const mockReminder: Reminder = {
   id: 1,
   description: 'Test reminder',
   dueDate: '2024-12-31',
-  assignedToUserId: 'user-1',
-  assignedToUserName: 'Alice',
+  assignedToChurchMemberId: 1,
+  assignedToName: 'Alice',
   categoryId: 1,
   categoryName: 'Admin',
   categoryColorHex: '#000000',
@@ -157,7 +157,7 @@ describe('useCreateReminder', () => {
       result.current.mutate({
         description: 'New reminder',
         dueDate: '2024-12-31',
-        assignedToUserId: 'user-1',
+        assignedToChurchMemberId: 1,
         categoryId: 1,
         priority: false,
       });
@@ -178,7 +178,7 @@ describe('useCreateReminder', () => {
       result.current.mutate({
         description: 'New reminder',
         dueDate: '2024-12-31',
-        assignedToUserId: 'user-1',
+        assignedToChurchMemberId: 1,
         categoryId: null,
         priority: null,
       });
@@ -206,7 +206,7 @@ describe('useUpdateReminder', () => {
         request: {
           description: 'Updated reminder',
           dueDate: '2024-12-31',
-          assignedToUserId: 'user-1',
+          assignedToChurchMemberId: 1,
           categoryId: null,
           priority: null,
         },
@@ -229,7 +229,7 @@ describe('useUpdateReminder', () => {
         request: {
           description: 'Updated',
           dueDate: '2024-12-31',
-          assignedToUserId: 'user-1',
+          assignedToChurchMemberId: 1,
           categoryId: null,
           priority: null,
         },

@@ -4,6 +4,7 @@ using ChurchRegister.Database.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChurchRegister.Database.Migrations
 {
     [DbContext(typeof(ChurchRegisterWebContext))]
-    partial class ChurchRegisterWebContextModelSnapshot : ModelSnapshot
+    [Migration("20260930105814_AddReminderNotes")]
+    partial class AddReminderNotes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1350,9 +1353,6 @@ namespace ChurchRegister.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AssignedToChurchMemberId")
-                        .HasColumnType("int");
-
                     b.Property<string>("AssignedToUserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -1404,9 +1404,6 @@ namespace ChurchRegister.Database.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssignedToChurchMemberId")
-                        .HasDatabaseName("IX_Reminders_AssignedToChurchMemberId");
 
                     b.HasIndex("AssignedToUserId")
                         .HasDatabaseName("IX_Reminders_AssignedToUserId");
@@ -2215,11 +2212,6 @@ namespace ChurchRegister.Database.Migrations
 
             modelBuilder.Entity("ChurchRegister.Database.Entities.Reminder", b =>
                 {
-                    b.HasOne("ChurchRegister.Database.Entities.ChurchMember", "AssignedToChurchMember")
-                        .WithMany()
-                        .HasForeignKey("AssignedToChurchMemberId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("ChurchRegister.Database.Data.ChurchRegisterWebUser", null)
                         .WithMany()
                         .HasForeignKey("AssignedToUserId")
@@ -2229,8 +2221,6 @@ namespace ChurchRegister.Database.Migrations
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("AssignedToChurchMember");
 
                     b.Navigation("Category");
                 });

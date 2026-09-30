@@ -45,7 +45,9 @@ export const RemindersGrid = React.memo(function RemindersGrid({
 }: RemindersGridProps) {
   // Filter state
   const [status, setStatus] = useState<string>('');
-  const [assignedToUserId, setAssignedToUserId] = useState<string>('');
+  const [assignedToChurchMemberId, setAssignedToChurchMemberId] = useState<
+    number | null
+  >(null);
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [description, setDescription] = useState<string>('');
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
@@ -63,7 +65,7 @@ export const RemindersGrid = React.memo(function RemindersGrid({
     isError,
   } = useReminders({
     status: status || undefined,
-    assignedToUserId: assignedToUserId || undefined,
+    assignedToChurchMemberId: assignedToChurchMemberId ?? undefined,
     categoryId: categoryId || undefined,
     description: description || undefined,
     showCompleted: showCompleted,
@@ -76,11 +78,11 @@ export const RemindersGrid = React.memo(function RemindersGrid({
   const hasActiveFilters = useMemo(
     () =>
       status !== '' ||
-      assignedToUserId !== '' ||
+      assignedToChurchMemberId !== null ||
       categoryId !== null ||
       description !== '' ||
       showCompleted,
-    [status, assignedToUserId, categoryId, description, showCompleted]
+    [status, assignedToChurchMemberId, categoryId, description, showCompleted]
   );
 
   const handleDeleteClick = useCallback((reminder: Reminder) => {
@@ -106,7 +108,7 @@ export const RemindersGrid = React.memo(function RemindersGrid({
 
   const handleClearFilters = useCallback(() => {
     setStatus('');
-    setAssignedToUserId('');
+    setAssignedToChurchMemberId(null);
     setCategoryId(null);
     setDescription('');
     setShowCompleted(false);
@@ -152,7 +154,7 @@ export const RemindersGrid = React.memo(function RemindersGrid({
         },
       },
       {
-        field: 'assignedToUserName',
+        field: 'assignedToName',
         headerName: 'Assigned To',
         width: 150,
       },

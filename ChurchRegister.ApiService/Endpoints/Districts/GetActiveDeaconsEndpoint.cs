@@ -21,7 +21,7 @@ public class GetActiveDeaconsEndpoint : EndpointWithoutRequest<List<ChurchMember
     {
         Get("/api/districts/deacons");
         Policies("Bearer");
-        Roles(SystemRoles.SystemAdministration, SystemRoles.ChurchMembersContributor, SystemRoles.ChurchMembersAdministrator);
+        Roles(SystemRoles.SystemAdministration, SystemRoles.ChurchMembersContributor, SystemRoles.ChurchMembersAdministrator, SystemRoles.RemindersContributor, SystemRoles.RemindersAdministrator);
         Description(x => x
             .WithName("GetActiveDeacons")
             .WithSummary("Get all active deacons")

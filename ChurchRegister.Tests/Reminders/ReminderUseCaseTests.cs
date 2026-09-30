@@ -43,7 +43,7 @@ public class ReminderUseCaseTests
         {
             Description = "Follow up on insurance",
             DueDate = DateTime.UtcNow.AddDays(7),
-            AssignedToUserId = "user-123"
+            AssignedToChurchMemberId = 123
         };
         var expected = new ReminderDto { Id = 10, Description = "Follow up on insurance" };
 

@@ -4,6 +4,7 @@ using ChurchRegister.Database.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChurchRegister.Database.Migrations
 {
     [DbContext(typeof(ChurchRegisterWebContext))]
-    partial class ChurchRegisterWebContextModelSnapshot : ModelSnapshot
+    [Migration("20260930112353_AddReminderAssignedChurchMember")]
+    partial class AddReminderAssignedChurchMember
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
