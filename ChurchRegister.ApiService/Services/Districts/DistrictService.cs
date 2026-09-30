@@ -50,11 +50,12 @@ public class DistrictService : IDistrictService
     }
 
     /// <inheritdoc />
-    public async Task<List<ChurchMemberSummaryDto>> GetActiveDeaconsAsync()
+    public async Task<List<ChurchMemberSummaryDto>> GetActiveDeaconsAsync(bool includeMinisters = false)
     {
         var deacons = await _context.ChurchMembers
             .Where(m => m.ChurchMemberStatusId == ActiveStatusId &&
-                       m.Roles.Any(r => r.ChurchMemberRoleType.Type == "Deacon"))
+                       m.Roles.Any(r => r.ChurchMemberRoleType.Type == "Deacon" ||
+                                        (includeMinisters && r.ChurchMemberRoleType.Type == "Minister")))
             .OrderBy(m => m.FirstName)
             .ThenBy(m => m.LastName)
             .Select(m => new ChurchMemberSummaryDto

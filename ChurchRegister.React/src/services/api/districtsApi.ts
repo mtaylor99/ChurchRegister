@@ -41,11 +41,15 @@ export class DistrictsApi {
 
   /**
    * Get all active church members with Deacon role
+   * @param includeMinisters When true, members with the Minister role are also returned
    * @returns List of active deacons
    */
-  async getActiveDeacons(): Promise<ChurchMemberSummary[]> {
+  async getActiveDeacons(
+    includeMinisters = false
+  ): Promise<ChurchMemberSummary[]> {
+    const params = includeMinisters ? '?includeMinisters=true' : '';
     return await apiClient.get<ChurchMemberSummary[]>(
-      `${this.basePath}/districts/deacons`
+      `${this.basePath}/districts/deacons${params}`
     );
   }
 
