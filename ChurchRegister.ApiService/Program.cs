@@ -321,6 +321,8 @@ builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.Gener
                            ChurchRegister.ApiService.UseCase.ChurchMembers.GenerateRegisterNumbers.GenerateRegisterNumbersUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.PreviewRegisterNumbers.IPreviewRegisterNumbersUseCase,
                            ChurchRegister.ApiService.UseCase.ChurchMembers.PreviewRegisterNumbers.PreviewRegisterNumbersUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.ExportRegisterNumbers.IExportRegisterNumbersUseCase,
+                           ChurchRegister.ApiService.UseCase.ChurchMembers.ExportRegisterNumbers.ExportRegisterNumbersUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.AssignDistrict.IAssignDistrictUseCase,
                            ChurchRegister.ApiService.UseCase.ChurchMembers.AssignDistrict.AssignDistrictUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.ExportPastoralCareReport.IExportPastoralCareReportUseCase,
