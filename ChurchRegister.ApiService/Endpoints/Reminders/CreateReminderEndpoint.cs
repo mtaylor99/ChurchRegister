@@ -2,7 +2,6 @@ using ChurchRegister.ApiService.Models.Reminders;
 using ChurchRegister.ApiService.UseCase.Reminders.CreateReminder;
 using ChurchRegister.Database.Constants;
 using FastEndpoints;
-using System.Security.Claims;
 
 namespace ChurchRegister.ApiService.Endpoints.Reminders;
 
@@ -31,22 +30,10 @@ public class CreateReminderEndpoint : Endpoint<CreateReminderRequest, ReminderDt
 
     public override async Task<ReminderDto> HandleAsync(CreateReminderRequest req, CancellationToken ct)
     {
-        _logger.LogInformation("CreateReminder called with Description={Description}, DueDate={DueDate}, AssignedToUserId={AssignedToUserId}, CategoryId={CategoryId}, Priority={Priority}",
-            req.Description, req.DueDate, req.AssignedToUserId, req.CategoryId, req.Priority);
+        _logger.LogInformation("CreateReminder called with Description={Description}, DueDate={DueDate}, AssignedToChurchMemberId={AssignedToChurchMemberId}, CategoryId={CategoryId}, Priority={Priority}",
+            req.Description, req.DueDate, req.AssignedToChurchMemberId, req.CategoryId, req.Priority);
 
         var username = User.Identity?.Name ?? throw new UnauthorizedAccessException("User not authenticated");
-
-        // Handle "current-user" as a special case to assign to the current logged-in user
-        if (req.AssignedToUserId == "current-user")
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                throw new UnauthorizedAccessException("Unable to determine current user ID");
-            }
-            _logger.LogInformation("Converting 'current-user' to actual user ID: {UserId}", userId);
-            req.AssignedToUserId = userId;
-        }
 
         var reminder = await _useCase.ExecuteAsync(req, username);
 

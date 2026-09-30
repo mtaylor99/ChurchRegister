@@ -9,8 +9,8 @@ export interface Reminder {
   description: string;
   notes?: string | null;
   dueDate: string; // ISO date string
-  assignedToUserId: string;
-  assignedToUserName: string;
+  assignedToChurchMemberId: number | null;
+  assignedToName: string;
   categoryId: number | null;
   categoryName: string | null;
   categoryColorHex: string | null;
@@ -32,7 +32,7 @@ export interface CreateReminderRequest {
   description: string;
   notes?: string | null;
   dueDate: string; // ISO date string
-  assignedToUserId: string;
+  assignedToChurchMemberId: number;
   categoryId: number | null;
   priority: boolean | null;
 }
@@ -42,7 +42,7 @@ export interface UpdateReminderRequest {
   description: string;
   notes?: string | null;
   dueDate: string; // ISO date string
-  assignedToUserId: string;
+  assignedToChurchMemberId: number;
   categoryId: number | null;
   priority: boolean | null;
 }
@@ -71,7 +71,7 @@ export interface CompleteReminderResponse {
 // Reminder Query Parameters matching API contract
 export interface ReminderQueryParameters {
   status?: string;
-  assignedToUserId?: string;
+  assignedToChurchMemberId?: number;
   categoryId?: number;
   description?: string;
   showCompleted?: boolean;
@@ -80,10 +80,4 @@ export interface ReminderQueryParameters {
 // Dashboard Reminder Summary matching API contract
 export interface DashboardReminderSummary {
   upcomingCount: number;
-}
-
-// User a reminder can be assigned to
-export interface AssignableUser {
-  id: string;
-  name: string;
 }

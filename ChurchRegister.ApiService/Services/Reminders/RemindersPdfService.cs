@@ -42,6 +42,7 @@ public class RemindersPdfService : IRemindersPdfService
             // Fetch due reminders
             var reminders = await _context.Reminders
                 .Include(r => r.Category)
+                .Include(r => r.AssignedToChurchMember)
                 .Where(r => r.DueDate <= dueDate &&
                            r.DueDate >= now &&
                            r.Status != "Completed")
@@ -53,7 +54,11 @@ public class RemindersPdfService : IRemindersPdfService
             foreach (var reminder in reminders)
             {
                 var assignedToName = "Unassigned";
-                if (!string.IsNullOrEmpty(reminder.AssignedToUserId))
+                if (reminder.AssignedToChurchMember != null)
+                {
+                    assignedToName = $"{reminder.AssignedToChurchMember.FirstName} {reminder.AssignedToChurchMember.LastName}";
+                }
+                else if (!string.IsNullOrEmpty(reminder.AssignedToUserId))
                 {
                     var user = await _userManager.FindByIdAsync(reminder.AssignedToUserId);
                     if (user != null)

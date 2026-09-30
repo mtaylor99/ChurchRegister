@@ -20,6 +20,8 @@ public class Reminder : IAuditableEntity
     
     public string? AssignedToUserId { get; set; }
     
+    public int? AssignedToChurchMemberId { get; set; }
+    
     public bool Priority { get; set; }
     
     [Required]
@@ -36,6 +38,7 @@ public class Reminder : IAuditableEntity
     
     // Navigation Properties
     public virtual ReminderCategory? Category { get; set; }
+    public virtual ChurchMember? AssignedToChurchMember { get; set; }
     
     // Audit Fields
     public string CreatedBy { get; set; } = string.Empty;

@@ -11,5 +11,4 @@ public interface IReminderService
     Task<CompleteReminderResponse> CompleteReminderAsync(int id, CompleteReminderRequest request, string completedBy);
     Task DeleteReminderAsync(int id);
     Task<DashboardReminderSummaryDto> GetDashboardSummaryAsync();
-    Task<List<AssignableUserDto>> GetAssignableUsersAsync();
 }

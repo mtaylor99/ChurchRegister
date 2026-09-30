@@ -19,7 +19,10 @@ export const createReminderSchema = yup.object({
     .nullable()
     .optional(),
   dueDate: yup.date().required('Due date is required').nullable(),
-  assignedToUserId: yup.string().required('Assigned to is required'),
+  assignedToChurchMemberId: yup
+    .number()
+    .integer()
+    .required('Assigned to is required'),
   categoryId: yup.number().integer().nullable().optional(),
   priority: yup.boolean().required(),
 });

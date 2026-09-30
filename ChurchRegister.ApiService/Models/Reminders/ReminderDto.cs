@@ -6,8 +6,8 @@ public class ReminderDto
     public string Description { get; set; } = string.Empty;
     public string? Notes { get; set; }
     public DateTime DueDate { get; set; }
-    public string AssignedToUserId { get; set; } = string.Empty;
-    public string AssignedToUserName { get; set; } = string.Empty;
+    public int? AssignedToChurchMemberId { get; set; }
+    public string AssignedToName { get; set; } = string.Empty;
     public int? CategoryId { get; set; }
     public string? CategoryName { get; set; }
     public string? CategoryColorHex { get; set; }

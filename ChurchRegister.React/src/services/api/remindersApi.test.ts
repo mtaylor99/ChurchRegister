@@ -41,10 +41,10 @@ describe('RemindersApi', () => {
       expect(url).toContain('status=Pending');
     });
 
-    test('appends assignedToUserId when provided', async () => {
-      await api.getReminders({ assignedToUserId: 'user-123' });
+    test('appends assignedToChurchMemberId when provided', async () => {
+      await api.getReminders({ assignedToChurchMemberId: 123 });
       const url = vi.mocked(apiClient.get).mock.calls[0][0] as string;
-      expect(url).toContain('assignedToUserId=user-123');
+      expect(url).toContain('assignedToChurchMemberId=123');
     });
 
     test('appends categoryId when provided', async () => {
@@ -89,7 +89,7 @@ describe('RemindersApi', () => {
       const request = {
         description: 'Annual visit',
         dueDate: '2024-12-31',
-        assignedToUserId: 'user-1',
+        assignedToChurchMemberId: 1,
         categoryId: null as null,
         priority: null as null,
       };
@@ -108,7 +108,7 @@ describe('RemindersApi', () => {
       const request = {
         description: 'Updated',
         dueDate: '2024-12-31',
-        assignedToUserId: 'user-1',
+        assignedToChurchMemberId: 1,
         categoryId: null as null,
         priority: null as null,
       };

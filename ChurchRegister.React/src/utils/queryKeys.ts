@@ -136,7 +136,6 @@ export const reminderKeys = {
   details: () => [...reminderKeys.all, 'detail'] as const,
   detail: (id: number) => [...reminderKeys.details(), id] as const,
   dashboardSummary: () => [...reminderKeys.all, 'dashboard-summary'] as const,
-  assignableUsers: () => [...reminderKeys.all, 'assignable-users'] as const,
 } as const;
 
 /**

@@ -1,4 +1,5 @@
 ﻿import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   Drawer,
   Box,
@@ -20,8 +21,10 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { enGB } from 'date-fns/locale';
-import { useUpdateReminder, useAssignableUsers } from '../../hooks/useReminders';
+import { useUpdateReminder } from '../../hooks/useReminders';
 import { useReminderCategories } from '../../hooks/useReminderCategories';
+import { districtsApi } from '../../services/api';
+import type { ChurchMemberSummary } from '../../types';
 import type { Reminder } from '../../types/reminders';
 
 export interface EditReminderDrawerProps {
@@ -40,7 +43,9 @@ export function EditReminderDrawer({
   const [description, setDescription] = useState('');
   const [notes, setNotes] = useState('');
   const [dueDate, setDueDate] = useState<Date | null>(null);
-  const [assignedToUserId, setAssignedToUserId] = useState('');
+  const [assignedToChurchMemberId, setAssignedToChurchMemberId] = useState<
+    number | null
+  >(null);
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [priority, setPriority] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,8 +53,13 @@ export function EditReminderDrawer({
   const updateMutation = useUpdateReminder();
   const { data: categories, isPending: categoriesLoading } =
     useReminderCategories();
-  const { data: assignableUsers, isPending: usersLoading } =
-    useAssignableUsers();
+  const { data: assignableMembers = [], isPending: membersLoading } = useQuery<
+    ChurchMemberSummary[]
+  >({
+    queryKey: ['activeDeacons', 'includeMinisters'],
+    queryFn: () => districtsApi.getActiveDeacons(true),
+    enabled: open,
+  });
 
   // Populate form when reminder changes
   useEffect(() => {
@@ -57,7 +67,7 @@ export function EditReminderDrawer({
       setDescription(reminder.description);
       setNotes(reminder.notes ?? '');
       setDueDate(new Date(reminder.dueDate));
-      setAssignedToUserId(reminder.assignedToUserId);
+      setAssignedToChurchMemberId(reminder.assignedToChurchMemberId);
       setCategoryId(reminder.categoryId);
       setPriority(reminder.priority || false);
       setError(null);
@@ -78,7 +88,7 @@ export function EditReminderDrawer({
       return;
     }
 
-    if (!assignedToUserId) {
+    if (assignedToChurchMemberId === null) {
       setError('Assigned to is required');
       return;
     }
@@ -92,7 +102,7 @@ export function EditReminderDrawer({
           description: description.trim(),
           notes: notes.trim() || null,
           dueDate: dueDate.toISOString(),
-          assignedToUserId,
+          assignedToChurchMemberId,
           categoryId,
           priority,
         },
@@ -112,11 +122,12 @@ export function EditReminderDrawer({
       notes !== (reminder.notes ?? '') ||
       (dueDate &&
         dueDate.toISOString() !== new Date(reminder.dueDate).toISOString()) ||
-      assignedToUserId !== reminder.assignedToUserId ||
+      assignedToChurchMemberId !== reminder.assignedToChurchMemberId ||
       categoryId !== reminder.categoryId ||
       priority !== (reminder.priority || false));
 
-  const isFormValid = description.trim() && dueDate && assignedToUserId;
+  const isFormValid =
+    description.trim() && dueDate && assignedToChurchMemberId !== null;
   const isSaving = updateMutation.isPending;
 
   if (!reminder) return null;
@@ -175,19 +186,24 @@ export function EditReminderDrawer({
           <FormControl fullWidth required>
             <InputLabel>Assigned To</InputLabel>
             <Select
-              value={assignedToUserId}
-              onChange={(e) => setAssignedToUserId(e.target.value)}
+              value={assignedToChurchMemberId ?? ''}
+              onChange={(e) =>
+                setAssignedToChurchMemberId(Number(e.target.value))
+              }
               label="Assigned To"
-              disabled={usersLoading}
+              disabled={membersLoading}
             >
-              {!assignableUsers?.some((u) => u.id === reminder.assignedToUserId) && (
-                <MenuItem value={reminder.assignedToUserId}>
-                  {reminder.assignedToUserName}
-                </MenuItem>
-              )}
-              {assignableUsers?.map((user) => (
-                <MenuItem key={user.id} value={user.id}>
-                  {user.name}
+              {reminder.assignedToChurchMemberId !== null &&
+                !assignableMembers.some(
+                  (m) => m.id === reminder.assignedToChurchMemberId
+                ) && (
+                  <MenuItem value={reminder.assignedToChurchMemberId}>
+                    {reminder.assignedToName}
+                  </MenuItem>
+                )}
+              {assignableMembers.map((member) => (
+                <MenuItem key={member.id} value={member.id}>
+                  {member.fullName}
                 </MenuItem>
               ))}
             </Select>

@@ -1,9 +1,7 @@
 using ChurchRegister.ApiService.Exceptions;
 using ChurchRegister.ApiService.Models.Reminders;
 using ChurchRegister.Database.Data;
-using ChurchRegister.Database.Constants;
 using ChurchRegister.Database.Entities;
-using ChurchRegister.Database.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +24,7 @@ public class ReminderService : IReminderService
     {
         var remindersQuery = _context.Reminders
             .Include(r => r.Category)
+            .Include(r => r.AssignedToChurchMember)
             .AsQueryable();
 
         // Apply ShowCompleted filter (default: don't show completed reminders)
@@ -50,9 +49,9 @@ public class ReminderService : IReminderService
         }
 
         // AssignedTo filter
-        if (!string.IsNullOrEmpty(query.AssignedToUserId))
+        if (query.AssignedToChurchMemberId.HasValue)
         {
-            remindersQuery = remindersQuery.Where(r => r.AssignedToUserId == query.AssignedToUserId);
+            remindersQuery = remindersQuery.Where(r => r.AssignedToChurchMemberId == query.AssignedToChurchMemberId.Value);
         }
 
         // Category filter
@@ -76,8 +75,7 @@ public class ReminderService : IReminderService
         var dtos = new List<ReminderDto>();
         foreach (var reminder in reminders)
         {
-            var user = await _userManager.FindByIdAsync(reminder.AssignedToUserId);
-            dtos.Add(MapToDto(reminder, user, reminder.Category));
+            dtos.Add(await MapToDtoAsync(reminder));
         }
 
         _logger.LogInformation("Mapped to {Count} ReminderDto objects", dtos.Count);
@@ -89,6 +87,7 @@ public class ReminderService : IReminderService
     {
         var reminder = await _context.Reminders
             .Include(r => r.Category)
+            .Include(r => r.AssignedToChurchMember)
             .FirstOrDefaultAsync(r => r.Id == id);
 
         if (reminder == null)
@@ -96,18 +95,19 @@ public class ReminderService : IReminderService
             throw new NotFoundException("Reminder", id);
         }
 
-        var user = await _userManager.FindByIdAsync(reminder.AssignedToUserId);
-        return MapToDto(reminder, user, reminder.Category);
+        return await MapToDtoAsync(reminder);
     }
 
     public async Task<ReminderDto> CreateReminderAsync(CreateReminderRequest request, string createdBy)
     {
+        await EnsureChurchMemberExistsAsync(request.AssignedToChurchMemberId);
+
         var reminder = new Reminder
         {
             Description = request.Description,
             Notes = request.Notes,
             DueDate = request.DueDate,
-            AssignedToUserId = request.AssignedToUserId,
+            AssignedToChurchMemberId = request.AssignedToChurchMemberId,
             CategoryId = request.CategoryId,
             Priority = request.Priority ?? false,
             Status = "Pending",
@@ -120,17 +120,18 @@ public class ReminderService : IReminderService
         _context.Reminders.Add(reminder);
         await _context.SaveChangesAsync();
 
-        // Reload with category
+        // Reload with category and assignee
         await _context.Entry(reminder).Reference(r => r.Category).LoadAsync();
+        await _context.Entry(reminder).Reference(r => r.AssignedToChurchMember).LoadAsync();
 
-        var user = await _userManager.FindByIdAsync(reminder.AssignedToUserId);
-        return MapToDto(reminder, user, reminder.Category);
+        return await MapToDtoAsync(reminder);
     }
 
     public async Task<ReminderDto> UpdateReminderAsync(int id, UpdateReminderRequest request, string modifiedBy)
     {
         var reminder = await _context.Reminders
             .Include(r => r.Category)
+            .Include(r => r.AssignedToChurchMember)
             .FirstOrDefaultAsync(r => r.Id == id);
 
         if (reminder == null)
@@ -143,10 +144,17 @@ public class ReminderService : IReminderService
             throw new ValidationException("Cannot edit completed reminders.");
         }
 
+        var member = await _context.ChurchMembers.FindAsync(request.AssignedToChurchMemberId)
+            ?? throw new ValidationException("Assigned church member does not exist.");
+        var category = request.CategoryId.HasValue
+            ? await _context.ReminderCategories.FindAsync(request.CategoryId.Value)
+            : null;
+
         reminder.Description = request.Description;
         reminder.Notes = request.Notes;
         reminder.DueDate = request.DueDate;
-        reminder.AssignedToUserId = request.AssignedToUserId;
+        reminder.AssignedToChurchMember = member;
+        reminder.Category = category;
         reminder.CategoryId = request.CategoryId;
         reminder.Priority = request.Priority ?? false;
         reminder.ModifiedBy = modifiedBy;
@@ -154,17 +162,14 @@ public class ReminderService : IReminderService
 
         await _context.SaveChangesAsync();
 
-        // Reload category if changed
-        await _context.Entry(reminder).Reference(r => r.Category).LoadAsync();
-
-        var user = await _userManager.FindByIdAsync(reminder.AssignedToUserId);
-        return MapToDto(reminder, user, reminder.Category);
+        return await MapToDtoAsync(reminder);
     }
 
     public async Task<CompleteReminderResponse> CompleteReminderAsync(int id, CompleteReminderRequest request, string completedBy)
     {
         var reminder = await _context.Reminders
             .Include(r => r.Category)
+            .Include(r => r.AssignedToChurchMember)
             .FirstOrDefaultAsync(r => r.Id == id);
 
         if (reminder == null)
@@ -187,8 +192,7 @@ public class ReminderService : IReminderService
 
         await _context.SaveChangesAsync();
 
-        var user = await _userManager.FindByIdAsync(reminder.AssignedToUserId);
-        var completedDto = MapToDto(reminder, user, reminder.Category);
+        var completedDto = await MapToDtoAsync(reminder);
 
         ReminderDto? nextReminderDto = null;
 
@@ -231,6 +235,7 @@ public class ReminderService : IReminderService
                 Description = reminder.Description,
                 Notes = reminder.Notes,
                 DueDate = newDueDate,
+                AssignedToChurchMemberId = reminder.AssignedToChurchMemberId,
                 AssignedToUserId = reminder.AssignedToUserId,
                 CategoryId = reminder.CategoryId, // Inherit category
                 Priority = reminder.Priority,
@@ -244,10 +249,11 @@ public class ReminderService : IReminderService
             _context.Reminders.Add(nextReminder);
             await _context.SaveChangesAsync();
 
-            // Reload with category
+            // Reload with category and assignee
             await _context.Entry(nextReminder).Reference(r => r.Category).LoadAsync();
+            await _context.Entry(nextReminder).Reference(r => r.AssignedToChurchMember).LoadAsync();
 
-            nextReminderDto = MapToDto(nextReminder, user, nextReminder.Category);
+            nextReminderDto = await MapToDtoAsync(nextReminder);
         }
 
         return new CompleteReminderResponse
@@ -295,39 +301,12 @@ public class ReminderService : IReminderService
         };
     }
 
-    public async Task<List<AssignableUserDto>> GetAssignableUsersAsync()
+    private async Task EnsureChurchMemberExistsAsync(int churchMemberId)
     {
-        var roles = new[]
+        if (!await _context.ChurchMembers.AnyAsync(m => m.Id == churchMemberId))
         {
-            SystemRoles.SystemAdministration,
-            SystemRoles.RemindersContributor,
-            SystemRoles.RemindersAdministrator
-        };
-
-        var users = new Dictionary<string, ChurchRegisterWebUser>();
-        foreach (var role in roles)
-        {
-            foreach (var user in await _userManager.GetUsersInRoleAsync(role))
-            {
-                if (user.AccountStatus == UserAccountStatus.Active)
-                {
-                    users[user.Id] = user;
-                }
-            }
+            throw new ValidationException("Assigned church member does not exist.");
         }
-
-        return users.Values
-            .Select(u =>
-            {
-                var name = $"{u.FirstName} {u.LastName}".Trim();
-                return new AssignableUserDto
-                {
-                    Id = u.Id,
-                    Name = string.IsNullOrWhiteSpace(name) ? (u.UserName ?? u.Email ?? "Unknown") : name
-                };
-            })
-            .OrderBy(u => u.Name)
-            .ToList();
     }
 
     private string CalculateAlertStatus(DateTime dueDate, string status)
@@ -353,15 +332,24 @@ public class ReminderService : IReminderService
         }
     }
 
-    private ReminderDto MapToDto(Reminder reminder, ChurchRegisterWebUser? user, ReminderCategory? category)
+    private async Task<ReminderDto> MapToDtoAsync(Reminder reminder)
     {
-        var userName = user != null
-            ? $"{user.FirstName} {user.LastName}".Trim()
-            : "Unknown";
+        var category = reminder.Category;
+        string assignedToName;
 
-        if (string.IsNullOrWhiteSpace(userName))
+        if (reminder.AssignedToChurchMember != null)
         {
-            userName = user?.UserName ?? "Unknown";
+            assignedToName = $"{reminder.AssignedToChurchMember.FirstName} {reminder.AssignedToChurchMember.LastName}".Trim();
+        }
+        else
+        {
+            // Reminders created before church-member assignment only carry a system user
+            var legacyUser = string.IsNullOrEmpty(reminder.AssignedToUserId)
+                ? null
+                : await _userManager.FindByIdAsync(reminder.AssignedToUserId);
+            assignedToName = legacyUser != null
+                ? $"{legacyUser.FirstName} {legacyUser.LastName}".Trim()
+                : "Unassigned";
         }
 
         return new ReminderDto
@@ -370,8 +358,8 @@ public class ReminderService : IReminderService
             Description = reminder.Description,
             Notes = reminder.Notes,
             DueDate = reminder.DueDate,
-            AssignedToUserId = reminder.AssignedToUserId,
-            AssignedToUserName = userName,
+            AssignedToChurchMemberId = reminder.AssignedToChurchMemberId,
+            AssignedToName = assignedToName,
             CategoryId = reminder.CategoryId,
             CategoryName = category?.Name,
             CategoryColorHex = category?.ColorHex,

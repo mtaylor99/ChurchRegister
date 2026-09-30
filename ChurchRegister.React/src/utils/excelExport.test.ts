@@ -123,8 +123,8 @@ const makeReminder = (overrides: Partial<Reminder> = {}): Reminder => ({
   id: 1,
   description: 'Complete annual review',
   dueDate: '2024-12-31',
-  assignedToUserId: 'user-1',
-  assignedToUserName: 'Alice',
+  assignedToChurchMemberId: 1,
+  assignedToName: 'Alice',
   categoryId: 1,
   categoryName: 'Administration',
   priority: false,
@@ -471,12 +471,12 @@ describe('exportRemindersToExcel', () => {
     expect(data[0]['Due Date']).toMatch(/\d{2}\/\d{2}\/\d{4}/);
   });
 
-  test('handles null completionNotes and completedBy', async () => {
+  test('handles null completionNotes and completedDateTime', async () => {
     const reminder = makeReminder({ completionNotes: null, completedBy: null, completedDateTime: null });
     await exportRemindersToExcel([reminder]);
     const [data] = mockJsonToSheet.mock.calls[0];
     expect(data[0]['Completion Notes']).toBe('');
-    expect(data[0]['Completed By']).toBe('');
+    expect(data[0]['Completed By']).toBeUndefined();
     expect(data[0]['Completed Date']).toBe('');
   });
 
