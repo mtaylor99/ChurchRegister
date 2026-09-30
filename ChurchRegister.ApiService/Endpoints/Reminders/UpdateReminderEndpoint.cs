@@ -2,7 +2,6 @@ using ChurchRegister.ApiService.Models.Reminders;
 using ChurchRegister.ApiService.UseCase.Reminders.UpdateReminder;
 using ChurchRegister.Database.Constants;
 using FastEndpoints;
-using System.Security.Claims;
 
 namespace ChurchRegister.ApiService.Endpoints.Reminders;
 
@@ -31,17 +30,6 @@ public class UpdateReminderEndpoint : Endpoint<UpdateReminderRequest, ReminderDt
     {
         var id = Route<int>("id");
         var username = User.Identity?.Name ?? throw new UnauthorizedAccessException("User not authenticated");
-
-        // Handle "current-user" as a special case to assign to the current logged-in user
-        if (req.AssignedToUserId == "current-user")
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                throw new UnauthorizedAccessException("Unable to determine current user ID");
-            }
-            req.AssignedToUserId = userId;
-        }
 
         var reminder = await _useCase.ExecuteAsync(id, req, username);
         return reminder;

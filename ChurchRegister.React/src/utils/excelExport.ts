@@ -463,12 +463,11 @@ export async function exportRemindersToExcel(
   const excelData = reminders.map((reminder) => ({
     Description: reminder.description,
     'Due Date': new Date(reminder.dueDate).toLocaleDateString('en-GB'),
-    'Assigned To': reminder.assignedToUserName,
+    'Assigned To': reminder.assignedToName,
     Category: reminder.categoryName || 'None',
     Priority: reminder.priority ? 'Important' : 'Normal',
     Status: reminder.status,
     'Completion Notes': reminder.completionNotes || '',
-    'Completed By': reminder.completedBy || '',
     'Completed Date': reminder.completedDateTime
       ? new Date(reminder.completedDateTime).toLocaleDateString('en-GB')
       : '',
@@ -486,7 +485,6 @@ export async function exportRemindersToExcel(
     { wch: 12 }, // Priority
     { wch: 12 }, // Status
     { wch: 30 }, // Completion Notes
-    { wch: 20 }, // Completed By
     { wch: 15 }, // Completed Date
   ];
   worksheet['!cols'] = columnWidths;

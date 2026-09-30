@@ -24,6 +24,8 @@ public class UpdateReminderUseCase : IUpdateReminderUseCase
     {
         try
         {
+            request.Notes = string.IsNullOrWhiteSpace(request.Notes) ? null : Helpers.ValidationHelpers.SanitizeHtml(request.Notes);
+
             _logger.LogInformation("Updating reminder: {ReminderId} by {Username}", id, username);
 
             var result = await _reminderService.UpdateReminderAsync(id, request, username);

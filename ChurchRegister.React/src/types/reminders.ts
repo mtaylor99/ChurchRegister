@@ -7,9 +7,10 @@
 export interface Reminder {
   id: number;
   description: string;
+  notes?: string | null;
   dueDate: string; // ISO date string
-  assignedToUserId: string;
-  assignedToUserName: string;
+  assignedToChurchMemberId: number | null;
+  assignedToName: string;
   categoryId: number | null;
   categoryName: string | null;
   categoryColorHex: string | null;
@@ -29,8 +30,9 @@ export interface Reminder {
 // Create Reminder Request matching API contract
 export interface CreateReminderRequest {
   description: string;
+  notes?: string | null;
   dueDate: string; // ISO date string
-  assignedToUserId: string;
+  assignedToChurchMemberId: number;
   categoryId: number | null;
   priority: boolean | null;
 }
@@ -38,8 +40,9 @@ export interface CreateReminderRequest {
 // Update Reminder Request matching API contract
 export interface UpdateReminderRequest {
   description: string;
+  notes?: string | null;
   dueDate: string; // ISO date string
-  assignedToUserId: string;
+  assignedToChurchMemberId: number;
   categoryId: number | null;
   priority: boolean | null;
 }
@@ -48,7 +51,14 @@ export interface UpdateReminderRequest {
 export interface CompleteReminderRequest {
   completionNotes: string;
   createNext: boolean;
-  nextInterval: '3months' | '6months' | '12months' | 'custom' | null;
+  nextInterval:
+    | '3months'
+    | '6months'
+    | '12months'
+    | '24months'
+    | '36months'
+    | 'custom'
+    | null;
   customDueDate: string | null; // ISO date string
 }
 
@@ -61,7 +71,7 @@ export interface CompleteReminderResponse {
 // Reminder Query Parameters matching API contract
 export interface ReminderQueryParameters {
   status?: string;
-  assignedToUserId?: string;
+  assignedToChurchMemberId?: number;
   categoryId?: number;
   description?: string;
   showCompleted?: boolean;

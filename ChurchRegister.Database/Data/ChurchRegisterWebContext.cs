@@ -235,6 +235,7 @@ namespace ChurchRegister.Database.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Description).IsRequired().HasMaxLength(500);
+                entity.Property(e => e.Notes).HasMaxLength(2000);
                 entity.Property(e => e.DueDate).IsRequired();
                 entity.Property(e => e.Status).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Priority).IsRequired().HasDefaultValue(false);
@@ -253,6 +254,9 @@ namespace ChurchRegister.Database.Data
                     
                 entity.HasIndex(e => e.AssignedToUserId)
                     .HasDatabaseName("IX_Reminders_AssignedToUserId");
+
+                entity.HasIndex(e => e.AssignedToChurchMemberId)
+                    .HasDatabaseName("IX_Reminders_AssignedToChurchMemberId");
                     
                 // Composite index for dashboard queries
                 entity.HasIndex(e => new { e.Status, e.DueDate })
@@ -265,6 +269,12 @@ namespace ChurchRegister.Database.Data
                     .OnDelete(DeleteBehavior.SetNull)
                     .IsRequired(false);
                     
+                // Foreign key to ChurchMember (assignee)
+                entity.HasOne(r => r.AssignedToChurchMember)
+                    .WithMany()
+                    .HasForeignKey(r => r.AssignedToChurchMemberId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
                 // Foreign key to ReminderCategory with SET NULL on delete
                 entity.HasOne(r => r.Category)
                     .WithMany()

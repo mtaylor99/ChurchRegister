@@ -17,7 +17,7 @@ export class RemindersApi {
 
   /**
    * Get reminders with optional filtering
-   * Supports filtering by status, assignedToUserId, categoryId, description search, and showExpired flag
+   * Supports filtering by status, assignedToChurchMemberId, categoryId, description search, and showExpired flag
    */
   async getReminders(params: ReminderQueryParameters): Promise<Reminder[]> {
     const searchParams = new URLSearchParams();
@@ -26,8 +26,11 @@ export class RemindersApi {
       searchParams.append('status', params.status);
     }
 
-    if (params.assignedToUserId) {
-      searchParams.append('assignedToUserId', params.assignedToUserId);
+    if (params.assignedToChurchMemberId !== undefined) {
+      searchParams.append(
+        'assignedToChurchMemberId',
+        params.assignedToChurchMemberId.toString()
+      );
     }
 
     if (params.categoryId !== undefined) {

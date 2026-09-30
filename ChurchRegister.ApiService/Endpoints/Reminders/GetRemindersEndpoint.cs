@@ -30,8 +30,8 @@ public class GetRemindersEndpoint : Endpoint<ReminderQueryParameters, List<Remin
 
     public override async Task HandleAsync(ReminderQueryParameters query, CancellationToken ct)
     {
-        _logger.LogInformation("GetReminders called with Status={Status}, AssignedToUserId={AssignedToUserId}, CategoryId={CategoryId}, ShowCompleted={ShowCompleted}",
-            query.Status, query.AssignedToUserId, query.CategoryId, query.ShowCompleted);
+        _logger.LogInformation("GetReminders called with Status={Status}, AssignedToChurchMemberId={AssignedToChurchMemberId}, CategoryId={CategoryId}, ShowCompleted={ShowCompleted}",
+            query.Status, query.AssignedToChurchMemberId, query.CategoryId, query.ShowCompleted);
 
         var reminders = await _useCase.ExecuteAsync(query);
 

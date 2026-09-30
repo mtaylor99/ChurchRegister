@@ -45,7 +45,7 @@ export function CompleteReminderDrawer({
   const [completionNotes, setCompletionNotes] = useState('');
   const [createNext, setCreateNext] = useState(false);
   const [nextInterval, setNextInterval] = useState<
-    '3months' | '6months' | '12months' | 'custom'
+    '3months' | '6months' | '12months' | '24months' | '36months' | 'custom'
   >('3months');
   const [customDueDate, setCustomDueDate] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -125,6 +125,12 @@ export function CompleteReminderDrawer({
       case '12months':
         calculatedDate = addMonths(originalDate, 12);
         break;
+      case '24months':
+        calculatedDate = addMonths(originalDate, 24);
+        break;
+      case '36months':
+        calculatedDate = addMonths(originalDate, 36);
+        break;
       default:
         return '';
     }
@@ -177,7 +183,7 @@ export function CompleteReminderDrawer({
               sx={{ mb: 1 }}
             >
               <Typography variant="body2" color="text.secondary">
-                Assigned to: {reminder.assignedToUserName}
+                Assigned to: {reminder.assignedToName}
               </Typography>
             </Stack>
 
@@ -252,13 +258,17 @@ export function CompleteReminderDrawer({
                         | '3months'
                         | '6months'
                         | '12months'
+                        | '24months'
+                        | '36months'
                     )
                   }
                   label="Interval"
                 >
                   <MenuItem value="3months">3 months</MenuItem>
                   <MenuItem value="6months">6 months</MenuItem>
-                  <MenuItem value="12months">12 months</MenuItem>
+                  <MenuItem value="12months">1 year</MenuItem>
+                  <MenuItem value="24months">2 years</MenuItem>
+                  <MenuItem value="36months">3 years</MenuItem>
                   <MenuItem value="custom">Custom date</MenuItem>
                 </Select>
               </FormControl>

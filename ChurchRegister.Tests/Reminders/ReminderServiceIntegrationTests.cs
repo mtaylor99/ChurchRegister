@@ -15,6 +15,7 @@ public class ReminderServiceIntegrationTests : IAsyncLifetime
     private readonly TestWebApplicationFactory<Program> _factory;
     private string _userId = string.Empty;
     private int _categoryId;
+    private int _memberId;
 
     public ReminderServiceIntegrationTests()
     {
@@ -39,11 +40,17 @@ public class ReminderServiceIntegrationTests : IAsyncLifetime
 
             _categoryId = category.Id;
 
+            var member = new ChurchMember { FirstName = "Test", LastName = "Deacon", CreatedBy = "system", CreatedDateTime = DateTime.UtcNow };
+            ctx.ChurchMembers.Add(member);
+            ctx.SaveChanges();
+            _memberId = member.Id;
+
             ctx.Reminders.Add(new Reminder
             {
                 Description = "Review public liability insurance",
                 DueDate = DateTime.UtcNow.AddDays(30),
                 AssignedToUserId = _userId,
+                AssignedToChurchMemberId = _memberId,
                 Status = "Pending",
                 Priority = true,
                 CategoryId = _categoryId,
@@ -180,7 +187,7 @@ public class ReminderServiceIntegrationTests : IAsyncLifetime
         {
             Description = "New CRUD test reminder",
             DueDate = DateTime.UtcNow.AddDays(14),
-            AssignedToUserId = _userId,
+            AssignedToChurchMemberId = _memberId,
             CategoryId = _categoryId,
             Priority = true
         };
@@ -190,20 +197,20 @@ public class ReminderServiceIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task CreateReminder_WithCurrentUser_ReturnsSuccess()
+    public async Task CreateReminder_WithNonExistentChurchMember_ReturnsError()
     {
         var userId = Guid.NewGuid().ToString();
         var client = _factory.CreateAuthenticatedClient(userId, "test@test.com", "SystemAdministration");
         var request = new CreateReminderRequest
         {
-            Description = "Current user reminder",
+            Description = "Unknown member reminder",
             DueDate = DateTime.UtcNow.AddDays(7),
-            AssignedToUserId = "current-user",
+            AssignedToChurchMemberId = 999999,
             Priority = false
         };
 
         var response = await client.PostAsJsonAsync("/api/reminders", request);
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.Created, HttpStatusCode.OK);
+        response.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.UnprocessableEntity);
     }
 
     // ─── PUT /api/reminders/{id} ──────────────────────────────────────────────
@@ -240,13 +247,13 @@ public class ReminderServiceIntegrationTests : IAsyncLifetime
         {
             Description = "Updated description",
             DueDate = DateTime.UtcNow.AddDays(30),
-            AssignedToUserId = _userId,
+            AssignedToChurchMemberId = _memberId,
             CategoryId = _categoryId,
             Priority = true
         };
 
         var response = await client.PutAsJsonAsync($"/api/reminders/{reminderId}", request);
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.Created, HttpStatusCode.NoContent);
+        response.StatusCode.Should().BeOneOf(new[] { HttpStatusCode.OK, HttpStatusCode.Created, HttpStatusCode.NoContent }, await response.Content.ReadAsStringAsync());
     }
 
     [Fact]
@@ -274,7 +281,7 @@ public class ReminderServiceIntegrationTests : IAsyncLifetime
         {
             Description = "Trying to update completed",
             DueDate = DateTime.UtcNow.AddDays(10),
-            AssignedToUserId = _userId,
+            AssignedToChurchMemberId = _memberId,
             Priority = false
         };
 
@@ -290,7 +297,7 @@ public class ReminderServiceIntegrationTests : IAsyncLifetime
         {
             Description = "Non-existent",
             DueDate = DateTime.UtcNow.AddDays(10),
-            AssignedToUserId = _userId,
+            AssignedToChurchMemberId = _memberId,
             Priority = false
         };
 
@@ -574,7 +581,7 @@ public class ReminderServiceIntegrationTests : IAsyncLifetime
     public async Task GetReminders_FilterByAssignedTo_ReturnsMatchingReminders()
     {
         var client = _factory.CreateAuthenticatedClient(Guid.NewGuid().ToString(), "admin@test.com", "SystemAdministration");
-        var response = await client.GetAsync($"/api/reminders?assignedToUserId={_userId}");
+        var response = await client.GetAsync($"/api/reminders?assignedToChurchMemberId={_memberId}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var body = await response.Content.ReadAsStringAsync();
         body.Should().Contain("Review public liability insurance");
