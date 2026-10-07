@@ -48,16 +48,23 @@ export const ChurchMembersPage: React.FC = () => {
     useState<ChurchMemberDetailDto | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isExportingPastoralCare, setIsExportingPastoralCare] = useState(false);
-  const [exportAnchorEl, setExportAnchorEl] = useState<null | HTMLElement>(null);
-  const [generateRegisterNumbersOpen, setGenerateRegisterNumbersOpen] = useState(false);
-  const [envelopeLabelsDialogOpen, setEnvelopeLabelsDialogOpen] = useState(false);
+  const [exportAnchorEl, setExportAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+  const [generateRegisterNumbersOpen, setGenerateRegisterNumbersOpen] =
+    useState(false);
+  const [envelopeLabelsDialogOpen, setEnvelopeLabelsDialogOpen] =
+    useState(false);
   const [envelopeLabelsExporting, setEnvelopeLabelsExporting] = useState(false);
   const [addressLabelsExporting, setAddressLabelsExporting] = useState(false);
   const [addressListExporting, setAddressListExporting] = useState(false);
-  const [envelopeNumbersDialogOpen, setEnvelopeNumbersDialogOpen] = useState(false);
-  const [envelopeNumbersExporting, setEnvelopeNumbersExporting] = useState(false);
+  const [envelopeNumbersDialogOpen, setEnvelopeNumbersDialogOpen] =
+    useState(false);
+  const [envelopeNumbersExporting, setEnvelopeNumbersExporting] =
+    useState(false);
   const [statsModalOpen, setStatsModalOpen] = useState(false);
-  const [isExportingDistrictsList, setIsExportingDistrictsList] = useState(false);
+  const [isExportingDistrictsList, setIsExportingDistrictsList] =
+    useState(false);
 
   const { showSuccess } = useNotification();
 
@@ -93,7 +100,7 @@ export const ChurchMembersPage: React.FC = () => {
     try {
       setIsExporting(true);
       // Fetch all members by paginating through results (max page size 100)
-      const firstResponse = await churchMembersApi.getChurchMembers({
+      const firstResponse = await churchMembersApi.getChurchMemberGrid({
         page: 1,
         pageSize: 100,
         sortBy: 'firstName',
@@ -108,7 +115,7 @@ export const ChurchMembersPage: React.FC = () => {
         const pagePromises = [];
         for (let page = 2; page <= totalPages; page++) {
           pagePromises.push(
-            churchMembersApi.getChurchMembers({
+            churchMembersApi.getChurchMemberGrid({
               page,
               pageSize: 100,
               sortBy: 'firstName',
@@ -284,9 +291,14 @@ export const ChurchMembersPage: React.FC = () => {
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
               <MenuItem
-                onClick={() => { setExportAnchorEl(null); setStatsModalOpen(true); }}
+                onClick={() => {
+                  setExportAnchorEl(null);
+                  setStatsModalOpen(true);
+                }}
               >
-                <ListItemIcon><StatisticsIcon fontSize="small" /></ListItemIcon>
+                <ListItemIcon>
+                  <StatisticsIcon fontSize="small" />
+                </ListItemIcon>
                 <ListItemText>View Statistics</ListItemText>
               </MenuItem>
               <Divider />
@@ -297,17 +309,26 @@ export const ChurchMembersPage: React.FC = () => {
                     setGenerateRegisterNumbersOpen(true);
                   }}
                 >
-                  <ListItemIcon><NumbersIcon fontSize="small" /></ListItemIcon>
+                  <ListItemIcon>
+                    <NumbersIcon fontSize="small" />
+                  </ListItemIcon>
                   <ListItemText>Generate Membership Numbers</ListItemText>
                 </MenuItem>
               )}
               <Divider />
               <MenuItem
-                onClick={() => { setExportAnchorEl(null); handleExportMembers(); }}
+                onClick={() => {
+                  setExportAnchorEl(null);
+                  handleExportMembers();
+                }}
                 disabled={isExporting}
               >
                 <ListItemIcon>
-                  {isExporting ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
+                  {isExporting ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <DownloadIcon fontSize="small" />
+                  )}
                 </ListItemIcon>
                 <ListItemText>Export Members List</ListItemText>
               </MenuItem>
@@ -316,43 +337,75 @@ export const ChurchMembersPage: React.FC = () => {
                 disabled={isExportingDistrictsList}
               >
                 <ListItemIcon>
-                  {isExportingDistrictsList ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
+                  {isExportingDistrictsList ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <DownloadIcon fontSize="small" />
+                  )}
                 </ListItemIcon>
                 <ListItemText>Export Districts List</ListItemText>
               </MenuItem>
               <MenuItem
-                onClick={() => { setExportAnchorEl(null); handleExportPastoralCare(); }}
+                onClick={() => {
+                  setExportAnchorEl(null);
+                  handleExportPastoralCare();
+                }}
                 disabled={isExportingPastoralCare}
               >
                 <ListItemIcon>
-                  {isExportingPastoralCare ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
+                  {isExportingPastoralCare ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <DownloadIcon fontSize="small" />
+                  )}
                 </ListItemIcon>
                 <ListItemText>Export Pastoral Care List</ListItemText>
               </MenuItem>
               <MenuItem
-                onClick={() => { setExportAnchorEl(null); setEnvelopeLabelsDialogOpen(true); }}
+                onClick={() => {
+                  setExportAnchorEl(null);
+                  setEnvelopeLabelsDialogOpen(true);
+                }}
                 disabled={envelopeLabelsExporting}
               >
                 <ListItemIcon>
-                  {envelopeLabelsExporting ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
+                  {envelopeLabelsExporting ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <DownloadIcon fontSize="small" />
+                  )}
                 </ListItemIcon>
                 <ListItemText>Export Envelope Labels</ListItemText>
               </MenuItem>
               <MenuItem
-                onClick={() => { setExportAnchorEl(null); setEnvelopeNumbersDialogOpen(true); }}
+                onClick={() => {
+                  setExportAnchorEl(null);
+                  setEnvelopeNumbersDialogOpen(true);
+                }}
                 disabled={envelopeNumbersExporting}
               >
                 <ListItemIcon>
-                  {envelopeNumbersExporting ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
+                  {envelopeNumbersExporting ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <DownloadIcon fontSize="small" />
+                  )}
                 </ListItemIcon>
                 <ListItemText>Export Envelope Numbers</ListItemText>
               </MenuItem>
               <MenuItem
-                onClick={() => { setExportAnchorEl(null); handleExportAddressLabels(); }}
+                onClick={() => {
+                  setExportAnchorEl(null);
+                  handleExportAddressLabels();
+                }}
                 disabled={addressLabelsExporting}
               >
                 <ListItemIcon>
-                  {addressLabelsExporting ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
+                  {addressLabelsExporting ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <DownloadIcon fontSize="small" />
+                  )}
                 </ListItemIcon>
                 <ListItemText>Export Address Labels</ListItemText>
               </MenuItem>
@@ -361,7 +414,11 @@ export const ChurchMembersPage: React.FC = () => {
                 disabled={addressListExporting}
               >
                 <ListItemIcon>
-                  {addressListExporting ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
+                  {addressListExporting ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <DownloadIcon fontSize="small" />
+                  )}
                 </ListItemIcon>
                 <ListItemText>Export Address List</ListItemText>
               </MenuItem>

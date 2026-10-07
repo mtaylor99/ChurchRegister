@@ -20,6 +20,11 @@ public interface IChurchMemberService
     Task<PagedResult<ChurchMemberDto>> GetChurchMembersAsync(ChurchMemberGridQuery query, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Get paginated members for the members grid: only members with a register number for the current year
+    /// </summary>
+    Task<PagedResult<ChurchMemberDto>> GetChurchMemberGridAsync(ChurchMemberGridQuery query, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Get church member by ID with full details
     /// </summary>
     Task<ChurchMemberDetailDto?> GetChurchMemberByIdAsync(int memberId, CancellationToken cancellationToken = default);

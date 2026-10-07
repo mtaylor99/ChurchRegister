@@ -25,6 +25,23 @@ export class ChurchMembersApi {
   async getChurchMembers(
     query: ChurchMemberGridQuery
   ): Promise<PagedResult<ChurchMemberDto>> {
+    return apiClient.get<PagedResult<ChurchMemberDto>>(
+      `${this.basePath}?${this.buildGridParams(query)}`
+    );
+  }
+
+  /**
+   * Get members for the members grid (only members with a current-year register number)
+   */
+  async getChurchMemberGrid(
+    query: ChurchMemberGridQuery
+  ): Promise<PagedResult<ChurchMemberDto>> {
+    return apiClient.get<PagedResult<ChurchMemberDto>>(
+      `${this.basePath}/grid?${this.buildGridParams(query)}`
+    );
+  }
+
+  private buildGridParams(query: ChurchMemberGridQuery): string {
     const params = new URLSearchParams();
     params.append('page', query.page.toString());
     params.append('pageSize', query.pageSize.toString());
@@ -76,9 +93,7 @@ export class ChurchMembersApi {
       );
     }
 
-    return apiClient.get<PagedResult<ChurchMemberDto>>(
-      `${this.basePath}?${params.toString()}`
-    );
+    return params.toString();
   }
 
   /**

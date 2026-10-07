@@ -78,53 +78,58 @@ export const authHandlers = [
  * Church Members Handlers
  */
 export const churchMembersHandlers = [
-  // Get all church members (paginated)
-  http.get(`${API_BASE_URL}/api/church-members`, ({ request }) => {
-    const url = new URL(request.url);
-    const page = Number(url.searchParams.get('page')) || 1;
-    const pageSize = Number(url.searchParams.get('pageSize')) || 20;
+  // Get all church members (paginated) and the members grid list
+  ...[
+    `${API_BASE_URL}/api/church-members`,
+    `${API_BASE_URL}/api/church-members/grid`,
+  ].map((path) =>
+    http.get(path, ({ request }) => {
+      const url = new URL(request.url);
+      const page = Number(url.searchParams.get('page')) || 1;
+      const pageSize = Number(url.searchParams.get('pageSize')) || 20;
 
-    return HttpResponse.json({
-      items: [
-        {
-          id: 1,
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          phoneNumber: '555-0100',
-          dateOfBirth: '1980-01-15',
-          membershipDate: '2020-01-01',
-          status: 1,
-          address: {
-            street: '123 Main St',
-            city: 'London',
-            postalCode: 'SW1A 1AA',
+      return HttpResponse.json({
+        items: [
+          {
+            id: 1,
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john.doe@example.com',
+            phoneNumber: '555-0100',
+            dateOfBirth: '1980-01-15',
+            membershipDate: '2020-01-01',
+            status: 1,
+            address: {
+              street: '123 Main St',
+              city: 'London',
+              postalCode: 'SW1A 1AA',
+            },
           },
-        },
-        {
-          id: 2,
-          firstName: 'Jane',
-          lastName: 'Smith',
-          email: 'jane.smith@example.com',
-          phoneNumber: '555-0101',
-          dateOfBirth: '1985-05-20',
-          membershipDate: '2019-06-15',
-          status: 1,
-          address: {
-            street: '456 Oak Ave',
-            city: 'Manchester',
-            postalCode: 'M1 1AA',
+          {
+            id: 2,
+            firstName: 'Jane',
+            lastName: 'Smith',
+            email: 'jane.smith@example.com',
+            phoneNumber: '555-0101',
+            dateOfBirth: '1985-05-20',
+            membershipDate: '2019-06-15',
+            status: 1,
+            address: {
+              street: '456 Oak Ave',
+              city: 'Manchester',
+              postalCode: 'M1 1AA',
+            },
           },
-        },
-      ],
-      currentPage: page,
-      pageSize: pageSize,
-      totalCount: 50,
-      totalPages: 3,
-      hasPreviousPage: page > 1,
-      hasNextPage: page < 3,
-    });
-  }),
+        ],
+        currentPage: page,
+        pageSize: pageSize,
+        totalCount: 50,
+        totalPages: 3,
+        hasPreviousPage: page > 1,
+        hasNextPage: page < 3,
+      });
+    })
+  ),
 
   // Get single church member
   http.get(`${API_BASE_URL}/api/church-members/:id`, ({ params }) => {
