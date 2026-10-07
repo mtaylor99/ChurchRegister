@@ -109,7 +109,7 @@ export function useChurchMemberGrid({
 
   const { data: membersResponse, isLoading: isLoadingMembers } = useQuery({
     queryKey: ['churchMembers', searchQuery],
-    queryFn: () => churchMembersApi.getChurchMembers(searchQuery),
+    queryFn: () => churchMembersApi.getChurchMemberGrid(searchQuery),
     placeholderData: (previousData) => previousData,
   });
 

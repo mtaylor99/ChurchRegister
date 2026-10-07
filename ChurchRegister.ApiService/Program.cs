@@ -311,6 +311,8 @@ builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.Delet
                            ChurchRegister.ApiService.UseCase.ChurchMembers.DeleteChurchMember.DeleteChurchMemberUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.GetChurchMembers.IGetChurchMembersUseCase,
                            ChurchRegister.ApiService.UseCase.ChurchMembers.GetChurchMembers.GetChurchMembersUseCase>();
+builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.GetChurchMemberGrid.IGetChurchMemberGridUseCase,
+                           ChurchRegister.ApiService.UseCase.ChurchMembers.GetChurchMemberGrid.GetChurchMemberGridUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.GetChurchMemberById.IGetChurchMemberByIdUseCase,
                            ChurchRegister.ApiService.UseCase.ChurchMembers.GetChurchMemberById.GetChurchMemberByIdUseCase>();
 builder.Services.AddScoped<ChurchRegister.ApiService.UseCase.ChurchMembers.GetChurchMemberRoles.IGetChurchMemberRolesUseCase,

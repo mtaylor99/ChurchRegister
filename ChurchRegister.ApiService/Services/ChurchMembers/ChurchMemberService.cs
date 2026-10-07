@@ -33,7 +33,13 @@ public class ChurchMemberService : IChurchMemberService
         _registerNumberService = registerNumberService;
     }
 
-    public async Task<PagedResult<ChurchMemberDto>> GetChurchMembersAsync(ChurchMemberGridQuery query, CancellationToken cancellationToken = default)
+    public Task<PagedResult<ChurchMemberDto>> GetChurchMembersAsync(ChurchMemberGridQuery query, CancellationToken cancellationToken = default)
+        => QueryChurchMembersAsync(query, currentYearNumbersOnly: false, cancellationToken);
+
+    public Task<PagedResult<ChurchMemberDto>> GetChurchMemberGridAsync(ChurchMemberGridQuery query, CancellationToken cancellationToken = default)
+        => QueryChurchMembersAsync(query, currentYearNumbersOnly: true, cancellationToken);
+
+    private async Task<PagedResult<ChurchMemberDto>> QueryChurchMembersAsync(ChurchMemberGridQuery query, bool currentYearNumbersOnly, CancellationToken cancellationToken)
     {
         // Validate pagination parameters (validation also exists at model level via [Range] attribute)
         Helpers.ValidationHelpers.RequireValidPageNumber(query.Page);
@@ -50,6 +56,13 @@ public class ChurchMemberService : IChurchMemberService
             .Include(m => m.DataProtection)
             .AsQueryable();
 
+        // Member number, sorting and the grid filter all use the requested year (default: current year)
+        var registerYear = query.Year ?? DateTime.UtcNow.Year;
+        if (currentYearNumbersOnly)
+        {
+            membersQuery = membersQuery.Where(m => m.RegisterNumbers.Any(r => r.Year == registerYear));
+        }
+
         // Apply search filter
         if (!string.IsNullOrWhiteSpace(query.SearchTerm))
         {
@@ -61,7 +74,7 @@ public class ChurchMemberService : IChurchMemberService
             membersQuery = membersQuery.Where(m =>
                 m.FirstName.ToLower().Contains(searchTerm) ||
                 m.LastName.ToLower().Contains(searchTerm) ||
-                (isNumericSearch && m.RegisterNumbers.Any(r => r.Number == memberNumberSearch)));
+                (isNumericSearch && m.RegisterNumbers.Any(r => r.Year == registerYear && r.Number == memberNumberSearch)));
         }
 
         // Apply status filter
@@ -124,8 +137,8 @@ public class ChurchMemberService : IChurchMemberService
 
         // Apply sorting
         membersQuery = query.SortDirection?.ToLower() == "desc"
-            ? ApplySortingDescending(membersQuery, query.SortBy)
-            : ApplySortingAscending(membersQuery, query.SortBy);
+            ? ApplySortingDescending(membersQuery, query.SortBy, registerYear)
+            : ApplySortingAscending(membersQuery, query.SortBy, registerYear);
 
         // Apply pagination
         var members = await membersQuery
@@ -135,9 +148,8 @@ public class ChurchMemberService : IChurchMemberService
 
         // Calculate this year's contributions for the paginated members
         var memberIds = members.Select(m => m.Id).ToList();
-        var currentYear = query.Year ?? DateTime.UtcNow.Year; // Use provided year or default to current year
-        var yearStart = new DateTime(currentYear, 1, 1);
-        var yearEnd = new DateTime(currentYear, 12, 31, 23, 59, 59);
+        var yearStart = new DateTime(registerYear, 1, 1);
+        var yearEnd = new DateTime(registerYear, 12, 31, 23, 59, 59);
 
         var contributionSums = await _context.ChurchMemberContributions
             .Where(c => memberIds.Contains(c.ChurchMemberId) &&
@@ -161,7 +173,7 @@ public class ChurchMemberService : IChurchMemberService
         var lastContributionDict = lastContributionDates.ToDictionary(c => c.ChurchMemberId, c => c.LastDate);
 
         // Map to DTOs
-        var memberDtos = members.Select(m => MapToChurchMemberDto(m, contributionDict, lastContributionDict)).ToList();
+        var memberDtos = members.Select(m => MapToChurchMemberDto(m, contributionDict, lastContributionDict, registerYear)).ToList();
 
         return new PagedResult<ChurchMemberDto>
         {
@@ -766,17 +778,13 @@ public class ChurchMemberService : IChurchMemberService
 
     #region Private Helper Methods
 
-    private static ChurchMemberDto MapToChurchMemberDto(ChurchMember member, Dictionary<int, decimal> contributionDict, Dictionary<int, DateTime> lastContributionDict)
+    private static ChurchMemberDto MapToChurchMemberDto(ChurchMember member, Dictionary<int, decimal> contributionDict, Dictionary<int, DateTime> lastContributionDict, int registerYear)
     {
         contributionDict.TryGetValue(member.Id, out var thisYearsContribution);
         lastContributionDict.TryGetValue(member.Id, out var lastContributionDate);
 
-        // Get current year register number
-        var currentYear = DateTime.UtcNow.Year;
         var memberNumber = member.RegisterNumbers
-            .Where(rn => rn.Year == currentYear)
-            .OrderByDescending(rn => rn.Year)
-            .FirstOrDefault()?.Number;
+            .FirstOrDefault(rn => rn.Year == registerYear)?.Number;
 
         return new ChurchMemberDto
         {
@@ -889,7 +897,7 @@ public class ChurchMemberService : IChurchMemberService
                 string.IsNullOrWhiteSpace(address.Postcode));
     }
 
-    private static IQueryable<ChurchMember> ApplySortingAscending(IQueryable<ChurchMember> query, string sortBy)
+    private static IQueryable<ChurchMember> ApplySortingAscending(IQueryable<ChurchMember> query, string sortBy, int year)
     {
         return sortBy.ToLower() switch
         {
@@ -899,17 +907,17 @@ public class ChurchMemberService : IChurchMemberService
             "membersince" => query.OrderBy(m => m.MemberSince),
             "status" => query.OrderBy(m => m.ChurchMemberStatus!.Name),
             "membernumber" => query.OrderBy(m => m.RegisterNumbers
-                .Where(rn => rn.Year == DateTime.UtcNow.Year)
+                .Where(rn => rn.Year == year)
                 .Select(rn => (int?)rn.Number)
                 .FirstOrDefault()),
             "lastcontributiondate" => query.OrderBy(m => m.Contributions
-                .Where(c => c.Date.Year == DateTime.UtcNow.Year)
+                .Where(c => c.Date.Year == year)
                 .Max(c => (DateTime?)c.Date)),
             _ => query.OrderBy(m => m.FirstName)
         };
     }
 
-    private static IQueryable<ChurchMember> ApplySortingDescending(IQueryable<ChurchMember> query, string sortBy)
+    private static IQueryable<ChurchMember> ApplySortingDescending(IQueryable<ChurchMember> query, string sortBy, int year)
     {
         return sortBy.ToLower() switch
         {
@@ -919,11 +927,11 @@ public class ChurchMemberService : IChurchMemberService
             "membersince" => query.OrderByDescending(m => m.MemberSince),
             "status" => query.OrderByDescending(m => m.ChurchMemberStatus!.Name),
             "membernumber" => query.OrderByDescending(m => m.RegisterNumbers
-                .Where(rn => rn.Year == DateTime.UtcNow.Year)
+                .Where(rn => rn.Year == year)
                 .Select(rn => (int?)rn.Number)
                 .FirstOrDefault()),
             "lastcontributiondate" => query.OrderByDescending(m => m.Contributions
-                .Where(c => c.Date.Year == DateTime.UtcNow.Year)
+                .Where(c => c.Date.Year == year)
                 .Max(c => (DateTime?)c.Date)),
             _ => query.OrderByDescending(m => m.FirstName)
         };
