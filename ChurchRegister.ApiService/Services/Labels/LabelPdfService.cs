@@ -12,13 +12,16 @@ public class LabelPdfService : ILabelPdfService
     private const int Columns = 2;
     private const int Rows = 7;
 
-    // Avery L7163 dimensions (mm)
-    private const float LabelWidth = 99.1f;
+    // Label sheet dimensions (mm): A4, 2 x 7,     2mm gap between columns, none between rows
+        private const float LabelWidth = 99f;
+        private const float ColumnGutter = 2f + RightColumnShift;
+    private const float RightColumnShift = 5f;
     private const float LabelHeight = 38.1f;
-    private const float MarginTopBottom = 10.7f;
-    private const float MarginLeftRight = 4.6f;
-    private const float ColumnGutter = 2.54f;
+    private const float MarginTopBottom = 15f;
+    private const float MarginLeftRight = 5f;
     private const float InternalPadding = 2f;
+    private const float PaddingLeft = 10f;
+    private const float PaddingTop = 8f;
 
     // Font sizes
     private const float Line1FontSize = 9f;
@@ -55,7 +58,9 @@ public class LabelPdfService : ILabelPdfService
             {
                 p.Size(PageSizes.A4);
                 p.MarginVertical(MarginTopBottom, Unit.Millimetre);
-                p.MarginHorizontal(MarginLeftRight, Unit.Millimetre);
+                p.MarginLeft(MarginLeftRight, Unit.Millimetre);
+                // The right column is shifted right, so its shift is taken from the right margin
+                p.MarginRight(MarginLeftRight - RightColumnShift, Unit.Millimetre);
                 p.PageColor(Colors.White);
                 p.DefaultTextStyle(x => x.FontSize(Lines24FontSize));
 
@@ -64,23 +69,27 @@ public class LabelPdfService : ILabelPdfService
                     table.ColumnsDefinition(cols =>
                     {
                         cols.ConstantColumn(LabelWidth, Unit.Millimetre);
-                        cols.RelativeColumn(); // fills the 2.54mm gutter without floating-point overflow
-                        cols.ConstantColumn(LabelWidth, Unit.Millimetre);
+                        cols.ConstantColumn(ColumnGutter, Unit.Millimetre);
+                        cols.RelativeColumn(); // takes the remaining width, avoiding floating-point overflow
                     });
 
                     foreach (var (left, right) in rows)
                     {
                         table.Cell()
-                            .MinHeight(LabelHeight, Unit.Millimetre)
-                            .Padding(InternalPadding, Unit.Millimetre)
+                            .Height(LabelHeight, Unit.Millimetre)
+                            .PaddingTop(PaddingTop, Unit.Millimetre)
+                            .PaddingLeft(PaddingLeft, Unit.Millimetre)
+                            .PaddingRight(InternalPadding, Unit.Millimetre)
                             .Column(lc => BuildLabelContent(lc, left));
 
                         table.Cell()
-                            .MinHeight(LabelHeight, Unit.Millimetre);
+                            .Height(LabelHeight, Unit.Millimetre);
 
                         table.Cell()
-                            .MinHeight(LabelHeight, Unit.Millimetre)
-                            .Padding(InternalPadding, Unit.Millimetre)
+                            .Height(LabelHeight, Unit.Millimetre)
+                            .PaddingTop(PaddingTop, Unit.Millimetre)
+                            .PaddingLeft(PaddingLeft, Unit.Millimetre)
+                            .PaddingRight(InternalPadding, Unit.Millimetre)
                             .Column(lc => BuildLabelContent(lc, right));
                     }
                 });
