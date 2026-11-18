@@ -95,6 +95,7 @@ export interface ChurchMemberGridQuery {
   giftAidFilter?: boolean;
   pastoralCareRequired?: boolean;
   noBankReferenceFilter?: boolean;
+  year?: number;
   sortBy: string;
   sortDirection: 'asc' | 'desc';
 }
