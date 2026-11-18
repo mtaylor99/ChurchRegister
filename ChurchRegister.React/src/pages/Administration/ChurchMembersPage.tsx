@@ -47,6 +47,8 @@ export const ChurchMembersPage: React.FC = () => {
   const [selectedMember, setSelectedMember] =
     useState<ChurchMemberDetailDto | null>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [membersExportDialogOpen, setMembersExportDialogOpen] =
+    useState(false);
   const [isExportingPastoralCare, setIsExportingPastoralCare] = useState(false);
   const [exportAnchorEl, setExportAnchorEl] = useState<null | HTMLElement>(
     null
@@ -96,7 +98,7 @@ export const ChurchMembersPage: React.FC = () => {
     // The grid will refresh automatically via React Query
   };
 
-  const handleExportMembers = async () => {
+  const handleExportMembers = async (year: number) => {
     try {
       setIsExporting(true);
       // Fetch all members by paginating through results (max page size 100)
@@ -105,6 +107,7 @@ export const ChurchMembersPage: React.FC = () => {
         pageSize: 100,
         sortBy: 'firstName',
         sortDirection: 'asc',
+        year,
       });
 
       let allMembers = [...firstResponse.items];
@@ -120,6 +123,7 @@ export const ChurchMembersPage: React.FC = () => {
               pageSize: 100,
               sortBy: 'firstName',
               sortDirection: 'asc',
+              year,
             })
           );
         }
@@ -143,13 +147,15 @@ export const ChurchMembersPage: React.FC = () => {
 
       await exportChurchMembersWithDetailsToExcel(
         memberDetails,
-        memberNumbersMap
+        memberNumbersMap,
+        year
       );
     } catch (error) {
       console.error('Error exporting members:', error);
       // You could add error notification here
     } finally {
       setIsExporting(false);
+      setMembersExportDialogOpen(false);
     }
   };
 
@@ -319,7 +325,7 @@ export const ChurchMembersPage: React.FC = () => {
               <MenuItem
                 onClick={() => {
                   setExportAnchorEl(null);
-                  handleExportMembers();
+                  setMembersExportDialogOpen(true);
                 }}
                 disabled={isExporting}
               >
@@ -452,6 +458,15 @@ export const ChurchMembersPage: React.FC = () => {
         <RegisterNumberGenerationDialog
           open={generateRegisterNumbersOpen}
           onClose={() => setGenerateRegisterNumbersOpen(false)}
+        />
+
+        {/* Export Members List Dialog */}
+        <ExportYearSelectorDialog
+          open={membersExportDialogOpen}
+          onClose={() => setMembersExportDialogOpen(false)}
+          onConfirm={handleExportMembers}
+          title="Export Members List"
+          isExporting={isExporting}
         />
 
         {/* Export Envelope Labels Dialog */}
