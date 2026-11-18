@@ -103,7 +103,8 @@ export async function exportMemberContributionsToExcel(
  */
 export async function exportChurchMembersWithDetailsToExcel(
   members: ChurchMemberDetailDto[],
-  memberNumbers?: Map<number, number | undefined>
+  memberNumbers?: Map<number, number | undefined>,
+  year?: number
 ): Promise<void> {
   // Dynamically import xlsx library to reduce initial bundle size
   const XLSX = await import('xlsx-js-style');
@@ -279,7 +280,9 @@ export async function exportChurchMembersWithDetailsToExcel(
   // Generate filename with date
   const now = new Date();
   const timestamp = now.toISOString().substring(0, 10);
-  const filename = `Church_Members_${timestamp}.xlsx`;
+  const filename = year
+    ? `Church_Members_${year}_${timestamp}.xlsx`
+    : `Church_Members_${timestamp}.xlsx`;
 
   // Write and download the file
   XLSX.writeFile(workbook, filename, { cellStyles: true });

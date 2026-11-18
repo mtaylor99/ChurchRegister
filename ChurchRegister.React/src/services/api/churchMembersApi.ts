@@ -93,6 +93,10 @@ export class ChurchMembersApi {
       );
     }
 
+    if (query.year !== undefined) {
+      params.append('year', query.year.toString());
+    }
+
     return params.toString();
   }
 
