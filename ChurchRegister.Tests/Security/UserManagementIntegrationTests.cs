@@ -101,9 +101,9 @@ public class UserManagementIntegrationTests : IAsyncLifetime
     [Fact]
     public async Task GetUsers_WithStatusFilter_ReturnsOk()
     {
-        // statusFilter=0 corresponds to UserAccountStatus.Pending
+        // statusFilter=1 corresponds to UserAccountStatus.Pending
         var client = AdminClient();
-        var response = await client.GetAsync("/api/administration/users?page=1&pageSize=10&statusFilter=0");
+        var response = await client.GetAsync("/api/administration/users?page=1&pageSize=10&statusFilter=1");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
