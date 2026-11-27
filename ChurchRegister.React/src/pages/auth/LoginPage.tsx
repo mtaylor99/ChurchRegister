@@ -150,191 +150,199 @@ export const LoginPage: React.FC = () => {
           zIndex: -1,
         }}
       />
-    <Container
-      component="main"
-      maxWidth="sm"
-      sx={{ display: 'flex', alignItems: 'center', py: 4 }}
-    >
-      <Box sx={{ width: '100%', py: 4 }}>
-        <Paper
-          elevation={0}
-          sx={{
-            p: { xs: 3, sm: 4 },
-            borderRadius: 3,
-            bgcolor: alpha(theme.palette.background.paper, 0.95),
-            backdropFilter: 'blur(10px)',
-            border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-          }}
-        >
-          {/* Header */}
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Box
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 64,
-                height: 64,
-                borderRadius: '50%',
-                bgcolor: alpha(theme.palette.primary.main, 0.1),
-                mb: 2,
-              }}
-            >
-              <LoginRounded
-                sx={{ fontSize: 32, color: theme.palette.primary.main }}
-              />
-            </Box>
-            <Typography
-              variant="h4"
-              component="h1"
-              fontWeight="bold"
-              gutterBottom
-            >
-              Welcome Back
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              Sign in to your Church Register account
-            </Typography>
-          </Box>
-
-          {/* Redirect message */}
-          {state?.message && (
-            <Alert severity="info" sx={{ mb: 3 }}>
-              {state.message}
-            </Alert>
-          )}
-
-          {/* Login Form */}
-          <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-            {/* Email Field */}
-            <Controller
-              name="email"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  margin="normal"
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  type="email"
-                  autoComplete="email"
-                  autoFocus
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                  disabled={isLoading}
-                  InputProps={{
-                    startAdornment: (
-                      <PersonOutlineRounded
-                        sx={{ mr: 1, color: 'text.secondary' }}
-                      />
-                    ),
-                  }}
-                  sx={{ mb: 2 }}
-                />
-              )}
-            />
-
-            {/* Password Field */}
-            <Controller
-              name="password"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  margin="normal"
-                  fullWidth
-                  id="password"
-                  label="Password"
-                  type="password"
-                  autoComplete="current-password"
-                  error={!!errors.password}
-                  helperText={errors.password?.message}
-                  disabled={isLoading}
-                  InputProps={{
-                    startAdornment: (
-                      <LockOutlineRounded
-                        sx={{ mr: 1, color: 'text.secondary' }}
-                      />
-                    ),
-                  }}
-                  sx={{ mb: 2 }}
-                />
-              )}
-            />
-
-            {/* Remember Me */}
-            <Controller
-              name="rememberMe"
-              control={control}
-              render={({ field }) => (
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      {...field}
-                      checked={field.value}
-                      color="primary"
-                      disabled={isLoading}
-                    />
-                  }
-                  label="Remember me for 30 days"
-                  sx={{ mb: 3 }}
-                />
-              )}
-            />
-
-            {/* Submit Button */}
-            <LoadingButton
-              type="submit"
-              fullWidth
-              variant="contained"
-              size="large"
-              loading={isLoading}
-              loadingIndicator={<CircularProgress size={20} />}
-              sx={{
-                mt: 2,
-                mb: 3,
-                py: 1.5,
-                fontSize: '1.1rem',
-                fontWeight: 'bold',
-                borderRadius: 2,
-                textTransform: 'none',
-              }}
-            >
-              Sign In
-            </LoadingButton>
-
-            <Divider sx={{ my: 3 }}>
-              <Typography variant="body2" color="textSecondary">
-                or
-              </Typography>
-            </Divider>
-
-            {/* Additional Links */}
-            <Box sx={{ textAlign: 'center', space: 2 }}>
-              <Link
-                component={RouterLink}
-                to="/auth/forgot-password"
-                variant="body2"
-                sx={{ display: 'block', mb: 1 }}
+      <Container
+        component="main"
+        maxWidth="sm"
+        sx={{ display: 'flex', alignItems: 'center', py: 4 }}
+      >
+        <Box sx={{ width: '100%', py: 4 }}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: { xs: 3, sm: 4 },
+              borderRadius: 3,
+              bgcolor: alpha(theme.palette.background.paper, 0.95),
+              backdropFilter: 'blur(10px)',
+              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            }}
+          >
+            {/* Header */}
+            <Box sx={{ textAlign: 'center', mb: 4 }}>
+              <Box
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 64,
+                  height: 64,
+                  borderRadius: '50%',
+                  bgcolor: alpha(theme.palette.primary.main, 0.1),
+                  mb: 2,
+                }}
               >
-                Forgot your password?
-              </Link>
-              <Typography variant="body2" color="textSecondary">
-                Don't have an account?{' '}
+                <LoginRounded
+                  sx={{ fontSize: 32, color: theme.palette.primary.main }}
+                />
+              </Box>
+              <Typography
+                variant="h4"
+                component="h1"
+                gutterBottom
+                sx={{
+                  fontWeight: "bold"
+                }}
+              >
+                Welcome Back
+              </Typography>
+              <Typography variant="body1" color="textSecondary">
+                Sign in to your Church Register account
+              </Typography>
+            </Box>
+
+            {/* Redirect message */}
+            {state?.message && (
+              <Alert severity="info" sx={{ mb: 3 }}>
+                {state.message}
+              </Alert>
+            )}
+
+            {/* Login Form */}
+            <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+              {/* Email Field */}
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="normal"
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    type="email"
+                    autoComplete="email"
+                    autoFocus
+                    error={!!errors.email}
+                    helperText={errors.email?.message}
+                    disabled={isLoading}
+                    sx={{ mb: 2 }}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <PersonOutlineRounded
+                            sx={{ mr: 1, color: 'text.secondary' }}
+                          />
+                        ),
+                      }
+                    }}
+                  />
+                )}
+              />
+
+              {/* Password Field */}
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="normal"
+                    fullWidth
+                    id="password"
+                    label="Password"
+                    type="password"
+                    autoComplete="current-password"
+                    error={!!errors.password}
+                    helperText={errors.password?.message}
+                    disabled={isLoading}
+                    sx={{ mb: 2 }}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <LockOutlineRounded
+                            sx={{ mr: 1, color: 'text.secondary' }}
+                          />
+                        ),
+                      }
+                    }}
+                  />
+                )}
+              />
+
+              {/* Remember Me */}
+              <Controller
+                name="rememberMe"
+                control={control}
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        {...field}
+                        checked={field.value}
+                        color="primary"
+                        disabled={isLoading}
+                      />
+                    }
+                    label="Remember me for 30 days"
+                    sx={{ mb: 3 }}
+                  />
+                )}
+              />
+
+              {/* Submit Button */}
+              <LoadingButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                size="large"
+                loading={isLoading}
+                loadingIndicator={<CircularProgress size={20} />}
+                sx={{
+                  mt: 2,
+                  mb: 3,
+                  py: 1.5,
+                  fontSize: '1.1rem',
+                  fontWeight: 'bold',
+                  borderRadius: 2,
+                  textTransform: 'none',
+                }}
+              >
+                Sign In
+              </LoadingButton>
+
+              <Divider sx={{ my: 3 }}>
+                <Typography variant="body2" color="textSecondary">
+                  or
+                </Typography>
+              </Divider>
+
+              {/* Additional Links */}
+              <Box sx={{ textAlign: 'center', space: 2 }}>
                 <Link
                   component={RouterLink}
-                  to="/auth/register"
-                  fontWeight="medium"
+                  to="/auth/forgot-password"
+                  variant="body2"
+                  sx={{ display: 'block', mb: 1 }}
                 >
-                  Sign up here
+                  Forgot your password?
                 </Link>
-              </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Don't have an account?{' '}
+                  <Link
+                    component={RouterLink}
+                    to="/auth/register"
+                    sx={{
+                      fontWeight: "medium"
+                    }}
+                  >
+                    Sign up here
+                  </Link>
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        </Paper>
-      </Box>
-    </Container>
+          </Paper>
+        </Box>
+      </Container>
     </Box>
   );
 };

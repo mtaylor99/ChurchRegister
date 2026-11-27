@@ -156,27 +156,29 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           value={filters.searchTerm}
           onChange={handleSearchChange}
           disabled={loading}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="action" />
-              </InputAdornment>
-            ),
-            endAdornment: filters.searchTerm && (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="clear search"
-                  onClick={clearSearch}
-                  edge="end"
-                  size="small"
-                  disabled={loading}
-                >
-                  <ClearIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
           sx={{ minWidth: { md: 300 } }}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+              endAdornment: filters.searchTerm && (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="clear search"
+                    onClick={clearSearch}
+                    edge="end"
+                    size="small"
+                    disabled={loading}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }
+          }}
         />
 
         {/* Status Filter */}

@@ -218,7 +218,9 @@ export const RiskAssessmentsGrid = React.memo(function RiskAssessmentsGrid({
           const { approvalCount, minimumApprovalsRequired } = params.row;
           const isMet = approvalCount >= minimumApprovalsRequired;
           return (
-            <Stack direction="row" spacing={0.5} alignItems="center">
+            <Stack direction="row" spacing={0.5} sx={{
+              alignItems: "center"
+            }}>
               <Typography variant="body2">
                 {approvalCount} of {minimumApprovalsRequired}
               </Typography>
@@ -350,9 +352,10 @@ export const RiskAssessmentsGrid = React.memo(function RiskAssessmentsGrid({
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
           spacing={2}
-          alignItems="center"
-          flexWrap="wrap"
-        >
+          sx={{
+            alignItems: "center",
+            flexWrap: "wrap"
+          }}>
           <TextField
             size="small"
             label="Title"
@@ -468,7 +471,12 @@ export const RiskAssessmentsGrid = React.memo(function RiskAssessmentsGrid({
           }}
           slots={{
             noRowsOverlay: () => (
-              <Stack height="100%" alignItems="center" justifyContent="center">
+              <Stack
+                sx={{
+                  height: "100%",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
                 <Typography>No risk assessments found</Typography>
               </Stack>
             ),

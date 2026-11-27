@@ -263,7 +263,12 @@ export const Sidebar = React.memo(function Sidebar({
     >
       {/* Header */}
       <Box sx={{ p: 2 }}>
-        <Box display="flex" alignItems="center" gap={1.5}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5
+          }}>
           <Box
             sx={{
               width: 32,
@@ -307,13 +312,12 @@ export const Sidebar = React.memo(function Sidebar({
       <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider' }}>
         <Typography
           variant="caption"
-          color="text.secondary"
           sx={{
+            color: "text.secondary",
             display: 'block',
             textAlign: 'center',
-            fontStyle: 'italic',
-          }}
-        >
+            fontStyle: 'italic'
+          }}>
           Church Register v1.0
         </Typography>
       </Box>

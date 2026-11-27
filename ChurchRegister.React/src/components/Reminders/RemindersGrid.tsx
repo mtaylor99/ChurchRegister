@@ -272,7 +272,13 @@ export const RemindersGrid = React.memo(function RemindersGrid({
     <Box>
       {/* Filter Bar */}
       <Box sx={{ mb: 3, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
-        <Stack direction="row" spacing={2} flexWrap="wrap" alignItems="center">
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{
+            flexWrap: "wrap",
+            alignItems: "center"
+          }}>
           <TextField
             label="Search Description"
             value={description}
@@ -299,7 +305,9 @@ export const RemindersGrid = React.memo(function RemindersGrid({
               </MenuItem>
               {categories?.map((cat) => (
                 <MenuItem key={cat.id} value={cat.id}>
-                  <Stack direction="row" spacing={1} alignItems="center">
+                  <Stack direction="row" spacing={1} sx={{
+                    alignItems: "center"
+                  }}>
                     <Box
                       sx={{
                         width: 16,
@@ -357,9 +365,11 @@ export const RemindersGrid = React.memo(function RemindersGrid({
       {reminders && reminders.length === 0 ? (
         <Typography
           variant="body1"
-          color="text.secondary"
-          sx={{ textAlign: 'center', py: 4 }}
-        >
+          sx={{
+            color: "text.secondary",
+            textAlign: 'center',
+            py: 4
+          }}>
           No reminders found
         </Typography>
       ) : (
@@ -392,10 +402,14 @@ export const RemindersGrid = React.memo(function RemindersGrid({
             <Box
               sx={{ mt: 2, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}
             >
-              <Typography variant="body2" fontWeight="bold">
+              <Typography variant="body2" sx={{
+                fontWeight: "bold"
+              }}>
                 {reminderToDelete.description}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Due: {format(new Date(reminderToDelete.dueDate), 'dd/MM/yyyy')}
               </Typography>
             </Box>

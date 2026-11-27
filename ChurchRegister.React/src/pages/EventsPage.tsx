@@ -266,7 +266,9 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
             spacing={2}
-            alignItems="center"
+            sx={{
+              alignItems: "center"
+            }}
           >
             <TextField
               fullWidth
@@ -274,10 +276,12 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               size="small"
-              InputProps={{
-                startAdornment: (
-                  <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                  ),
+                }
               }}
             />
           </Stack>
@@ -303,7 +307,9 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
 
         <Card>
           <CardContent>
-            <Typography variant="h6" color="success.main">
+            <Typography variant="h6" sx={{
+              color: "success.main"
+            }}>
               Active Events
             </Typography>
             <Typography variant="h4">
@@ -314,7 +320,9 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
 
         <Card>
           <CardContent>
-            <Typography variant="h6" color="info.main">
+            <Typography variant="h6" sx={{
+              color: "info.main"
+            }}>
               Events In Charts
             </Typography>
             <Typography variant="h4">
@@ -348,14 +356,20 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
               ) : events.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} align="center">
-                    <Box py={4}>
+                    <Box sx={{
+                      py: 4
+                    }}>
                       <EventIcon
                         sx={{ fontSize: 64, color: 'grey.400', mb: 2 }}
                       />
-                      <Typography variant="h6" color="text.secondary">
+                      <Typography variant="h6" sx={{
+                        color: "text.secondary"
+                      }}>
                         No events found
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                      }}>
                         Create your first event to start tracking attendance
                       </Typography>
                       <Button
@@ -387,12 +401,16 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
                   .map((event) => (
                     <TableRow key={event.id} hover>
                       <TableCell>
-                        <Typography variant="subtitle2" fontWeight="medium">
+                        <Typography variant="subtitle2" sx={{
+                          fontWeight: "medium"
+                        }}>
                           {event.name}
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                          color: "text.secondary"
+                        }}>
                           {event.description || '—'}
                         </Typography>
                       </TableCell>
@@ -406,7 +424,9 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
                             icon={<CalendarTodayIcon />}
                           />
                         ) : (
-                          <Typography variant="body2" color="text.secondary">
+                          <Typography variant="body2" sx={{
+                            color: "text.secondary"
+                          }}>
                             —
                           </Typography>
                         )}
@@ -493,7 +513,12 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
                 borderRadius: '4px 4px 0 0',
               }}
             >
-              <Typography variant="h5" color="primary.main" fontWeight="bold">
+              <Typography
+                variant="h5"
+                sx={{
+                  color: "primary.main",
+                  fontWeight: "bold"
+                }}>
                 {editingEvent ? 'Edit Event' : 'Add New Event'}
               </Typography>
               <IconButton
@@ -580,9 +605,10 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
                 />
                 <Typography
                   variant="caption"
-                  color="text.secondary"
-                  display="block"
-                >
+                  sx={{
+                    color: "text.secondary",
+                    display: "block"
+                  }}>
                   Active events can have attendance recorded
                 </Typography>
               </Box>
@@ -605,9 +631,10 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
                 />
                 <Typography
                   variant="caption"
-                  color="text.secondary"
-                  display="block"
-                >
+                  sx={{
+                    color: "text.secondary",
+                    display: "block"
+                  }}>
                   Include this event in attendance analytics and reports
                 </Typography>
               </Box>
@@ -647,7 +674,12 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
               borderRadius: '4px 4px 0 0',
             }}
           >
-            <Typography variant="h5" color="primary.main" fontWeight="bold">
+            <Typography
+              variant="h5"
+              sx={{
+                color: "primary.main",
+                fontWeight: "bold"
+              }}>
               Delete Event
             </Typography>
           </Box>
@@ -656,7 +688,12 @@ export const EventsPage = forwardRef<EventsPageHandle>((_props, ref) => {
           <Typography>
             Are you sure you want to delete "{deleteConfirmEvent?.name}"?
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mt: 1
+            }}>
             This action cannot be undone. All attendance records for this event
             will also be removed.
           </Typography>

@@ -32,7 +32,9 @@ export const ProtectedAdminRoute: React.FC<ProtectedAdminRouteProps> = ({
           <Typography variant="h6" gutterBottom>
             Verifying Access...
           </Typography>
-          <Typography color="text.secondary">
+          <Typography sx={{
+            color: "text.secondary"
+          }}>
             Please wait while we verify your permissions.
           </Typography>
         </Paper>
@@ -53,13 +55,22 @@ export const ProtectedAdminRoute: React.FC<ProtectedAdminRouteProps> = ({
       <Container maxWidth="sm" sx={{ py: 8 }}>
         <Paper elevation={2} sx={{ p: 4, textAlign: 'center' }}>
           <LockIcon sx={{ fontSize: 48, color: 'error.main', mb: 2 }} />
-          <Typography variant="h5" gutterBottom color="error.main">
+          <Typography variant="h5" gutterBottom sx={{
+            color: "error.main"
+          }}>
             Access Denied
           </Typography>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" sx={{
+            marginBottom: "16px"
+          }}>
             You don't have permission to access the Administration section.
           </Typography>
-          <Typography variant="body2" color="text.secondary" paragraph>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              marginBottom: "16px"
+            }}>
             This area requires <strong>{requiredRole}</strong> role access.
             Please contact your system administrator if you believe this is an
             error.

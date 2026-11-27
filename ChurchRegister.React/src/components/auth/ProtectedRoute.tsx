@@ -92,15 +92,18 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if ((isAuthenticated === null || globalIsLoading) && showLoading) {
     return (
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="60vh"
-        flexDirection="column"
-        gap={2}
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "60vh",
+          flexDirection: "column",
+          gap: 2
+        }}>
         <CircularProgress size={48} />
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{
+          color: "text.secondary"
+        }}>
           Verifying authentication...
         </Typography>
       </Box>
@@ -202,7 +205,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Show auth error if any
   if (authError) {
     return (
-      <Box p={3}>
+      <Box sx={{
+        p: 3
+      }}>
         <AuthErrorDisplay
           error={authError}
           onDismiss={() => setAuthError(null)}

@@ -76,15 +76,18 @@ const renderDataProtectionTooltip = (
       {dataProtection.permissionForMyChildren ? '✓' : '✗'} Permission for
       Children
     </Typography>
-    <Typography variant="caption" color="text.secondary">
+    <Typography variant="caption" sx={{
+      color: "text.secondary"
+    }}>
       Last modified:{' '}
       {new Date(dataProtection.modifiedDateTime).toLocaleString()}
     </Typography>
     <Typography
       variant="caption"
-      color="text.secondary"
-      sx={{ display: 'block' }}
-    >
+      sx={{
+        color: "text.secondary",
+        display: 'block'
+      }}>
       Modified by: {dataProtection.modifiedBy}
     </Typography>
   </Box>
@@ -208,9 +211,10 @@ export const ChurchMemberGrid: React.FC<ChurchMemberGridProps> = React.memo(
               </Typography>
               <Typography
                 variant="caption"
-                color="text.secondary"
-                sx={{ lineHeight: 1 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  lineHeight: 1
+                }}>
                 {params.row.phone || '-'}
               </Typography>
             </Box>

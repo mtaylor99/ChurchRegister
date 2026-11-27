@@ -156,11 +156,15 @@ export const AdministrationLayout: React.FC<AdministrationLayoutProps> = ({
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               {tab.icon}
               <Box sx={{ textAlign: 'left' }}>
-                <Typography variant="body2" fontWeight={600}>
+                <Typography variant="body2" sx={{
+                  fontWeight: 600
+                }}>
                   {tab.label}
                 </Typography>
                 {!isMobile && (
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{
+                    color: "text.secondary"
+                  }}>
                     {tab.description}
                   </Typography>
                 )}
@@ -193,7 +197,9 @@ export const AdministrationLayout: React.FC<AdministrationLayoutProps> = ({
       }}
     >
       <Box sx={{ p: 2 }}>
-        <Typography variant="h6" fontWeight={600}>
+        <Typography variant="h6" sx={{
+          fontWeight: 600
+        }}>
           Administration
         </Typography>
       </Box>

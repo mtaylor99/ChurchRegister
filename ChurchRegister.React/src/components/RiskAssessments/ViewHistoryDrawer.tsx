@@ -47,11 +47,13 @@ export const ViewHistoryDrawer: React.FC<ViewHistoryDrawerProps> = ({
       anchor="right"
       open={open}
       onClose={onClose}
-      PaperProps={{
-        sx: {
-          width: 700,
-          maxWidth: '90vw',
-        },
+      slotProps={{
+        paper: {
+          sx: {
+            width: 700,
+            maxWidth: '90vw',
+          },
+        }
       }}
     >
       <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -69,7 +71,9 @@ export const ViewHistoryDrawer: React.FC<ViewHistoryDrawerProps> = ({
           <Box>
             <Typography variant="h6">Version History</Typography>
             {history && (
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 {history.title}
               </Typography>
             )}
@@ -104,8 +108,10 @@ export const ViewHistoryDrawer: React.FC<ViewHistoryDrawerProps> = ({
             <Box>
               <Typography
                 variant="subtitle2"
-                color="text.secondary"
                 gutterBottom
+                sx={{
+                  color: "text.secondary"
+                }}
               >
                 Review Cycles (most recent first)
               </Typography>
@@ -191,7 +197,9 @@ export const ViewHistoryDrawer: React.FC<ViewHistoryDrawerProps> = ({
                                     <Box sx={{ flex: 1 }}>
                                       <Typography
                                         variant="subtitle2"
-                                        fontWeight={600}
+                                        sx={{
+                                          fontWeight: 600
+                                        }}
                                       >
                                         {group.approvers
                                           .map((a) => a.name)
@@ -199,7 +207,9 @@ export const ViewHistoryDrawer: React.FC<ViewHistoryDrawerProps> = ({
                                       </Typography>
                                       <Typography
                                         variant="caption"
-                                        color="text.secondary"
+                                        sx={{
+                                          color: "text.secondary"
+                                        }}
                                       >
                                         Approved on{' '}
                                         {formatDate(group.approvedDate)}

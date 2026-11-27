@@ -136,7 +136,9 @@ export const RiskAssessmentWidget: React.FC = () => {
               }}
             >
               {(isOverdue || isDueSoon) && <StatusIcon sx={{ fontSize: 20 }} />}
-              <Typography variant="body2" fontWeight="medium">
+              <Typography variant="body2" sx={{
+                fontWeight: "medium"
+              }}>
                 {isOverdue ? 'Overdue' : isDueSoon ? 'Due Soon' : 'All Clear'}
               </Typography>
             </Box>
@@ -145,10 +147,12 @@ export const RiskAssessmentWidget: React.FC = () => {
           {/* Title */}
           <Typography
             variant="h6"
-            color="text.secondary"
             gutterBottom
-            sx={{ fontSize: '0.875rem', fontWeight: 500 }}
-          >
+            sx={{
+              color: "text.secondary",
+              fontSize: '0.875rem',
+              fontWeight: 500
+            }}>
             Risk Assessments
           </Typography>
 
@@ -167,12 +171,16 @@ export const RiskAssessmentWidget: React.FC = () => {
               </MetricValue>
               <Typography
                 variant="body2"
-                color="text.secondary"
-                sx={{ mt: 1, mb: 2 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  mt: 1,
+                  mb: 2
+                }}>
                 {statusText}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 {breakdownText}
               </Typography>
             </>
@@ -190,12 +198,16 @@ export const RiskAssessmentWidget: React.FC = () => {
               </MetricValue>
               <Typography
                 variant="body2"
-                color="text.secondary"
-                sx={{ mt: 1, mb: 2 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  mt: 1,
+                  mb: 2
+                }}>
                 {statusText}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 {totalCount} {totalCount === 1 ? 'assessment' : 'assessments'}{' '}
                 up to date
               </Typography>

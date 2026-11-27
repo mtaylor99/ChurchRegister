@@ -111,7 +111,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   }, [showNotification]);
 
   const handleClose = useCallback(
-    (_event?: React.SyntheticEvent | Event, reason?: string) => {
+    (_event?: React.SyntheticEvent | Event | null, reason?: string) => {
       if (reason === 'clickaway') {
         return;
       }
@@ -136,9 +136,11 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         open={notification.open}
         autoHideDuration={notification.autoHideDuration}
         onClose={handleClose}
-        TransitionComponent={SlideTransition}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         sx={{ zIndex: (theme) => theme.zIndex.snackbar }}
+        slots={{
+          transition: SlideTransition
+        }}
       >
         <Alert
           onClose={handleClose}

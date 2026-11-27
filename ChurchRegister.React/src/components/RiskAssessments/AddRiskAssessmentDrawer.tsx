@@ -128,10 +128,11 @@ export function AddRiskAssessmentDrawer({
         {/* Header */}
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={3}
-        >
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3
+          }}>
           <Typography variant="h5">Add Risk Assessment</Typography>
           <IconButton onClick={handleClose} aria-label="Close">
             <CloseIcon />
@@ -173,8 +174,10 @@ export function AddRiskAssessmentDrawer({
             fullWidth
             required
             disabled={isSaving}
-            inputProps={{ maxLength: 200 }}
             helperText={`${title.length}/200 characters`}
+            slotProps={{
+              htmlInput: { maxLength: 200 }
+            }}
           />
 
           {/* Description */}
@@ -186,8 +189,10 @@ export function AddRiskAssessmentDrawer({
             multiline
             rows={4}
             disabled={isSaving}
-            inputProps={{ maxLength: 1000 }}
             helperText={`${description.length}/1000 characters`}
+            slotProps={{
+              htmlInput: { maxLength: 1000 }
+            }}
           />
 
           {/* Review Interval */}
@@ -217,8 +222,10 @@ export function AddRiskAssessmentDrawer({
             multiline
             rows={3}
             disabled={isSaving}
-            inputProps={{ maxLength: 500 }}
             helperText={`${scope.length}/500 characters`}
+            slotProps={{
+              htmlInput: { maxLength: 500 }
+            }}
           />
 
           {/* Notes */}

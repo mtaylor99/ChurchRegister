@@ -243,7 +243,9 @@ export const ChangePasswordPage: React.FC = () => {
             </Box>
           }
           title={
-            <Typography variant="h5" component="h1" fontWeight="bold">
+            <Typography variant="h5" component="h1" sx={{
+              fontWeight: "bold"
+            }}>
               Change Password
             </Typography>
           }
@@ -286,27 +288,29 @@ export const ChangePasswordPage: React.FC = () => {
                   error={!!errors.currentPassword}
                   helperText={errors.currentPassword?.message}
                   disabled={isLoading}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockOutlineRounded sx={{ color: 'text.secondary' }} />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle current password visibility"
-                          onClick={() => togglePasswordVisibility('current')}
-                          edge="end"
-                        >
-                          {showPasswords.current ? (
-                            <VisibilityOffRounded />
-                          ) : (
-                            <VisibilityRounded />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlineRounded sx={{ color: 'text.secondary' }} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle current password visibility"
+                            onClick={() => togglePasswordVisibility('current')}
+                            edge="end"
+                          >
+                            {showPasswords.current ? (
+                              <VisibilityOffRounded />
+                            ) : (
+                              <VisibilityRounded />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }
                   }}
                 />
               )}
@@ -332,27 +336,29 @@ export const ChangePasswordPage: React.FC = () => {
                   error={!!errors.newPassword}
                   helperText={errors.newPassword?.message}
                   disabled={isLoading}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockOutlineRounded sx={{ color: 'text.secondary' }} />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle new password visibility"
-                          onClick={() => togglePasswordVisibility('new')}
-                          edge="end"
-                        >
-                          {showPasswords.new ? (
-                            <VisibilityOffRounded />
-                          ) : (
-                            <VisibilityRounded />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlineRounded sx={{ color: 'text.secondary' }} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle new password visibility"
+                            onClick={() => togglePasswordVisibility('new')}
+                            edge="end"
+                          >
+                            {showPasswords.new ? (
+                              <VisibilityOffRounded />
+                            ) : (
+                              <VisibilityRounded />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }
                   }}
                 />
               )}
@@ -379,27 +385,29 @@ export const ChangePasswordPage: React.FC = () => {
                   error={!!errors.confirmPassword}
                   helperText={errors.confirmPassword?.message}
                   disabled={isLoading}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LockOutlineRounded sx={{ color: 'text.secondary' }} />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle confirm password visibility"
-                          onClick={() => togglePasswordVisibility('confirm')}
-                          edge="end"
-                        >
-                          {showPasswords.confirm ? (
-                            <VisibilityOffRounded />
-                          ) : (
-                            <VisibilityRounded />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlineRounded sx={{ color: 'text.secondary' }} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle confirm password visibility"
+                            onClick={() => togglePasswordVisibility('confirm')}
+                            edge="end"
+                          >
+                            {showPasswords.confirm ? (
+                              <VisibilityOffRounded />
+                            ) : (
+                              <VisibilityRounded />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }
                   }}
                 />
               )}

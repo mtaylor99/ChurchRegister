@@ -65,8 +65,18 @@ const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
       label || (showLabel ? `${Math.round(normalizedValue)}%` : '');
 
     const renderLinearProgress = () => (
-      <Box width="100%" display="flex" alignItems="center" gap={2}>
-        <Box width="100%" position="relative">
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: 2
+        }}>
+        <Box
+          sx={{
+            width: "100%",
+            position: "relative"
+          }}>
           <LinearProgress
             variant={variant}
             value={variant === 'determinate' ? normalizedValue : undefined}
@@ -87,16 +97,15 @@ const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
           {displayLabel && showLabel && (
             <Typography
               variant="caption"
-              color="text.secondary"
               sx={{
+                color: "text.secondary",
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
                 fontWeight: 600,
-                fontSize: '0.75rem',
-              }}
-            >
+                fontSize: '0.75rem'
+              }}>
               {displayLabel}
             </Typography>
           )}
@@ -104,9 +113,11 @@ const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
         {displayLabel && !showLabel && (
           <Typography
             variant="body2"
-            color="text.secondary"
-            sx={{ minWidth: 40, textAlign: 'right' }}
-          >
+            sx={{
+              color: "text.secondary",
+              minWidth: 40,
+              textAlign: 'right'
+            }}>
             {displayLabel}
           </Typography>
         )}
@@ -115,11 +126,12 @@ const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
 
     const renderCircularProgress = () => (
       <Box
-        position="relative"
-        display="inline-flex"
-        alignItems="center"
-        justifyContent="center"
-      >
+        sx={{
+          position: "relative",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
         <CircularProgress
           variant={variant}
           value={variant === 'determinate' ? normalizedValue : undefined}
@@ -149,12 +161,11 @@ const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
             <Typography
               variant="caption"
               component="div"
-              color="text.secondary"
               sx={{
+                color: "text.secondary",
                 fontSize: size > 60 ? '0.875rem' : '0.75rem',
-                fontWeight: 600,
-              }}
-            >
+                fontWeight: 600
+              }}>
               {displayLabel}
             </Typography>
           </Box>
@@ -180,13 +191,23 @@ const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
           }}
         >
           {label && type === 'circular' && (
-            <Typography variant="body2" color="text.primary" sx={{ mb: 1 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.primary",
+                mb: 1
+              }}>
               {label}
             </Typography>
           )}
           {progressComponent}
           {label && type === 'linear' && (
-            <Typography variant="body2" color="text.primary" textAlign="center">
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.primary",
+                textAlign: "center"
+              }}>
               {label}
             </Typography>
           )}

@@ -90,7 +90,12 @@ export const AssignDeaconDialog: React.FC<AssignDeaconDialogProps> = ({
       aria-labelledby="assign-deacon-dialog-title"
     >
       <DialogTitle id="assign-deacon-dialog-title">
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}>
           <Typography variant="h6">
             Assign Deacon - District {district?.name}
           </Typography>
@@ -115,7 +120,12 @@ export const AssignDeaconDialog: React.FC<AssignDeaconDialogProps> = ({
         )}
 
         {isLoadingDeacons ? (
-          <Box display="flex" justifyContent="center" py={3}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              py: 3
+            }}>
             <CircularProgress />
           </Box>
         ) : (
@@ -145,8 +155,12 @@ export const AssignDeaconDialog: React.FC<AssignDeaconDialogProps> = ({
         )}
 
         {district?.deaconName && (
-          <Box mt={2}>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            mt: 2
+          }}>
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Current Deacon: <strong>{district.deaconName}</strong>
             </Typography>
           </Box>

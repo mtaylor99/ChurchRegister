@@ -110,7 +110,12 @@ export const HsbcUploadModal: React.FC<HsbcUploadModalProps> = ({
             borderRadius: '4px 4px 0 0',
           }}
         >
-          <Typography variant="h5" color="primary.main" fontWeight="bold">
+          <Typography
+            variant="h5"
+            sx={{
+              color: "primary.main",
+              fontWeight: "bold"
+            }}>
             {result ? 'Upload Complete' : 'Upload HSBC Bank Statement'}
           </Typography>
         </Box>
@@ -118,7 +123,12 @@ export const HsbcUploadModal: React.FC<HsbcUploadModalProps> = ({
       <DialogContent>
         {!result ? (
           <>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mb: 2
+              }}>
               Select an HSBC CSV export file. The system will automatically
               extract credit transactions and detect duplicates.
             </Typography>
@@ -165,9 +175,10 @@ export const HsbcUploadModal: React.FC<HsbcUploadModalProps> = ({
                 <LinearProgress variant="determinate" value={progress} />
                 <Typography
                   variant="caption"
-                  color="text.secondary"
-                  sx={{ mt: 1 }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    mt: 1
+                  }}>
                   Uploading and processing... {progress}%
                 </Typography>
               </Box>
@@ -192,7 +203,9 @@ export const HsbcUploadModal: React.FC<HsbcUploadModalProps> = ({
                   }}
                 >
                   <CheckCircleIcon sx={{ fontSize: 32 }} />
-                  <Typography variant="h5" fontWeight={700}>
+                  <Typography variant="h5" sx={{
+                    fontWeight: 700
+                  }}>
                     Upload Successful
                   </Typography>
                 </Box>
@@ -213,16 +226,18 @@ export const HsbcUploadModal: React.FC<HsbcUploadModalProps> = ({
                   >
                     <Typography
                       variant="h3"
-                      fontWeight={700}
-                      color="text.primary"
-                    >
+                      sx={{
+                        fontWeight: 700,
+                        color: "text.primary"
+                      }}>
                       {result.summary?.totalProcessed ?? 0}
                     </Typography>
                     <Typography
                       variant="body2"
-                      color="text.secondary"
-                      sx={{ mt: 0.5 }}
-                    >
+                      sx={{
+                        color: "text.secondary",
+                        mt: 0.5
+                      }}>
                       Total Processed
                     </Typography>
                   </Box>
@@ -241,16 +256,18 @@ export const HsbcUploadModal: React.FC<HsbcUploadModalProps> = ({
                   >
                     <Typography
                       variant="h3"
-                      fontWeight={700}
-                      color="success.main"
-                    >
+                      sx={{
+                        fontWeight: 700,
+                        color: "success.main"
+                      }}>
                       {result.summary?.newTransactions ?? 0}
                     </Typography>
                     <Typography
                       variant="body2"
-                      color="text.secondary"
-                      sx={{ mt: 0.5 }}
-                    >
+                      sx={{
+                        color: "text.secondary",
+                        mt: 0.5
+                      }}>
                       New Transactions Imported
                     </Typography>
                   </Box>
@@ -269,21 +286,24 @@ export const HsbcUploadModal: React.FC<HsbcUploadModalProps> = ({
                   >
                     <Typography
                       variant="h3"
-                      fontWeight={700}
                       color={
                         (result.processingSummary?.unmatchedTransactions ?? 0) >
                         0
                           ? 'warning.dark'
                           : 'text.primary'
                       }
+                      sx={{
+                        fontWeight: 700
+                      }}
                     >
                       {result.processingSummary?.unmatchedTransactions ?? 0}
                     </Typography>
                     <Typography
                       variant="body2"
-                      color="text.secondary"
-                      sx={{ mt: 0.5 }}
-                    >
+                      sx={{
+                        color: "text.secondary",
+                        mt: 0.5
+                      }}>
                       Unmatched Transactions
                     </Typography>
                   </Box>
@@ -295,10 +315,11 @@ export const HsbcUploadModal: React.FC<HsbcUploadModalProps> = ({
                   <Box sx={{ mt: 3 }}>
                     <Typography
                       variant="subtitle2"
-                      color="text.primary"
-                      fontWeight={700}
                       gutterBottom
-                    >
+                      sx={{
+                        color: "text.primary",
+                        fontWeight: 700
+                      }}>
                       Unmatched References
                     </Typography>
                     <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
@@ -308,7 +329,9 @@ export const HsbcUploadModal: React.FC<HsbcUploadModalProps> = ({
                             key={i}
                             component="li"
                             variant="body2"
-                            color="text.primary"
+                            sx={{
+                              color: "text.primary"
+                            }}
                           >
                             {ref}
                           </Typography>
@@ -335,7 +358,9 @@ export const HsbcUploadModal: React.FC<HsbcUploadModalProps> = ({
                         <ListItem key={index}>
                           <ListItemText
                             primary={error}
-                            primaryTypographyProps={{ color: 'error' }}
+                            slotProps={{
+                              primary: { color: 'error' }
+                            }}
                           />
                         </ListItem>
                       ))}
@@ -913,7 +938,12 @@ export const EnvelopeBatchEntry: React.FC<EnvelopeBatchEntryProps> = ({
         <Typography variant="h5" gutterBottom>
           Envelope Batch Entry
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            mb: 2
+          }}>
           Enter weekly envelope contributions for Sunday collections
         </Typography>
 
@@ -1018,9 +1048,11 @@ export const EnvelopeBatchEntry: React.FC<EnvelopeBatchEntryProps> = ({
                       onBlur={() => handleAmountBlur(envelope.id)}
                       onKeyDown={(e) => handleKeyDown(e, envelope.id, 'amount')}
                       disabled={!envelope.isValid || isSubmitting}
-                      inputProps={{ min: 0, step: 0.01 }}
                       error={!!envelope.amountError}
                       helperText={envelope.amountError}
+                      slotProps={{
+                        htmlInput: { min: 0, step: 0.01 }
+                      }}
                     />
                   </TableCell>
                   <TableCell align="center">
@@ -1075,10 +1107,11 @@ export const EnvelopeBatchEntry: React.FC<EnvelopeBatchEntryProps> = ({
           {/* Keyboard Shortcuts */}
           <Typography
             variant="caption"
-            color="text.secondary"
-            display="block"
-            sx={{ mb: 2 }}
-          >
+            sx={{
+              color: "text.secondary",
+              display: "block",
+              mb: 2
+            }}>
             <strong>Keyboard Shortcuts:</strong> Tab = Next Field | Enter = Next
             Row
           </Typography>

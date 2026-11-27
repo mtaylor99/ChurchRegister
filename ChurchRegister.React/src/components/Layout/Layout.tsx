@@ -351,10 +351,17 @@ export const Layout: React.FC = () => {
       <Divider />
 
       <Box sx={{ p: 2 }}>
-        <Typography variant="caption" color="text.secondary" display="block">
+        <Typography
+          variant="caption"
+          sx={{
+            color: "text.secondary",
+            display: "block"
+          }}>
           Logged in as
         </Typography>
-        <Typography variant="body2" fontWeight="medium">
+        <Typography variant="body2" sx={{
+          fontWeight: "medium"
+        }}>
           {getUserDisplayName()}
         </Typography>
       </Box>
@@ -440,9 +447,10 @@ export const Layout: React.FC = () => {
         open={Boolean(anchorEl)}
         onClose={handleProfileMenuClose}
         onClick={handleProfileMenuClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
+        slotProps={{
+          paper: {
+            elevation: 0,
+            sx: {
             overflow: 'visible',
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 1.5,
@@ -465,6 +473,7 @@ export const Layout: React.FC = () => {
               zIndex: 0,
             },
           },
+          },
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
@@ -473,7 +482,9 @@ export const Layout: React.FC = () => {
           <Avatar sx={{ bgcolor: 'primary.main' }}>{getUserInitials()}</Avatar>
           <Box>
             <Typography variant="body2">{getUserDisplayName()}</Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               {user?.roles?.join(', ') || 'User'}
             </Typography>
           </Box>

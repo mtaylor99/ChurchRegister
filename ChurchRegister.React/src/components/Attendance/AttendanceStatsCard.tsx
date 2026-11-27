@@ -181,10 +181,12 @@ export const AttendanceStatsCard: React.FC<AttendanceStatsCardProps> = ({
         >
           <Box>
             <Typography
-              color="text.secondary"
               gutterBottom
               variant="body2"
               component="div"
+              sx={{
+                color: "text.secondary"
+              }}
             >
               {title}
             </Typography>
@@ -222,9 +224,10 @@ export const AttendanceStatsCard: React.FC<AttendanceStatsCardProps> = ({
         {subtitle && (
           <Typography
             variant="body2"
-            color="text.secondary"
-            sx={{ mb: showTrend ? 1 : 0 }}
-          >
+            sx={{
+              color: "text.secondary",
+              mb: showTrend ? 1 : 0
+            }}>
             {subtitle}
           </Typography>
         )}
@@ -239,7 +242,9 @@ export const AttendanceStatsCard: React.FC<AttendanceStatsCardProps> = ({
               size="small"
               variant="outlined"
             />
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               {trendInfo.direction === 'up' && 'Increased'}
               {trendInfo.direction === 'down' && 'Decreased'}
               {trendInfo.direction === 'flat' && 'No change'}

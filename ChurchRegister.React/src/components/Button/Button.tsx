@@ -127,7 +127,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || loading;
 
     const buttonContent = loading ? (
-      <Box display="flex" alignItems="center" gap={1}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1
+        }}>
         <CircularProgress
           size={size === 'small' ? 16 : size === 'medium' ? 18 : 20}
           color="inherit"
@@ -137,13 +142,17 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ) : (
       <>
         {startIcon && (
-          <Box component="span" mr={1}>
+          <Box component="span" sx={{
+            mr: 1
+          }}>
             {startIcon}
           </Box>
         )}
         {children}
         {endIcon && (
-          <Box component="span" ml={1}>
+          <Box component="span" sx={{
+            ml: 1
+          }}>
             {endIcon}
           </Box>
         )}

@@ -65,7 +65,12 @@ const SimpleTable = forwardRef<HTMLDivElement, SimpleTableProps>(
     return (
       <Paper ref={ref} sx={{ width: '100%', overflow: 'hidden', ...sx }}>
         {title && (
-          <Box p={2} borderBottom={1} borderColor="divider">
+          <Box
+            sx={{
+              p: 2,
+              borderBottom: 1,
+              borderColor: "divider"
+            }}>
             <Typography variant="h6" component="h2">
               {title}
             </Typography>
@@ -96,8 +101,12 @@ const SimpleTable = forwardRef<HTMLDivElement, SimpleTableProps>(
               {rows.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={columns.length} align="center">
-                    <Box py={4}>
-                      <Typography variant="body1" color="text.secondary">
+                    <Box sx={{
+                      py: 4
+                    }}>
+                      <Typography variant="body1" sx={{
+                        color: "text.secondary"
+                      }}>
                         {emptyMessage}
                       </Typography>
                     </Box>

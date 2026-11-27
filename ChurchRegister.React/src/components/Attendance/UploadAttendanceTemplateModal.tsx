@@ -276,7 +276,9 @@ export const UploadAttendanceTemplateModal: React.FC<
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <ErrorIcon color="error" />
-            <Typography variant="subtitle1" fontWeight="bold">
+            <Typography variant="subtitle1" sx={{
+              fontWeight: "bold"
+            }}>
               Errors ({errors.length})
             </Typography>
           </Box>
@@ -325,7 +327,9 @@ export const UploadAttendanceTemplateModal: React.FC<
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <WarningIcon color="warning" />
-            <Typography variant="subtitle1" fontWeight="bold">
+            <Typography variant="subtitle1" sx={{
+              fontWeight: "bold"
+            }}>
               Warnings ({warnings.length})
             </Typography>
           </Box>
@@ -349,10 +353,12 @@ export const UploadAttendanceTemplateModal: React.FC<
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={(_event, reason) => {
+        if (reason === 'escapeKeyDown' && isUploading) return;
+        handleClose();
+      }}
       maxWidth="md"
       fullWidth
-      disableEscapeKeyDown={isUploading}
     >
       <DialogTitle>
         <Box
@@ -439,10 +445,14 @@ export const UploadAttendanceTemplateModal: React.FC<
                   ? 'Drop file here'
                   : 'Drag and drop file here, or click to select'}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Supported format: .xlsx (Excel)
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Maximum file size: 5MB
               </Typography>
 
@@ -462,7 +472,9 @@ export const UploadAttendanceTemplateModal: React.FC<
                       <Typography variant="subtitle2">
                         {selectedFile.name}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         {formatFileSize(selectedFile.size)}
                       </Typography>
                     </Box>
@@ -485,7 +497,9 @@ export const UploadAttendanceTemplateModal: React.FC<
           {isUploading && (
             <Box sx={{ textAlign: 'center' }}>
               <CircularProgress size={40} sx={{ mb: 2 }} />
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Uploading and processing file...
               </Typography>
               <LinearProgress sx={{ mt: 2 }} />

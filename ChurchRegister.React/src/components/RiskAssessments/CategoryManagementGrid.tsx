@@ -326,9 +326,10 @@ export const CategoryManagementGrid = forwardRef<CategoryManagementGridRef>(
           <DialogTitle>
             <Stack
               direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
+              sx={{
+                alignItems: "center",
+                justifyContent: "space-between"
+              }}>
               {dialogMode === 'add' ? 'Add New Category' : 'Edit Category'}
               <IconButton onClick={handleDialogClose} edge="end">
                 <CloseIcon />

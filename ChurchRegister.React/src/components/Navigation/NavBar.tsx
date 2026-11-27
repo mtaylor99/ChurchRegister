@@ -137,7 +137,9 @@ export const NavBar: React.FC<NavBarProps> = ({
             <LogoIcon>
               <ChurchIcon />
             </LogoIcon>
-            <Typography variant="h6" component="div" fontWeight="bold">
+            <Typography variant="h6" component="div" sx={{
+              fontWeight: "bold"
+            }}>
               Church Register
             </Typography>
           </LogoContainer>

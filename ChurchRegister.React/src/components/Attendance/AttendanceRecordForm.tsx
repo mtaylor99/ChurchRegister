@@ -310,7 +310,9 @@ export const AttendanceRecordForm: React.FC<AttendanceRecordFormProps> = ({
                     disabled={isSubmitting || isViewMode}
                     required={!isViewMode}
                     fullWidth
-                    inputProps={{ min: 0, step: 1 }}
+                    slotProps={{
+                      htmlInput: { min: 0, step: 1 }
+                    }}
                   />
                 )}
               />

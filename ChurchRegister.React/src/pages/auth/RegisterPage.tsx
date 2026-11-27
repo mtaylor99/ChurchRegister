@@ -238,12 +238,14 @@ export const RegisterPage: React.FC = () => {
               error={!!errors.firstName}
               helperText={errors.firstName?.message}
               disabled={isLoading}
-              InputProps={{
-                startAdornment: (
-                  <PersonOutlineRounded
-                    sx={{ mr: 1, color: 'text.secondary' }}
-                  />
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <PersonOutlineRounded
+                      sx={{ mr: 1, color: 'text.secondary' }}
+                    />
+                  ),
+                }
               }}
             />
           )}
@@ -275,12 +277,14 @@ export const RegisterPage: React.FC = () => {
               error={!!errors.lastName}
               helperText={errors.lastName?.message}
               disabled={isLoading}
-              InputProps={{
-                startAdornment: (
-                  <PersonOutlineRounded
-                    sx={{ mr: 1, color: 'text.secondary' }}
-                  />
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <PersonOutlineRounded
+                      sx={{ mr: 1, color: 'text.secondary' }}
+                    />
+                  ),
+                }
               }}
             />
           )}
@@ -316,10 +320,12 @@ export const RegisterPage: React.FC = () => {
             }
             disabled={isLoading}
             sx={{ mb: 2 }}
-            InputProps={{
-              startAdornment: (
-                <BadgeRounded sx={{ mr: 1, color: 'text.secondary' }} />
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <BadgeRounded sx={{ mr: 1, color: 'text.secondary' }} />
+                ),
+              }
             }}
           />
         )}
@@ -348,10 +354,12 @@ export const RegisterPage: React.FC = () => {
             helperText={errors.email?.message}
             disabled={isLoading}
             sx={{ mb: 2 }}
-            InputProps={{
-              startAdornment: (
-                <EmailRounded sx={{ mr: 1, color: 'text.secondary' }} />
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <EmailRounded sx={{ mr: 1, color: 'text.secondary' }} />
+                ),
+              }
             }}
           />
         )}
@@ -501,7 +509,9 @@ export const RegisterPage: React.FC = () => {
         <EmailRounded
           sx={{ fontSize: 64, color: theme.palette.primary.main, mb: 2 }}
         />
-        <Typography variant="h5" gutterBottom fontWeight="bold">
+        <Typography variant="h5" gutterBottom sx={{
+          fontWeight: "bold"
+        }}>
           Check Your Email
         </Typography>
         <Typography variant="body1" color="textSecondary" sx={{ mb: 3 }}>
@@ -539,7 +549,9 @@ export const RegisterPage: React.FC = () => {
         <CheckCircleRounded
           sx={{ fontSize: 64, color: theme.palette.success.main, mb: 2 }}
         />
-        <Typography variant="h5" gutterBottom fontWeight="bold">
+        <Typography variant="h5" gutterBottom sx={{
+          fontWeight: "bold"
+        }}>
           Registration Complete!
         </Typography>
         <Typography variant="body1" color="textSecondary" sx={{ mb: 4 }}>
@@ -610,8 +622,10 @@ export const RegisterPage: React.FC = () => {
             <Typography
               variant="h4"
               component="h1"
-              fontWeight="bold"
               gutterBottom
+              sx={{
+                fontWeight: "bold"
+              }}
             >
               Create Account
             </Typography>
@@ -668,7 +682,9 @@ export const RegisterPage: React.FC = () => {
                   <Link
                     component={RouterLink}
                     to="/auth/login"
-                    fontWeight="medium"
+                    sx={{
+                      fontWeight: "medium"
+                    }}
                   >
                     Sign in here
                   </Link>

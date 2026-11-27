@@ -117,8 +117,10 @@ export const StatCard: React.FC<StatCardProps> = ({
           <Typography
             variant={compact ? 'h5' : 'h3'}
             component="div"
-            fontWeight="bold"
             color="primary"
+            sx={{
+              fontWeight: "bold"
+            }}
           >
             {formatValue(value)}
           </Typography>
@@ -126,8 +128,10 @@ export const StatCard: React.FC<StatCardProps> = ({
 
         <Typography
           variant={compact ? 'body2' : 'subtitle1'}
-          color="text.secondary"
           component="div"
+          sx={{
+            color: "text.secondary"
+          }}
         >
           {label}
         </Typography>
@@ -147,17 +151,22 @@ export const StatCard: React.FC<StatCardProps> = ({
         {progress && (
           <ProgressContainer>
             <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              mb={0.5}
-            >
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 0.5
+              }}>
               {progress.label && (
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   {progress.label}
                 </Typography>
               )}
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 {progress.value}%
               </Typography>
             </Box>

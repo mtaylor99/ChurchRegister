@@ -94,11 +94,12 @@ const GenerateRegisterNumbers = lazy(() =>
 // Loading fallback component
 const PageLoadingFallback = () => (
   <Box
-    display="flex"
-    justifyContent="center"
-    alignItems="center"
-    minHeight="400px"
-  >
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "400px"
+    }}>
     <CircularProgress />
   </Box>
 );

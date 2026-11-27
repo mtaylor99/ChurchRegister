@@ -147,7 +147,12 @@ export const ServerErrorPage: React.FC<ServerErrorPageProps> = ({
             Report This Error
           </Typography>
 
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mb: 2
+            }}>
             Help us improve by describing what you were doing when this error
             occurred.
           </Typography>
@@ -196,9 +201,13 @@ export const ServerErrorPage: React.FC<ServerErrorPageProps> = ({
         onChange={() => setShowDetails(!showDetails)}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Stack direction="row" alignItems="center" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{
+            alignItems: "center"
+          }}>
             {showDetails ? <VisibilityOffIcon /> : <VisibilityIcon />}
-            <Typography variant="subtitle1" fontWeight="medium">
+            <Typography variant="subtitle1" sx={{
+              fontWeight: "medium"
+            }}>
               Technical Details
             </Typography>
             <Chip label="Development Mode" size="small" color="warning" />
@@ -265,14 +274,17 @@ export const ServerErrorPage: React.FC<ServerErrorPageProps> = ({
       showRefreshButton={true}
       onRefresh={handleRetry}
     >
-      <Stack spacing={2} alignItems="center">
+      <Stack spacing={2} sx={{
+        alignItems: "center"
+      }}>
         {/* Error metadata chips */}
         <Stack
           direction="row"
           spacing={1}
-          flexWrap="wrap"
-          justifyContent="center"
-        >
+          sx={{
+            flexWrap: "wrap",
+            justifyContent: "center"
+          }}>
           <Chip
             label={`Request ID: ${currentErrorDetails.requestId}`}
             size="small"

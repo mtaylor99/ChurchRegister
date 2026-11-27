@@ -11,6 +11,7 @@ import {
 import { ErrorAlert } from '../ErrorAlert';
 import { extractErrorMessage } from '../../utils/typeGuards';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNotification } from '../../hooks/useNotification';
 import { trainingCertificatesApi } from '../../services/api';
 import type {
   TrainingCertificateTypeDto,
@@ -30,6 +31,7 @@ export const TrainingCertificateTypeForm: React.FC<
   TrainingCertificateTypeFormProps
 > = ({ type, mode, onSuccess, onCancel }) => {
   const queryClient = useQueryClient();
+  const { showSuccess } = useNotification();
   const isEditMode = mode === 'edit';
 
   // Form state - isActive is true for Active, false for InActive
@@ -50,6 +52,7 @@ export const TrainingCertificateTypeForm: React.FC<
       queryClient.invalidateQueries({
         queryKey: ['trainingCertificateTypes'],
       });
+      showSuccess('Training type created successfully');
       onSuccess();
     },
     onError: (error: unknown) => {
@@ -70,6 +73,7 @@ export const TrainingCertificateTypeForm: React.FC<
       queryClient.invalidateQueries({
         queryKey: ['trainingCertificateTypes'],
       });
+      showSuccess('Training type updated successfully');
       onSuccess();
     },
     onError: (error: unknown) => {
@@ -120,8 +124,10 @@ export const TrainingCertificateTypeForm: React.FC<
           onChange={(e) => setFormData({ ...formData, type: e.target.value })}
           required
           fullWidth
-          inputProps={{ maxLength: 50 }}
           helperText="e.g., DBS Check, Safeguarding Level 2, First Aid"
+          slotProps={{
+            htmlInput: { maxLength: 50 }
+          }}
         />
 
         {/* Description */}
@@ -134,8 +140,10 @@ export const TrainingCertificateTypeForm: React.FC<
           fullWidth
           multiline
           rows={3}
-          inputProps={{ maxLength: 500 }}
           placeholder="Brief description of the training/check type..."
+          slotProps={{
+            htmlInput: { maxLength: 500 }
+          }}
         />
 
         {/* Active Status Switch */}
@@ -151,13 +159,20 @@ export const TrainingCertificateTypeForm: React.FC<
             }
             label="Active Type"
           />
-          <Typography variant="caption" color="text.secondary" display="block">
+          <Typography
+            variant="caption"
+            sx={{
+              color: "text.secondary",
+              display: "block"
+            }}>
             Active types can be assigned to church members
           </Typography>
         </Box>
 
         {/* Actions */}
-        <Stack direction="row" spacing={2} justifyContent="flex-end">
+        <Stack direction="row" spacing={2} sx={{
+          justifyContent: "flex-end"
+        }}>
           <Button onClick={onCancel} variant="outlined">
             Cancel
           </Button>

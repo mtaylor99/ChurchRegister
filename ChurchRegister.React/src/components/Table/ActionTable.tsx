@@ -105,7 +105,12 @@ const ActionTable = forwardRef<HTMLDivElement, ActionTableProps>(
     return (
       <Paper ref={ref} sx={{ width: '100%', overflow: 'hidden', ...sx }}>
         {title && (
-          <Box p={2} borderBottom={1} borderColor="divider">
+          <Box
+            sx={{
+              p: 2,
+              borderBottom: 1,
+              borderColor: "divider"
+            }}>
             <Typography variant="h6" component="h2">
               {title}
             </Typography>
@@ -144,8 +149,12 @@ const ActionTable = forwardRef<HTMLDivElement, ActionTableProps>(
                     colSpan={columns.length + (hasActions ? 1 : 0)}
                     align="center"
                   >
-                    <Box py={4}>
-                      <Typography variant="body1" color="text.secondary">
+                    <Box sx={{
+                      py: 4
+                    }}>
+                      <Typography variant="body1" sx={{
+                        color: "text.secondary"
+                      }}>
                         {emptyMessage}
                       </Typography>
                     </Box>
@@ -218,8 +227,8 @@ const ActionTable = forwardRef<HTMLDivElement, ActionTableProps>(
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleActionClose}
-          PaperProps={{
-            sx: { minWidth: 150 },
+          slotProps={{
+            paper: { sx: { minWidth: 150 } },
           }}
         >
           {actions.map((action, index) => (

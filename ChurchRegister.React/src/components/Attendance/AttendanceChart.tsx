@@ -125,7 +125,15 @@ export const AttendanceChart: React.FC<AttendanceChartProps> = React.memo(
     const chartData = isMonthlyChart ? monthlyData : data;
 
     // Process data for chart display
-    const processedData = useMemo(() => {
+    const processedData = useMemo<
+      Array<{
+        displayDate: string;
+        attendance: number;
+        date: string;
+        monthYear?: string;
+        recordCount?: number;
+      }>
+    >(() => {
       if (isMonthlyChart && monthlyData) {
         // Process monthly data
         return [...monthlyData].reverse().map((point) => ({
@@ -247,7 +255,9 @@ export const AttendanceChart: React.FC<AttendanceChartProps> = React.memo(
               <strong>{data.value?.toLocaleString()}</strong>
             </Typography>
             {isMonthlyChart && payloadData?.recordCount && (
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 Records: {payloadData.recordCount}
               </Typography>
             )}
@@ -275,7 +285,9 @@ export const AttendanceChart: React.FC<AttendanceChartProps> = React.memo(
           action={
             stats && (
               <Box sx={{ textAlign: 'right' }}>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   Avg: {stats.average.toLocaleString()} | Max:{' '}
                   {stats.max.toLocaleString()}
                 </Typography>
@@ -332,7 +344,9 @@ export const AttendanceChart: React.FC<AttendanceChartProps> = React.memo(
                 borderRadius: 1,
               }}
             >
-              <Typography color="text.secondary">
+              <Typography sx={{
+                color: "text.secondary"
+              }}>
                 No attendance data available
               </Typography>
             </Box>

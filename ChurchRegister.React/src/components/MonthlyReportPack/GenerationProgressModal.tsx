@@ -27,7 +27,14 @@ const GenerationProgressModal = ({
   const progress = (reportsCompleted / totalReports) * 100;
 
   return (
-    <Dialog open={open} disableEscapeKeyDown maxWidth="sm" fullWidth>
+    <Dialog
+      open={open}
+      onClose={(_event, reason) => {
+        if (reason === 'escapeKeyDown') return;
+      }}
+      maxWidth="sm"
+      fullWidth
+    >
       <DialogTitle>Downloading Monthly Reports</DialogTitle>
       <DialogContent>
         <Box sx={{ width: '100%', mb: 2 }}>
@@ -42,7 +49,9 @@ const GenerationProgressModal = ({
             sx={{ mt: 2 }}
           />
         </Box>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" sx={{
+          color: "text.secondary"
+        }}>
           Please wait while we download all reports. This may take up to 30
           seconds.
         </Typography>

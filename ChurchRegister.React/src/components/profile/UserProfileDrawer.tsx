@@ -91,14 +91,13 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
         {/* Header */}
         <Stack
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
           sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
             p: 2,
             borderBottom: 1,
-            borderColor: 'divider',
-          }}
-        >
+            borderColor: 'divider'
+          }}>
           <Typography variant="h6">My Profile</Typography>
           <IconButton onClick={onClose} edge="end">
             <CloseIcon />
@@ -163,10 +162,17 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
             {/* User Role Information */}
             {user?.roles && user.roles.length > 0 && (
               <Box>
-                <Typography variant="subtitle2" color="text.secondary" mb={1}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: "text.secondary",
+                    mb: 1
+                  }}>
                   Roles
                 </Typography>
-                <Stack direction="row" spacing={1} flexWrap="wrap">
+                <Stack direction="row" spacing={1} sx={{
+                  flexWrap: "wrap"
+                }}>
                   {user.roles.map((role) => (
                     <Box
                       key={role}

@@ -41,7 +41,12 @@ export const Header: React.FC<HeaderProps> = ({
     >
       <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, sm: 3 } }}>
         {/* Left section */}
-        <Box display="flex" alignItems="center" gap={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2
+          }}>
           {showMenuButton && (
             <IconButton
               edge="start"
@@ -55,7 +60,12 @@ export const Header: React.FC<HeaderProps> = ({
           )}
 
           {/* Logo and Brand */}
-          <Box display="flex" alignItems="center" gap={1.5}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5
+            }}>
             <Box
               sx={{
                 width: 40,
@@ -87,7 +97,12 @@ export const Header: React.FC<HeaderProps> = ({
         </Box>
 
         {/* Right section */}
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1
+          }}>
           {/* Theme Toggle */}
           <IconButton
             onClick={toggleTheme}

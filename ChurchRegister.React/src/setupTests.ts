@@ -74,7 +74,7 @@ beforeAll(() => {
  * - afterAll: Clean up and close the server after all tests
  */
 beforeAll(() => {
-  server.listen({ onUnhandledRequest: 'warn' });
+  server.listen({ onUnhandledFrame: 'warn' });
 });
 
 afterEach(() => {

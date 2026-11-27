@@ -102,21 +102,30 @@ export const InfoCard: React.FC<InfoCardProps> = ({
             <Typography
               variant="h4"
               component="div"
-              fontWeight="bold"
               color="primary"
+              sx={{
+                fontWeight: "bold"
+              }}
             >
               {value}
             </Typography>
           )}
 
           {label && (
-            <Typography variant="subtitle1" component="div" fontWeight={500}>
+            <Typography variant="subtitle1" component="div" sx={{
+              fontWeight: 500
+            }}>
               {label}
             </Typography>
           )}
 
           {description && (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mt: 0.5
+              }}>
               {description}
             </Typography>
           )}

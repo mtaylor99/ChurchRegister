@@ -254,24 +254,39 @@ export const ChurchMembersPage: React.FC = () => {
       >
         {/* Page Header */}
         <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
-          <Box display="flex" alignItems="center" gap={2}>
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2
+          }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2
+            }}>
             <MembersIcon sx={{ fontSize: 32, color: 'primary.main' }} />
             <Box>
-              <Typography variant="h4" component="h1" fontWeight={700}>
+              <Typography variant="h4" component="h1" sx={{
+                fontWeight: 700
+              }}>
                 Church Members Management
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Manage church member records, roles, and contact information
               </Typography>
             </Box>
           </Box>
 
-          <Box display="flex" gap={1} alignItems="center">
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              alignItems: "center"
+            }}>
             <Button
               variant="contained"
               startIcon={<AddIcon />}

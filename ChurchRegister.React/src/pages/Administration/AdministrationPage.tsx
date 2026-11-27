@@ -85,13 +85,23 @@ export const AdministrationPage: React.FC = () => {
       }}
     >
       {/* Page Header */}
-      <Box display="flex" alignItems="center" gap={2} mb={3}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          mb: 3
+        }}>
         <AdminIcon sx={{ fontSize: 32, color: 'primary.main' }} />
         <Box>
-          <Typography variant="h4" component="h1" fontWeight={700}>
+          <Typography variant="h4" component="h1" sx={{
+            fontWeight: 700
+          }}>
             Administration
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Manage system users, roles, and district assignments
           </Typography>
         </Box>

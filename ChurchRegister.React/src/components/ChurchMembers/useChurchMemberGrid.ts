@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNotification } from '../../hooks/useNotification';
 import type { GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
 import { churchMembersApi } from '@services/api';
 import type {
@@ -23,6 +24,7 @@ export function useChurchMemberGrid({
   initialQuery,
 }: ChurchMemberGridProps) {
   const queryClient = useQueryClient();
+  const { showSuccess } = useNotification();
 
   // RBAC
   const { hasPermission } = useRBAC();
@@ -155,6 +157,7 @@ export function useChurchMemberGrid({
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['churchMembers'] });
+      showSuccess('Pastoral care status updated successfully');
     },
   });
 
@@ -163,6 +166,7 @@ export function useChurchMemberGrid({
       churchMembersApi.deleteChurchMember(memberId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['churchMembers'] });
+      showSuccess('Church member deleted successfully');
     },
   });
 

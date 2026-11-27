@@ -38,13 +38,13 @@ export const Toast: React.FC<ToastProps> = ({
   action,
 }) => {
   const handleClose = (
-    event?: React.SyntheticEvent | Event,
+    event?: React.SyntheticEvent | Event | null,
     reason?: string
   ) => {
     if (reason === 'clickaway') {
       return;
     }
-    onClose?.(event, reason);
+    onClose?.(event ?? undefined, reason);
   };
 
   const closeButton = showCloseButton ? (

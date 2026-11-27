@@ -20,7 +20,7 @@ import {
   Close as CloseIcon,
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
-  CheckCircleOutline as ActionIcon,
+  CheckCircleOutlineOutlined as ActionIcon,
   ContactSupport as SupportIcon,
   Refresh as RetryIcon,
   Security as SecurityIcon,
@@ -232,7 +232,9 @@ export const AuthErrorDisplay: React.FC<AuthErrorDisplayProps> = ({
               </ListItemIcon>
               <ListItemText
                 primary={action}
-                primaryTypographyProps={{ variant: 'body2' }}
+                slotProps={{
+                  primary: { variant: 'body2' }
+                }}
               />
             </ListItem>
           ))}
@@ -259,7 +261,9 @@ export const AuthErrorDisplay: React.FC<AuthErrorDisplayProps> = ({
               </ListItemIcon>
               <ListItemText
                 primary={action}
-                primaryTypographyProps={{ variant: 'body2' }}
+                slotProps={{
+                  primary: { variant: 'body2' }
+                }}
               />
             </ListItem>
           ))}
@@ -327,7 +331,12 @@ export const AuthErrorDisplay: React.FC<AuthErrorDisplayProps> = ({
       </Typography>
 
       {errorMessage.details && (
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            mb: 1
+          }}>
           {errorMessage.details}
         </Typography>
       )}
@@ -335,9 +344,11 @@ export const AuthErrorDisplay: React.FC<AuthErrorDisplayProps> = ({
       {showTimestamp && (
         <Typography
           variant="caption"
-          color="text.secondary"
-          sx={{ display: 'block', mt: 1 }}
-        >
+          sx={{
+            color: "text.secondary",
+            display: 'block',
+            mt: 1
+          }}>
           Error occurred at {new Date().toLocaleString()}
         </Typography>
       )}

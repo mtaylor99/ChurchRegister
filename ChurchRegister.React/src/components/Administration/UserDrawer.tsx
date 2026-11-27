@@ -103,11 +103,15 @@ export const UserDrawer: React.FC<UserDrawerProps> = ({
             {getIcon()}
           </Box>
           <Box>
-            <Typography variant="h5" component="h2" fontWeight={600}>
+            <Typography variant="h5" component="h2" sx={{
+              fontWeight: 600
+            }}>
               {getTitle()}
             </Typography>
             {mode === 'edit' && user && (
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 {user.email}
               </Typography>
             )}
@@ -161,32 +165,32 @@ export const UserDrawer: React.FC<UserDrawerProps> = ({
       variant="temporary"
       ModalProps={{
         keepMounted: false, // Better mobile performance
-        disableEscapeKeyDown: loading,
         sx: {
           zIndex: theme.zIndex.drawer + 1,
-        },
-      }}
-      PaperProps={{
-        sx: {
-          width: isMobile ? mobileDrawerWidth : drawerWidth,
-          maxWidth: '100vw',
-          height: '100vh',
-          borderRadius: 0,
-          boxShadow: theme.shadows[16],
-        },
-      }}
-      SlideProps={{
-        direction: 'left',
-        timeout: {
-          enter: theme.transitions.duration.enteringScreen,
-          exit: theme.transitions.duration.leavingScreen,
         },
       }}
       transitionDuration={{
         enter: theme.transitions.duration.enteringScreen,
         exit: theme.transitions.duration.leavingScreen,
       }}
-    >
+      slotProps={{
+        paper: {
+          sx: {
+            width: isMobile ? mobileDrawerWidth : drawerWidth,
+            maxWidth: '100vw',
+            height: '100vh',
+            borderRadius: 0,
+            boxShadow: theme.shadows[16],
+          },
+        },
+
+        transition: {
+          timeout: {
+            enter: theme.transitions.duration.enteringScreen,
+            exit: theme.transitions.duration.leavingScreen,
+          },
+        }
+      }}>
       <Slide
         direction="left"
         in={open}

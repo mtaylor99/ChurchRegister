@@ -303,10 +303,17 @@ export const ContributionHistoryDialog: React.FC<
             }}
           >
             <Box>
-              <Typography variant="h5" color="primary.main" fontWeight="bold">
+              <Typography
+                variant="h5"
+                sx={{
+                  color: "primary.main",
+                  fontWeight: "bold"
+                }}>
                 Contribution History
               </Typography>
-              <Typography variant="subtitle2" color="text.secondary">
+              <Typography variant="subtitle2" sx={{
+                color: "text.secondary"
+              }}>
                 {memberName}
               </Typography>
             </Box>
@@ -324,7 +331,9 @@ export const ContributionHistoryDialog: React.FC<
           <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
             <Card sx={{ flex: 1 }}>
               <CardContent>
-                <Typography variant="h6" color="text.secondary" gutterBottom>
+                <Typography variant="h6" gutterBottom sx={{
+                  color: "text.secondary"
+                }}>
                   Total Contributions
                 </Typography>
                 <Typography variant="h4">{contributions.length}</Typography>
@@ -332,7 +341,9 @@ export const ContributionHistoryDialog: React.FC<
             </Card>
             <Card sx={{ flex: 1 }}>
               <CardContent>
-                <Typography variant="h6" color="text.secondary" gutterBottom>
+                <Typography variant="h6" gutterBottom sx={{
+                  color: "text.secondary"
+                }}>
                   Total Amount
                 </Typography>
                 <Typography variant="h4">£{totalAmount.toFixed(2)}</Typography>
@@ -423,14 +434,16 @@ export const ContributionHistoryDialog: React.FC<
               onChange={(e) => setEditAmount(e.target.value)}
               required
               fullWidth
-              inputProps={{ min: 0.01, step: 0.01 }}
               disabled={editMutation.isPending}
               placeholder="0.00"
-              InputProps={{
-                startAdornment: <Typography sx={{ mr: 1 }}>£</Typography>,
-              }}
               autoFocus
-            />
+              slotProps={{
+                input: {
+                  startAdornment: <Typography sx={{ mr: 1 }}>£</Typography>,
+                },
+
+                htmlInput: { min: 0.01, step: 0.01 }
+              }} />
           </Box>
         </DialogContent>
         <DialogActions>

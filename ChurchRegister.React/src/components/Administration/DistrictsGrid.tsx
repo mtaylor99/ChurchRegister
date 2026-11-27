@@ -114,7 +114,9 @@ export const DistrictsGrid: React.FC = () => {
       width: 120,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-          <Typography variant="body2" fontWeight="medium">
+          <Typography variant="body2" sx={{
+            fontWeight: "medium"
+          }}>
             {params.value}
           </Typography>
         </Box>
@@ -132,9 +134,10 @@ export const DistrictsGrid: React.FC = () => {
           ) : (
             <Typography
               variant="body2"
-              color="text.secondary"
-              fontStyle="italic"
-            >
+              sx={{
+                color: "text.secondary",
+                fontStyle: "italic"
+              }}>
               No description
             </Typography>
           )}
@@ -153,9 +156,10 @@ export const DistrictsGrid: React.FC = () => {
           ) : (
             <Typography
               variant="body2"
-              color="text.secondary"
-              fontStyle="italic"
-            >
+              sx={{
+                color: "text.secondary",
+                fontStyle: "italic"
+              }}>
               Not assigned
             </Typography>
           )}
@@ -174,9 +178,10 @@ export const DistrictsGrid: React.FC = () => {
           ) : (
             <Typography
               variant="body2"
-              color="text.secondary"
-              fontStyle="italic"
-            >
+              sx={{
+                color: "text.secondary",
+                fontStyle: "italic"
+              }}>
               Not assigned
             </Typography>
           )}
@@ -237,7 +242,9 @@ export const DistrictsGrid: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               District Management
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Manage deacon and district officer assignments for each district
             </Typography>
           </Box>

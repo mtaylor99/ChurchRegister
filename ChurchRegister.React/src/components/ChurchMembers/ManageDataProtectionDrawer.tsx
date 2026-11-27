@@ -165,7 +165,9 @@ export const ManageDataProtectionDrawer: React.FC<
               }}
             >
               <Box>
-                <Typography variant="h5" component="h2" fontWeight={600}>
+                <Typography variant="h5" component="h2" sx={{
+                  fontWeight: 600
+                }}>
                   Data Protection Consent
                 </Typography>
                 <Typography variant="subtitle1" sx={{ mt: 0.5, opacity: 0.9 }}>
@@ -228,16 +230,19 @@ export const ManageDataProtectionDrawer: React.FC<
                   <Typography
                     variant="h6"
                     color="primary"
-                    fontWeight={600}
                     gutterBottom
+                    sx={{
+                      fontWeight: 600
+                    }}
                   >
                     Consent Permissions
                   </Typography>
                   <Typography
                     variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 3 }}
-                  >
+                    sx={{
+                      color: "text.secondary",
+                      mb: 3
+                    }}>
                     Please review and update the consent preferences below
                   </Typography>
 
@@ -255,7 +260,9 @@ export const ManageDataProtectionDrawer: React.FC<
                           />
                         }
                         label={
-                          <Typography variant="body1" fontWeight={500}>
+                          <Typography variant="body1" sx={{
+                            fontWeight: 500
+                          }}>
                             1. I give permission for my name to be included in
                             the church newsletter or other church
                             communications.
@@ -264,9 +271,11 @@ export const ManageDataProtectionDrawer: React.FC<
                       />
                       <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ ml: 4, mt: 0.5 }}
-                      >
+                        sx={{
+                          color: "text.secondary",
+                          ml: 4,
+                          mt: 0.5
+                        }}>
                         This covers: Congratulations, Thank-yous, Mentions of
                         involvement, Prayer requests without health details
                       </Typography>
@@ -287,7 +296,9 @@ export const ManageDataProtectionDrawer: React.FC<
                           />
                         }
                         label={
-                          <Typography variant="body1" fontWeight={500}>
+                          <Typography variant="body1" sx={{
+                            fontWeight: 500
+                          }}>
                             2. I give permission for the church to mention me in
                             pastoral situations (e.g., illness, hospital
                             admission), keeping details minimal.
@@ -296,9 +307,11 @@ export const ManageDataProtectionDrawer: React.FC<
                       />
                       <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ ml: 4, mt: 0.5 }}
-                      >
+                        sx={{
+                          color: "text.secondary",
+                          ml: 4,
+                          mt: 0.5
+                        }}>
                         This is needed because health information is "special
                         category data".
                       </Typography>
@@ -317,7 +330,9 @@ export const ManageDataProtectionDrawer: React.FC<
                           />
                         }
                         label={
-                          <Typography variant="body1" fontWeight={500}>
+                          <Typography variant="body1" sx={{
+                            fontWeight: 500
+                          }}>
                             3. I give permission for my photo to be used in
                             printed church materials (e.g., newsletter,
                             noticeboard).
@@ -326,9 +341,11 @@ export const ManageDataProtectionDrawer: React.FC<
                       />
                       <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ ml: 4, mt: 0.5 }}
-                      >
+                        sx={{
+                          color: "text.secondary",
+                          ml: 4,
+                          mt: 0.5
+                        }}>
                         This separates print from online, which is important
                         legally.
                       </Typography>
@@ -347,7 +364,9 @@ export const ManageDataProtectionDrawer: React.FC<
                           />
                         }
                         label={
-                          <Typography variant="body1" fontWeight={500}>
+                          <Typography variant="body1" sx={{
+                            fontWeight: 500
+                          }}>
                             4. I give permission for my photo to be used on the
                             church Facebook page or other online platforms.
                           </Typography>
@@ -355,9 +374,11 @@ export const ManageDataProtectionDrawer: React.FC<
                       />
                       <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ ml: 4, mt: 0.5 }}
-                      >
+                        sx={{
+                          color: "text.secondary",
+                          ml: 4,
+                          mt: 0.5
+                        }}>
                         This must be separate because: Facebook is public, Data
                         leaves the UK/EU, People often want print but not
                         online.
@@ -375,7 +396,9 @@ export const ManageDataProtectionDrawer: React.FC<
                           />
                         }
                         label={
-                          <Typography variant="body1" fontWeight={500}>
+                          <Typography variant="body1" sx={{
+                            fontWeight: 500
+                          }}>
                             5. I am happy to appear incidentally in group or
                             crowd photos.
                           </Typography>
@@ -383,9 +406,11 @@ export const ManageDataProtectionDrawer: React.FC<
                       />
                       <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ ml: 4, mt: 0.5 }}
-                      >
+                        sx={{
+                          color: "text.secondary",
+                          ml: 4,
+                          mt: 0.5
+                        }}>
                         This avoids needing consent for every wide shot, while
                         still respecting people who prefer not to appear at all.
                       </Typography>
@@ -404,7 +429,9 @@ export const ManageDataProtectionDrawer: React.FC<
                           />
                         }
                         label={
-                          <Typography variant="body1" fontWeight={500}>
+                          <Typography variant="body1" sx={{
+                            fontWeight: 500
+                          }}>
                             6. I give permission for my child's name/photo to be
                             used as above.
                           </Typography>
@@ -412,9 +439,11 @@ export const ManageDataProtectionDrawer: React.FC<
                       />
                       <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ ml: 4, mt: 0.5 }}
-                      >
+                        sx={{
+                          color: "text.secondary",
+                          ml: 4,
+                          mt: 0.5
+                        }}>
                         (Optional but helpful - not essential)
                       </Typography>
                     </Box>
@@ -433,15 +462,18 @@ export const ManageDataProtectionDrawer: React.FC<
                   >
                     <Typography
                       variant="caption"
-                      color="text.secondary"
-                      display="block"
-                    >
+                      sx={{
+                        color: "text.secondary",
+                        display: "block"
+                      }}>
                       <strong>Last updated:</strong>{' '}
                       {new Date(
                         dataProtection.modifiedDateTime
                       ).toLocaleString()}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" sx={{
+                      color: "text.secondary"
+                    }}>
                       <strong>Modified by:</strong> {dataProtection.modifiedBy}
                     </Typography>
                   </Paper>
@@ -509,11 +541,13 @@ export const ManageDataProtectionDrawer: React.FC<
       <Dialog
         open={clearAllDialogOpen}
         onClose={() => setClearAllDialogOpen(false)}
-        PaperProps={{
-          sx: {
-            borderRadius: 2,
-            minWidth: '400px',
-          },
+        slotProps={{
+          paper: {
+            sx: {
+              borderRadius: 2,
+              minWidth: '400px',
+            },
+          }
         }}
       >
         <DialogTitle sx={{ fontWeight: 600, pb: 1 }}>
@@ -527,7 +561,12 @@ export const ManageDataProtectionDrawer: React.FC<
             </strong>
             ?
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mt: 2
+            }}>
             This action can be reversed by updating the permissions again.
           </Typography>
         </DialogContent>

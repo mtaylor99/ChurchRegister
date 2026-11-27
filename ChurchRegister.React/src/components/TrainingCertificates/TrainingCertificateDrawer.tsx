@@ -36,14 +36,13 @@ export const TrainingCertificateDrawer: React.FC<
         {/* Header */}
         <Stack
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
           sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
             p: 2,
             borderBottom: 1,
-            borderColor: 'divider',
-          }}
-        >
+            borderColor: 'divider'
+          }}>
           <Typography variant="h6">
             {mode === 'add'
               ? 'Add Training Certificate'

@@ -179,7 +179,12 @@ const MonthlyReportPackWidget = () => {
           <Typography variant="h6" gutterBottom>
             Monthly Report Pack
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mb: 2
+            }}>
             Download monthly reports (Attendance Analytics, Pastoral Care,
             Training, Risk Assessments, Reminders)
           </Typography>
@@ -200,9 +205,11 @@ const MonthlyReportPackWidget = () => {
           {analyticsEvents.length === 0 && (
             <Typography
               variant="caption"
-              color="text.secondary"
-              sx={{ mt: 1, display: 'block' }}
-            >
+              sx={{
+                color: "text.secondary",
+                mt: 1,
+                display: 'block'
+              }}>
               No attendance analytics events available
             </Typography>
           )}

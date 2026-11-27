@@ -334,10 +334,14 @@ export const UserGrid: React.FC<UserGridProps> = React.memo(
           minWidth: 200,
           renderCell: (params) => (
             <Box>
-              <Typography variant="body2" fontWeight={500}>
+              <Typography variant="body2" sx={{
+                fontWeight: 500
+              }}>
                 {params.row.fullName}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 {params.row.jobTitle || 'No job title'}
               </Typography>
             </Box>
