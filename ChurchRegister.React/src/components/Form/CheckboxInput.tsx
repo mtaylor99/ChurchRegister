@@ -84,7 +84,6 @@ export const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
 
     const checkbox = (
       <Checkbox
-        inputRef={ref}
         name={name}
         color={color}
         size={size}
@@ -96,7 +95,11 @@ export const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
         defaultChecked={defaultChecked}
         value={value}
         {...register}
-      />
+        slotProps={{
+          input: {
+            ref: ref
+          }
+        }} />
     );
 
     return (

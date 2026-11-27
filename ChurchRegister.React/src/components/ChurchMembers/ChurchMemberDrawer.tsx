@@ -41,14 +41,13 @@ export const ChurchMemberDrawer: React.FC<ChurchMemberDrawerProps> = ({
         {/* Header */}
         <Stack
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
           sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
             p: 2,
             borderBottom: 1,
-            borderColor: 'divider',
-          }}
-        >
+            borderColor: 'divider'
+          }}>
           <Typography variant="h6">
             {mode === 'add'
               ? 'Add New Church Member'

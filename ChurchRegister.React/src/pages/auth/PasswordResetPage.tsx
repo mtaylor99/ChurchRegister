@@ -280,10 +280,12 @@ export const PasswordResetPage: React.FC = () => {
               'Enter the email address associated with your account'
             }
             disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <EmailRounded sx={{ mr: 1, color: 'text.secondary' }} />
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <EmailRounded sx={{ mr: 1, color: 'text.secondary' }} />
+                ),
+              }
             }}
           />
         )}
@@ -317,7 +319,9 @@ export const PasswordResetPage: React.FC = () => {
         <EmailRounded
           sx={{ fontSize: 64, color: theme.palette.primary.main, mb: 2 }}
         />
-        <Typography variant="h5" gutterBottom fontWeight="bold">
+        <Typography variant="h5" gutterBottom sx={{
+          fontWeight: "bold"
+        }}>
           Check Your Email
         </Typography>
         <Typography variant="body1" color="textSecondary" sx={{ mb: 3 }}>
@@ -387,10 +391,12 @@ export const PasswordResetPage: React.FC = () => {
               'Minimum 8 characters with uppercase, lowercase, number, and special character'
             }
             disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <LockOutlineRounded sx={{ mr: 1, color: 'text.secondary' }} />
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <LockOutlineRounded sx={{ mr: 1, color: 'text.secondary' }} />
+                ),
+              }
             }}
           />
         )}
@@ -417,10 +423,12 @@ export const PasswordResetPage: React.FC = () => {
             error={!!resetErrors.confirmPassword}
             helperText={resetErrors.confirmPassword?.message}
             disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <LockOutlineRounded sx={{ mr: 1, color: 'text.secondary' }} />
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <LockOutlineRounded sx={{ mr: 1, color: 'text.secondary' }} />
+                ),
+              }
             }}
           />
         )}
@@ -454,7 +462,9 @@ export const PasswordResetPage: React.FC = () => {
         <CheckCircleRounded
           sx={{ fontSize: 64, color: theme.palette.success.main, mb: 2 }}
         />
-        <Typography variant="h5" gutterBottom fontWeight="bold">
+        <Typography variant="h5" gutterBottom sx={{
+          fontWeight: "bold"
+        }}>
           Password Reset Complete!
         </Typography>
         <Typography variant="body1" color="textSecondary" sx={{ mb: 4 }}>
@@ -590,8 +600,10 @@ export const PasswordResetPage: React.FC = () => {
             <Typography
               variant="h4"
               component="h1"
-              fontWeight="bold"
               gutterBottom
+              sx={{
+                fontWeight: "bold"
+              }}
             >
               {getPageTitle()}
             </Typography>
@@ -643,7 +655,9 @@ export const PasswordResetPage: React.FC = () => {
                   <Link
                     component={RouterLink}
                     to="/auth/login"
-                    fontWeight="medium"
+                    sx={{
+                      fontWeight: "medium"
+                    }}
                   >
                     Sign in here
                   </Link>
@@ -657,7 +671,9 @@ export const PasswordResetPage: React.FC = () => {
                   <Link
                     component={RouterLink}
                     to="/auth/register"
-                    fontWeight="medium"
+                    sx={{
+                      fontWeight: "medium"
+                    }}
                   >
                     Sign up here
                   </Link>

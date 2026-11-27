@@ -315,13 +315,20 @@ export const GenerateRegisterNumbers: React.FC<
     <>
       <Card>
         <CardContent>
-          <Box display="flex" alignItems="center" mb={2}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 2
+            }}>
             <NumbersIcon color="primary" sx={{ fontSize: 40, mr: 2 }} />
             <Box>
               <Typography variant="h6">
                 Generate New Membership Numbers
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 Annual membership number generation for {targetYear}
               </Typography>
             </Box>
@@ -382,7 +389,13 @@ export const GenerateRegisterNumbers: React.FC<
         fullWidth
       >
         <DialogTitle>
-          <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              flexWrap: "wrap"
+            }}>
             Membership Numbers Preview — {targetYear}
             {previewData && (
               <>
@@ -407,14 +420,21 @@ export const GenerateRegisterNumbers: React.FC<
         </DialogTitle>
         <DialogContent>
           {loading ? (
-            <Box display="flex" justifyContent="center" p={4}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                p: 4
+              }}>
               <CircularProgress />
             </Box>
           ) : previewData ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               {/* Baptised Members section */}
               <Box>
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                <Typography variant="subtitle1" gutterBottom sx={{
+                  fontWeight: "bold"
+                }}>
                   Members (Baptised) — Numbers 1 to {previewData.totalMembers}
                 </Typography>
                 <TableContainer component={Paper} variant="outlined">
@@ -449,7 +469,9 @@ export const GenerateRegisterNumbers: React.FC<
 
               {/* Non-Baptised Members section */}
               <Box>
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                <Typography variant="subtitle1" gutterBottom sx={{
+                  fontWeight: "bold"
+                }}>
                   Members (Non-Baptised) — Numbers 250 to{' '}
                   {249 + previewData.totalNonBaptisedMembers}
                 </Typography>
@@ -485,7 +507,9 @@ export const GenerateRegisterNumbers: React.FC<
 
               {/* Non-Members section */}
               <Box>
-                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                <Typography variant="subtitle1" gutterBottom sx={{
+                  fontWeight: "bold"
+                }}>
                   Non-Members — Numbers 500+
                 </Typography>
                 <TableContainer component={Paper} variant="outlined">

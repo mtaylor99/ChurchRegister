@@ -78,7 +78,12 @@ export const AssignDescriptionDialog: React.FC<AssignDescriptionDialogProps> = (
       aria-labelledby="assign-description-dialog-title"
     >
       <DialogTitle id="assign-description-dialog-title">
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}>
           <Typography variant="h6">
             Assign Description - District {district?.name}
           </Typography>
@@ -102,10 +107,12 @@ export const AssignDescriptionDialog: React.FC<AssignDescriptionDialogProps> = (
           fullWidth
           multiline
           rows={4}
-          inputProps={{ maxLength: 500 }}
           helperText={`${description.length}/500`}
           disabled={assignDescriptionMutation.isPending}
           placeholder="Enter a description for this district (optional)"
+          slotProps={{
+            htmlInput: { maxLength: 500 }
+          }}
         />
       </DialogContent>
 

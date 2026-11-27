@@ -16,7 +16,12 @@ export const SkeletonRows: React.FC<SkeletonRowsProps> = ({
         <TableRow key={`skeleton-row-${rowIndex}`}>
           {/* Avatar column */}
           <TableCell>
-            <Box display="flex" alignItems="center" gap={2}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2
+              }}>
               <Skeleton variant="circular" width={40} height={40} />
               <Box>
                 <Skeleton variant="text" width={120} height={20} />
@@ -37,7 +42,11 @@ export const SkeletonRows: React.FC<SkeletonRowsProps> = ({
 
           {/* Roles column */}
           <TableCell>
-            <Box display="flex" gap={1}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1
+              }}>
               <Skeleton variant="rounded" width={60} height={20} />
               <Skeleton variant="rounded" width={45} height={20} />
             </Box>
@@ -50,7 +59,11 @@ export const SkeletonRows: React.FC<SkeletonRowsProps> = ({
 
           {/* Actions column */}
           <TableCell>
-            <Box display="flex" gap={1}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1
+              }}>
               <Skeleton variant="circular" width={32} height={32} />
               <Skeleton variant="circular" width={32} height={32} />
               <Skeleton variant="circular" width={32} height={32} />

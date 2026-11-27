@@ -122,25 +122,36 @@ export const RegisterNumberGenerationDialog: React.FC<
         onClose={handleClose}
         maxWidth="lg"
         fullWidth
-        PaperProps={{
-          sx: { height: '90vh' },
+        slotProps={{
+          paper: {
+            sx: { height: '90vh' },
+          }
         }}
       >
         <DialogTitle>
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
             sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
               bgcolor: 'grey.100',
               p: 2,
               m: -3,
               mb: 0,
-              borderRadius: '4px 4px 0 0',
-            }}
-          >
-            <Box display="flex" alignItems="center" gap={1}>
-              <Typography variant="h6" color="primary.main" fontWeight="bold">
+              borderRadius: '4px 4px 0 0'
+            }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1
+              }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "primary.main",
+                  fontWeight: "bold"
+                }}>
                 Generate Membership Numbers for {targetYear}
               </Typography>
             </Box>
@@ -159,11 +170,12 @@ export const RegisterNumberGenerationDialog: React.FC<
         <DialogContent dividers>
           {isLoading && (
             <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              minHeight={300}
-            >
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: 300
+              }}>
               <CircularProgress />
             </Box>
           )}
@@ -188,7 +200,9 @@ export const RegisterNumberGenerationDialog: React.FC<
           {!isLoading && !isGenerated && showPreview && preview.data && (
             <>
               <Alert severity="warning" sx={{ mb: 2 }}>
-                <Typography variant="body2" fontWeight="bold">
+                <Typography variant="body2" sx={{
+                  fontWeight: "bold"
+                }}>
                   ⚠️ Important: This action is permanent and cannot be undone
                 </Typography>
               </Alert>

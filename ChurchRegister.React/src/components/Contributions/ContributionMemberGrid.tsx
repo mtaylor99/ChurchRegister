@@ -252,8 +252,10 @@ export const ContributionMemberGrid: React.FC<ContributionMemberGridProps> =
                 checked={showContributions}
                 onChange={(e) => setShowContributions(e.target.checked)}
                 onClick={(e) => e.stopPropagation()}
-                inputProps={{ 'aria-label': 'Show contribution amounts' }}
                 sx={{ ml: 0.5, flexShrink: 0 }}
+                slotProps={{
+                  input: { 'aria-label': 'Show contribution amounts' }
+                }}
               />
             </Box>
           ),
@@ -351,10 +353,12 @@ export const ContributionMemberGrid: React.FC<ContributionMemberGridProps> =
             value={searchTerm}
             onChange={handleSearchChange}
             sx={{ minWidth: 300, flexGrow: 1 }}
-            InputProps={{
-              startAdornment: (
-                <SearchIcon sx={{ mr: 1, color: 'action.active' }} />
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <SearchIcon sx={{ mr: 1, color: 'action.active' }} />
+                ),
+              }
             }}
           />
 
@@ -396,7 +400,9 @@ export const ContributionMemberGrid: React.FC<ContributionMemberGridProps> =
             <Typography variant="h6" gutterBottom>
               No members found
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Try adjusting your search or filters
             </Typography>
           </Paper>

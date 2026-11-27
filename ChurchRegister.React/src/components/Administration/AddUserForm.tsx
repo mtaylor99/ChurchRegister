@@ -241,7 +241,12 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
                 />
               )}
             />
-            <Typography variant="body2" color="text.secondary" sx={{ ml: 4 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                ml: 4
+              }}>
               The user will receive an invitation email with a secure link to
               verify their email address and set up their password.
             </Typography>
@@ -259,9 +264,10 @@ export const AddUserForm: React.FC<AddUserFormProps> = ({
         <Stack
           direction="row"
           spacing={2}
-          justifyContent="flex-end"
-          sx={{ pt: 2 }}
-        >
+          sx={{
+            justifyContent: "flex-end",
+            pt: 2
+          }}>
           <LoadingButton
             variant="outlined"
             onClick={onCancel}

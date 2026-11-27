@@ -142,7 +142,12 @@ export const TokenRefreshExample: React.FC = () => {
         Enhanced Token Refresh System
       </Typography>
 
-      <Typography variant="body1" paragraph color="text.secondary">
+      <Typography
+        variant="body1"
+        sx={{
+          color: "text.secondary",
+          marginBottom: "16px"
+        }}>
         Real-time monitoring of the enhanced token refresh system with race
         condition prevention, automatic retry logic, and HTTP request
         interception.
@@ -340,12 +345,19 @@ export const TokenRefreshExample: React.FC = () => {
               HTTP Interceptor Statistics
             </Typography>
 
-            <Typography variant="body2" paragraph color="text.secondary">
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                marginBottom: "16px"
+              }}>
               Monitor HTTP request interception and automatic token refresh
               integration.
             </Typography>
 
-            <Stack direction="row" spacing={2} flexWrap="wrap">
+            <Stack direction="row" spacing={2} sx={{
+              flexWrap: "wrap"
+            }}>
               <Chip
                 label={`Pending Requests: ${interceptorStats.pendingRequests}`}
                 color={
@@ -373,7 +385,9 @@ export const TokenRefreshExample: React.FC = () => {
 
               <Box sx={{ maxHeight: 300, overflow: 'auto' }}>
                 {refreshLogs.length === 0 ? (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     No refresh activity yet
                   </Typography>
                 ) : (
@@ -408,7 +422,9 @@ export const TokenRefreshExample: React.FC = () => {
 
               <Box sx={{ maxHeight: 300, overflow: 'auto' }}>
                 {testApiResults.length === 0 ? (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     No API calls made yet
                   </Typography>
                 ) : (

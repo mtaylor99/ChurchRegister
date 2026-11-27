@@ -157,7 +157,9 @@ export function CompleteReminderDrawer({
 
           {/* Read-only reminder details */}
           <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+            <Typography variant="subtitle2" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               Reminder Details
             </Typography>
 
@@ -168,10 +170,13 @@ export function CompleteReminderDrawer({
             <Stack
               direction="row"
               spacing={1}
-              alignItems="center"
-              sx={{ mb: 1 }}
-            >
-              <Typography variant="body2" color="text.secondary">
+              sx={{
+                alignItems: "center",
+                mb: 1
+              }}>
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Due: {format(new Date(reminder.dueDate), 'dd/MM/yyyy')}
               </Typography>
             </Stack>
@@ -179,10 +184,13 @@ export function CompleteReminderDrawer({
             <Stack
               direction="row"
               spacing={1}
-              alignItems="center"
-              sx={{ mb: 1 }}
-            >
-              <Typography variant="body2" color="text.secondary">
+              sx={{
+                alignItems: "center",
+                mb: 1
+              }}>
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Assigned to: {reminder.assignedToName}
               </Typography>
             </Stack>
@@ -191,10 +199,13 @@ export function CompleteReminderDrawer({
               <Stack
                 direction="row"
                 spacing={1}
-                alignItems="center"
-                sx={{ mb: 1 }}
-              >
-                <Typography variant="body2" color="text.secondary">
+                sx={{
+                  alignItems: "center",
+                  mb: 1
+                }}>
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Category:
                 </Typography>
                 <Chip
@@ -209,9 +220,13 @@ export function CompleteReminderDrawer({
             )}
 
             {reminder.priority && (
-              <Stack direction="row" spacing={1} alignItems="center">
+              <Stack direction="row" spacing={1} sx={{
+                alignItems: "center"
+              }}>
                 <StarIcon sx={{ color: '#ff9800', fontSize: 20 }} />
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Important
                 </Typography>
               </Stack>
@@ -230,7 +245,9 @@ export function CompleteReminderDrawer({
           />
 
           <Divider>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Create Next Reminder
             </Typography>
           </Divider>

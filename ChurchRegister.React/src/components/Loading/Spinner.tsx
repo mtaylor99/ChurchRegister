@@ -73,7 +73,12 @@ const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(
     );
 
     const renderDotsSpinner = () => (
-      <Box display="flex" alignItems="center" gap={0.5}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 0.5
+        }}>
         {[0, 1, 2].map((index) => (
           <Box
             key={index}
@@ -100,7 +105,12 @@ const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(
     );
 
     const renderBarsSpinner = () => (
-      <Box display="flex" alignItems="center" gap={0.5}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 0.5
+        }}>
         {[0, 1, 2, 3, 4].map((index) => (
           <Box
             key={index}
@@ -163,20 +173,25 @@ const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(
 
     const spinnerContent = (
       <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        gap={2}
         sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+
           ...(center && {
             minHeight: '200px',
             justifyContent: 'center',
-          }),
-        }}
-      >
+          })
+        }}>
         {renderSpinner()}
         {text && (
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mt: 1
+            }}>
             {text}
           </Typography>
         )}

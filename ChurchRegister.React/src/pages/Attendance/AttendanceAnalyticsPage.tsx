@@ -409,7 +409,12 @@ export const AttendanceAnalyticsPage = forwardRef<
   if (eventsLoading) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box display="flex" alignItems="center" mb={3}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 3
+          }}>
           <AnalyticsIcon sx={{ mr: 2, color: 'primary.main' }} />
           <Typography variant="h4" component="h1">
             Attendance Analytics
@@ -434,7 +439,12 @@ export const AttendanceAnalyticsPage = forwardRef<
   if (analyticsError) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box display="flex" alignItems="center" mb={3}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 3
+          }}>
           <AnalyticsIcon sx={{ mr: 2, color: 'primary.main' }} />
           <Typography variant="h4" component="h1">
             Attendance Analytics
@@ -508,25 +518,27 @@ export const AttendanceAnalyticsPage = forwardRef<
                 value={searchTerm}
                 size="small"
                 onChange={handleSearchChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon color="action" />
-                    </InputAdornment>
-                  ),
-                  endAdornment: searchTerm && (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="clear search"
-                        onClick={handleClearSearch}
-                        edge="end"
-                      >
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
                 sx={{ maxWidth: 400 }}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon color="action" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: searchTerm && (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="clear search"
+                          onClick={handleClearSearch}
+                          edge="end"
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }
+                }}
               />
             </Paper>
           </Box>
@@ -620,7 +632,12 @@ export const AttendanceAnalyticsPage = forwardRef<
               borderRadius: '4px 4px 0 0',
             }}
           >
-            <Typography variant="h5" color="primary.main" fontWeight="bold">
+            <Typography
+              variant="h5"
+              sx={{
+                color: "primary.main",
+                fontWeight: "bold"
+              }}>
               Email Analytics Report
             </Typography>
           </Box>

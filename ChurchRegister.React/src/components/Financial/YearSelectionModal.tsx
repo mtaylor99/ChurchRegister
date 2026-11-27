@@ -74,7 +74,12 @@ export const YearSelectionModal: React.FC<YearSelectionModalProps> = ({
       <DialogTitle>Export Member Contributions</DialogTitle>
       <DialogContent>
         <Box sx={{ pt: 2 }}>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mb: 3
+            }}>
             Select the year and contribution type for which you want to export
             member contributions.
           </Typography>

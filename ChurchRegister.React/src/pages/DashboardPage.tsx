@@ -260,25 +260,37 @@ export const DashboardPage: React.FC = () => {
     >
       {/* Header */}
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="flex-start"
-        mb={2}
-      >
-        <Box display="flex" alignItems="center" gap={2}>
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          mb: 2
+        }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2
+          }}>
           <DashboardIcon sx={{ fontSize: 32, color: 'primary.main' }} />
           <Box>
-            <Typography variant="h4" component="h1" fontWeight={700}>
+            <Typography variant="h4" component="h1" sx={{
+              fontWeight: 700
+            }}>
               Dashboard
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Overview of church management metrics and activity
             </Typography>
           </Box>
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Last updated: {formatLastUpdated(lastUpdated)}
           </Typography>
 
@@ -355,7 +367,9 @@ export const DashboardPage: React.FC = () => {
                         gap: 0.5,
                       }}
                     >
-                      <Typography variant="body2" fontWeight="medium">
+                      <Typography variant="body2" sx={{
+                        fontWeight: "medium"
+                      }}>
                         {trainingAlerts.length > 0
                           ? 'Action Required'
                           : 'All Clear'}
@@ -366,10 +380,12 @@ export const DashboardPage: React.FC = () => {
                   {/* Title */}
                   <Typography
                     variant="h6"
-                    color="text.secondary"
                     gutterBottom
-                    sx={{ fontSize: '0.875rem', fontWeight: 500 }}
-                  >
+                    sx={{
+                      color: "text.secondary",
+                      fontSize: '0.875rem',
+                      fontWeight: 500
+                    }}>
                     Training & Checks
                   </Typography>
 
@@ -381,13 +397,17 @@ export const DashboardPage: React.FC = () => {
                       </MetricValue>
                       <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ mt: 1, mb: 2 }}
-                      >
+                        sx={{
+                          color: "text.secondary",
+                          mt: 1,
+                          mb: 2
+                        }}>
                         {uniqueMemberCount === 1 ? 'person' : 'people'} with
                         expiring training
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         {trainingAlerts.length}{' '}
                         {trainingAlerts.length === 1 ? 'item' : 'items'}{' '}
                         requiring attention
@@ -398,12 +418,16 @@ export const DashboardPage: React.FC = () => {
                       <MetricValue color="success.main">✓</MetricValue>
                       <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ mt: 1, mb: 2 }}
-                      >
+                        sx={{
+                          color: "text.secondary",
+                          mt: 1,
+                          mb: 2
+                        }}>
                         All items up to date
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         No items expiring in 60 days
                       </Typography>
                     </>
@@ -464,7 +488,9 @@ export const DashboardPage: React.FC = () => {
                         {getTrendDirection(metric.change) === 'down' && (
                           <TrendingDown />
                         )}
-                        <Typography variant="body2" fontWeight="medium">
+                        <Typography variant="body2" sx={{
+                          fontWeight: "medium"
+                        }}>
                           {Math.abs(metric.change).toFixed(1)}%
                         </Typography>
                       </TrendIndicator>
@@ -473,10 +499,12 @@ export const DashboardPage: React.FC = () => {
                     {/* Title */}
                     <Typography
                       variant="h6"
-                      color="text.secondary"
                       gutterBottom
-                      sx={{ fontSize: '0.875rem', fontWeight: 500 }}
-                    >
+                      sx={{
+                        color: "text.secondary",
+                        fontSize: '0.875rem',
+                        fontWeight: 500
+                      }}>
                       {metric.title}
                     </Typography>
 
@@ -488,14 +516,18 @@ export const DashboardPage: React.FC = () => {
                     {/* Change Indicator */}
                     <Typography
                       variant="body2"
-                      color="text.secondary"
-                      sx={{ mt: 1, mb: 2 }}
-                    >
+                      sx={{
+                        color: "text.secondary",
+                        mt: 1,
+                        mb: 2
+                      }}>
                       {metric.changeLabel}
                     </Typography>
 
                     {/* Description */}
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" sx={{
+                      color: "text.secondary"
+                    }}>
                       {metric.description}
                     </Typography>
 
@@ -543,7 +575,9 @@ export const DashboardPage: React.FC = () => {
                   sx={{ fontSize: 48, color: 'primary.main', mb: 1 }}
                 />
                 <Typography variant="h6">Record Attendance</Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Log service attendance
                 </Typography>
 
@@ -567,7 +601,9 @@ export const DashboardPage: React.FC = () => {
                   sx={{ fontSize: 48, color: 'primary.main', mb: 1 }}
                 />
                 <Typography variant="h6">Add New Member</Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Register a new church member
                 </Typography>
               </CardContent>
@@ -583,11 +619,13 @@ export const DashboardPage: React.FC = () => {
         maxWidth="sm"
         fullWidth
         fullScreen={isMobile}
-        PaperProps={{
-          sx: {
-            m: { xs: 0, sm: 2 },
-            maxHeight: { xs: '100vh', sm: '90vh' },
-          },
+        slotProps={{
+          paper: {
+            sx: {
+              m: { xs: 0, sm: 2 },
+              maxHeight: { xs: '100vh', sm: '90vh' },
+            },
+          }
         }}
       >
         <DialogTitle>
@@ -604,7 +642,12 @@ export const DashboardPage: React.FC = () => {
             }}
           >
             <AttendanceIcon sx={{ color: 'primary.main' }} />
-            <Typography variant="h5" color="primary.main" fontWeight="bold">
+            <Typography
+              variant="h5"
+              sx={{
+                color: "primary.main",
+                fontWeight: "bold"
+              }}>
               Record Attendance
             </Typography>
           </Box>

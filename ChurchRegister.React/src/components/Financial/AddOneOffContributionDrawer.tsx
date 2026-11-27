@@ -23,6 +23,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { enGB } from 'date-fns/locale';
 import { contributionsApi, churchMembersApi } from '@services/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNotification } from '../../hooks/useNotification';
 import type { ChurchMemberDto } from '../../types/churchMembers';
 import { envelopeContributionService } from '../../services/attendanceService';
 
@@ -46,6 +47,7 @@ export const AddOneOffContributionDrawer: React.FC<
   AddOneOffContributionDrawerProps
 > = ({ open, onClose, onSuccess }) => {
   const queryClient = useQueryClient();
+  const { showSuccess } = useNotification();
 
   const [selectedMember, setSelectedMember] = useState<ChurchMemberDto | null>(
     null
@@ -95,6 +97,8 @@ export const AddOneOffContributionDrawer: React.FC<
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: ['contribution-members'] });
       queryClient.invalidateQueries({ queryKey: ['contributionHistory'] });
+
+      showSuccess('Contribution added successfully');
 
       // Reset form
       handleReset();
@@ -252,7 +256,12 @@ export const AddOneOffContributionDrawer: React.FC<
             borderRadius: '0',
           }}
         >
-          <Typography variant="h5" color="primary.main" fontWeight=" bold">
+          <Typography
+            variant="h5"
+            sx={{
+              color: "primary.main",
+              fontWeight: " bold"
+            }}>
             Add One Off Contribution
           </Typography>
           <IconButton
@@ -302,14 +311,6 @@ export const AddOneOffContributionDrawer: React.FC<
                   required
                   disabled={addContributionMutation.isPending}
                   placeholder="Enter the number from last year's envelope"
-                  InputProps={{
-                    endAdornment:
-                      lastYearLookup.status === 'loading' ? (
-                        <CircularProgress size={20} />
-                      ) : lastYearLookup.status === 'valid' ? (
-                        <CheckCircleIcon color="success" fontSize="small" />
-                      ) : null,
-                  }}
                   error={lastYearLookup.status === 'invalid'}
                   helperText={
                     lastYearLookup.status === 'valid'
@@ -318,6 +319,16 @@ export const AddOneOffContributionDrawer: React.FC<
                         ? lastYearLookup.error
                         : ' '
                   }
+                  slotProps={{
+                    input: {
+                      endAdornment:
+                        lastYearLookup.status === 'loading' ? (
+                          <CircularProgress size={20} />
+                        ) : lastYearLookup.status === 'valid' ? (
+                          <CheckCircleIcon color="success" fontSize="small" />
+                        ) : null,
+                    }
+                  }}
                 />
               ) : (
                 /* Member Autocomplete */
@@ -343,16 +354,20 @@ export const AddOneOffContributionDrawer: React.FC<
                       label="Member"
                       required
                       placeholder="Search by name or number..."
-                      InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                          <>
-                            {isMembersLoading ? (
-                              <CircularProgress size={20} />
-                            ) : null}
-                            {params.InputProps.endAdornment}
-                          </>
-                        ),
+                      slotProps={{
+                        ...params.slotProps,
+
+                        input: {
+                          ...params.slotProps.input,
+                          endAdornment: (
+                            <>
+                              {isMembersLoading ? (
+                                <CircularProgress size={20} />
+                              ) : null}
+                              {params.slotProps.input.endAdornment}
+                            </>
+                          ),
+                        }
                       }}
                     />
                   )}
@@ -366,13 +381,15 @@ export const AddOneOffContributionDrawer: React.FC<
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 required
-                inputProps={{ min: 0.01, step: 0.01 }}
                 disabled={addContributionMutation.isPending}
                 placeholder="0.00"
-                InputProps={{
-                  startAdornment: <Typography sx={{ mr: 1 }}>£</Typography>,
-                }}
-              />
+                slotProps={{
+                  input: {
+                    startAdornment: <Typography sx={{ mr: 1 }}>£</Typography>,
+                  },
+
+                  htmlInput: { min: 0.01, step: 0.01 }
+                }} />
 
               {/* Date */}
               <DatePicker
@@ -398,12 +415,16 @@ export const AddOneOffContributionDrawer: React.FC<
                 rows={3}
                 disabled={addContributionMutation.isPending}
                 placeholder="Enter description of this contribution..."
-                inputProps={{ maxLength: 500 }}
                 helperText={`${description.length}/500 characters`}
+                slotProps={{
+                  htmlInput: { maxLength: 500 }
+                }}
               />
 
               {/* Action Buttons */}
-              <Stack direction="row" spacing={2} justifyContent="flex-end">
+              <Stack direction="row" spacing={2} sx={{
+                justifyContent: "flex-end"
+              }}>
                 <Button
                   variant="outlined"
                   onClick={handleClose}

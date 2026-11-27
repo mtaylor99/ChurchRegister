@@ -84,11 +84,17 @@ export const AttendancePermissions: React.FC<AttendancePermissionsProps> = ({
       <CardContent>
         {/* Granted Permissions */}
         {grantedPermissions.length > 0 && (
-          <Box mb={2}>
-            <Typography variant="subtitle2" gutterBottom color="success.main">
+          <Box sx={{
+            mb: 2
+          }}>
+            <Typography variant="subtitle2" gutterBottom sx={{
+              color: "success.main"
+            }}>
               Granted Permissions
             </Typography>
-            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+            <Stack direction="row" spacing={1} useFlexGap sx={{
+              flexWrap: "wrap"
+            }}>
               {grantedPermissions.map((permission) => (
                 <Chip
                   key={permission.key}
@@ -107,10 +113,14 @@ export const AttendancePermissions: React.FC<AttendancePermissionsProps> = ({
         {/* Denied Permissions - only show in details mode */}
         {showDetails && deniedPermissions.length > 0 && (
           <Box>
-            <Typography variant="subtitle2" gutterBottom color="text.secondary">
+            <Typography variant="subtitle2" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               Restricted Permissions
             </Typography>
-            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+            <Stack direction="row" spacing={1} useFlexGap sx={{
+              flexWrap: "wrap"
+            }}>
               {deniedPermissions.map((permission) => (
                 <Chip
                   key={permission.key}
@@ -127,7 +137,9 @@ export const AttendancePermissions: React.FC<AttendancePermissionsProps> = ({
 
         {/* No permissions message */}
         {grantedPermissions.length === 0 && (
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             No attendance permissions granted.
           </Typography>
         )}

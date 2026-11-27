@@ -48,7 +48,12 @@ export const UserManagementTab: React.FC = () => {
   return (
     <Box>
       {/* Add User Button */}
-      <Box display="flex" justifyContent="flex-end" mb={2}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          mb: 2
+        }}>
         <Button
           variant="contained"
           startIcon={<AddIcon />}

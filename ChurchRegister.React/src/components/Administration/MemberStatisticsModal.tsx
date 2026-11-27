@@ -51,7 +51,12 @@ export const MemberStatisticsModal: React.FC<MemberStatisticsModalProps> = ({
       <DialogTitle>Member Statistics</DialogTitle>
       <DialogContent dividers>
         {isLoading && (
-          <Box display="flex" justifyContent="center" py={4}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              py: 4
+            }}>
             <CircularProgress />
           </Box>
         )}
@@ -70,16 +75,19 @@ export const MemberStatisticsModal: React.FC<MemberStatisticsModalProps> = ({
               Active Members Summary
             </Typography>
             <Box
-              display="grid"
-              gridTemplateColumns="repeat(3, 1fr)"
-              gap={2}
-              mb={3}
-            >
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 2,
+                mb: 3
+              }}>
               <Paper variant="outlined" sx={{ p: 2, textAlign: 'center' }}>
                 <Typography variant="h4" color="primary">
                   {stats.envelopeCount}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Envelope Recipients
                 </Typography>
               </Paper>
@@ -87,7 +95,9 @@ export const MemberStatisticsModal: React.FC<MemberStatisticsModalProps> = ({
                 <Typography variant="h4" color="primary">
                   {stats.residenceCount}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Residences (Unique Addresses)
                 </Typography>
               </Paper>
@@ -95,7 +105,9 @@ export const MemberStatisticsModal: React.FC<MemberStatisticsModalProps> = ({
                 <Typography variant="h4" color="primary">
                   {stats.noAddressCount}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                  color: "text.secondary"
+                }}>
                   Members Without Address
                 </Typography>
               </Paper>
@@ -108,7 +120,9 @@ export const MemberStatisticsModal: React.FC<MemberStatisticsModalProps> = ({
               District Breakdown
             </Typography>
             {stats.districtBreakdown.length === 0 ? (
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 No district data available.
               </Typography>
             ) : (

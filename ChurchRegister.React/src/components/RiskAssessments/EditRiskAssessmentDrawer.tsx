@@ -133,10 +133,11 @@ export function EditRiskAssessmentDrawer({
         {/* Header */}
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={3}
-        >
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3
+          }}>
           <Typography variant="h5">Edit Risk Assessment</Typography>
           <IconButton onClick={onClose} aria-label="Close">
             <CloseIcon />
@@ -148,10 +149,18 @@ export function EditRiskAssessmentDrawer({
 
           {/* Read-only Category */}
           <Box>
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+            <Typography variant="subtitle2" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               Category
             </Typography>
-            <Stack direction="row" spacing={1} alignItems="center" mb={1}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                alignItems: "center",
+                mb: 1
+              }}>
               <Chip
                 label={riskAssessment.categoryName}
                 size="small"
@@ -162,7 +171,9 @@ export function EditRiskAssessmentDrawer({
                 }}
               />
             </Stack>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               Category cannot be changed after creation
             </Typography>
           </Box>
@@ -171,7 +182,9 @@ export function EditRiskAssessmentDrawer({
 
           {/* Read-only Consolidated Items Reference */}
           <Box>
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+            <Typography variant="subtitle2" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               Items covered by this assessment:
             </Typography>
             <Typography
@@ -196,9 +209,11 @@ export function EditRiskAssessmentDrawer({
             onChange={(e) => setTitle(e.target.value)}
             required
             fullWidth
-            inputProps={{ maxLength: 200 }}
             helperText={`${title.length}/200 characters`}
             error={title.trim().length === 0 || title.length > 200}
+            slotProps={{
+              htmlInput: { maxLength: 200 }
+            }}
           />
 
           {/* Description (Assessment Notes) */}
@@ -209,9 +224,11 @@ export function EditRiskAssessmentDrawer({
             multiline
             rows={4}
             fullWidth
-            inputProps={{ maxLength: 1000 }}
             helperText={`${description.length}/1000 characters`}
             error={description.length > 1000}
+            slotProps={{
+              htmlInput: { maxLength: 1000 }
+            }}
           />
 
           {/* Review Interval */}
@@ -232,9 +249,10 @@ export function EditRiskAssessmentDrawer({
             {intervalChanged && (
               <Typography
                 variant="caption"
-                color="text.secondary"
-                sx={{ mt: 1 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  mt: 1
+                }}>
                 Next review date will recalculate upon next approval
               </Typography>
             )}
@@ -248,9 +266,11 @@ export function EditRiskAssessmentDrawer({
             multiline
             rows={2}
             fullWidth
-            inputProps={{ maxLength: 500 }}
             helperText={`${scope.length}/500 characters`}
             error={scope.length > 500}
+            slotProps={{
+              htmlInput: { maxLength: 500 }
+            }}
           />
 
           {/* Notes */}

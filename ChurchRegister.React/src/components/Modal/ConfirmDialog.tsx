@@ -115,34 +115,36 @@ const ConfirmDialog = forwardRef<HTMLDivElement, ConfirmDialogProps>(
         maxWidth={maxWidth}
         fullWidth
         fullScreen={fullScreen}
-        PaperProps={{
-          sx: {
-            borderRadius: fullScreen ? 0 : 2,
-            ...sx,
-          },
+        slotProps={{
+          paper: {
+            sx: {
+              borderRadius: fullScreen ? 0 : 2,
+              ...sx,
+            },
+          }
         }}
       >
         {title && (
           <DialogTitle sx={{ pb: 1 }}>
             <Box
-              display="flex"
-              alignItems="center"
-              gap={1}
               sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
                 bgcolor: 'grey.100',
                 p: 2,
                 m: -3,
                 mb: 0,
-                borderRadius: '4px 4px 0 0',
-              }}
-            >
+                borderRadius: '4px 4px 0 0'
+              }}>
               {getIcon()}
               <Typography
                 variant="h6"
                 component="span"
-                color="primary.main"
-                fontWeight="bold"
-              >
+                sx={{
+                  color: "primary.main",
+                  fontWeight: "bold"
+                }}>
                 {title}
               </Typography>
             </Box>
@@ -155,7 +157,9 @@ const ConfirmDialog = forwardRef<HTMLDivElement, ConfirmDialogProps>(
           ) : message ? (
             <DialogContentText component="div">
               {typeof message === 'string' ? (
-                <Typography variant="body1" color="text.primary">
+                <Typography variant="body1" sx={{
+                  color: "text.primary"
+                }}>
                   {message}
                 </Typography>
               ) : (

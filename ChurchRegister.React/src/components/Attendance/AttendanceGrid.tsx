@@ -240,7 +240,12 @@ export const AttendanceGrid: React.FC<AttendanceGridProps> = React.memo(
             }
           },
           renderCell: (params) => (
-            <Box display="flex" alignItems="center" gap={1}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1
+              }}>
               <DateIcon fontSize="small" color="action" />
               <Typography variant="body2">{params.formattedValue}</Typography>
             </Box>
@@ -256,13 +261,16 @@ export const AttendanceGrid: React.FC<AttendanceGridProps> = React.memo(
           headerAlign: 'center',
           renderCell: (params) => (
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              gap={1}
-            >
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1
+              }}>
               <AttendanceIcon fontSize="small" color="primary" />
-              <Typography variant="body2" fontWeight={500}>
+              <Typography variant="body2" sx={{
+                fontWeight: 500
+              }}>
                 {params.value}
               </Typography>
             </Box>
@@ -274,7 +282,9 @@ export const AttendanceGrid: React.FC<AttendanceGridProps> = React.memo(
           flex: 0.8,
           minWidth: 150,
           renderCell: (params) => (
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               {params.value}
             </Typography>
           ),
@@ -304,7 +314,9 @@ export const AttendanceGrid: React.FC<AttendanceGridProps> = React.memo(
           <Typography variant="h6" color="error" gutterBottom>
             Error Loading Attendance Records
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             {String(attendanceError)}
           </Typography>
         </Paper>

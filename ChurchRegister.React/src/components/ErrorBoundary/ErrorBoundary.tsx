@@ -1,6 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { logger } from '../../utils/logger';
 
 export interface ErrorBoundaryProps {
@@ -61,7 +61,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
             <Typography variant="h4" gutterBottom>
               Oops! Something went wrong
             </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+            <Typography
+              variant="body1"
+              sx={{
+                color: "text.secondary",
+                mb: 3
+              }}>
               We're sorry, but something unexpected happened. The error has been
               logged and we'll look into it.
             </Typography>

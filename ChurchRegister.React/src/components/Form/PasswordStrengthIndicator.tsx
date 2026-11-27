@@ -14,8 +14,8 @@ import {
 } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import {
-  CheckCircleOutline,
-  ErrorOutline,
+  CheckCircleOutlineOutlined as CheckCircleOutline,
+  ErrorOutlineOutlined as ErrorOutline,
   WarningAmberOutlined,
   InfoOutlined,
   ExpandMoreRounded,

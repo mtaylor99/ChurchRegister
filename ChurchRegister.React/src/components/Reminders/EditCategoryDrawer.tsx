@@ -103,16 +103,20 @@ export const EditCategoryDrawer: React.FC<EditCategoryDrawerProps> = ({
               required
               fullWidth
               disabled={category.isSystemCategory}
-              inputProps={{ maxLength: 100 }}
               helperText={
                 category.isSystemCategory
                   ? 'System category names cannot be changed'
                   : `${name.length}/100 characters`
               }
+              slotProps={{
+                htmlInput: { maxLength: 100 }
+              }}
             />
 
             <Box>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
+              <Typography variant="body2" gutterBottom sx={{
+                color: "text.secondary"
+              }}>
                 Color
               </Typography>
               <TextField

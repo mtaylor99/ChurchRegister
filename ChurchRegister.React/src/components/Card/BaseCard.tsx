@@ -163,7 +163,9 @@ export const BaseCard: React.FC<BaseCardProps> = ({
     >
       {loading && (
         <LoadingOverlay>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Loading...
           </Typography>
         </LoadingOverlay>
@@ -192,7 +194,9 @@ export const BaseCard: React.FC<BaseCardProps> = ({
           }
           subheader={
             subtitle && (
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 {subtitle}
               </Typography>
             )

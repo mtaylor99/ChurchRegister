@@ -109,13 +109,6 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({
         placeholder="Search for pages..."
         value={searchTerm}
         onChange={handleSearchChange}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon color="action" />
-            </InputAdornment>
-          ),
-        }}
         sx={{
           maxWidth: 400,
           mx: 'auto',
@@ -123,6 +116,15 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({
           '& .MuiOutlinedInput-root': {
             borderRadius: 2,
           },
+        }}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color="action" />
+              </InputAdornment>
+            ),
+          }
         }}
       />
 
@@ -158,8 +160,10 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({
                 <ListItemText
                   primary={suggestion.label}
                   secondary={suggestion.description}
-                  primaryTypographyProps={{
-                    fontWeight: 'medium',
+                  slotProps={{
+                    primary: {
+                      sx: { fontWeight: 'medium' },
+                    }
                   }}
                 />
               </ListItem>
@@ -173,9 +177,11 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({
         searchTerm.length > 0 && (
           <Typography
             variant="body2"
-            color="text.secondary"
-            sx={{ mt: 2, fontStyle: 'italic' }}
-          >
+            sx={{
+              color: "text.secondary",
+              mt: 2,
+              fontStyle: 'italic'
+            }}>
             No matching pages found. Try different keywords.
           </Typography>
         )}

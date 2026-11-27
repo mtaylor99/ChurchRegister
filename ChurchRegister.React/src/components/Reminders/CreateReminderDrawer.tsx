@@ -136,8 +136,10 @@ export function CreateReminderDrawer({
             rows={3}
             required
             fullWidth
-            inputProps={{ maxLength: 500 }}
             helperText={`${description.length}/500 characters`}
+            slotProps={{
+              htmlInput: { maxLength: 500 }
+            }}
           />
 
           <TextField
@@ -147,8 +149,10 @@ export function CreateReminderDrawer({
             multiline
             rows={4}
             fullWidth
-            inputProps={{ maxLength: 2000 }}
             helperText={`${notes.length}/2000 characters`}
+            slotProps={{
+              htmlInput: { maxLength: 2000 }
+            }}
           />
 
           <LocalizationProvider
@@ -204,7 +208,9 @@ export function CreateReminderDrawer({
               <MenuItem value="">None</MenuItem>
               {categories?.map((cat) => (
                 <MenuItem key={cat.id} value={cat.id}>
-                  <Stack direction="row" spacing={1} alignItems="center">
+                  <Stack direction="row" spacing={1} sx={{
+                    alignItems: "center"
+                  }}>
                     <Box
                       sx={{
                         width: 16,

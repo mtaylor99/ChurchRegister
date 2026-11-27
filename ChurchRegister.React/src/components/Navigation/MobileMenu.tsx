@@ -120,7 +120,9 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
               {user.name.charAt(0).toUpperCase()}
             </Avatar>
             <Box>
-              <Typography variant="subtitle1" fontWeight="bold">
+              <Typography variant="subtitle1" sx={{
+                fontWeight: "bold"
+              }}>
                 {user.name}
               </Typography>
               <Typography variant="caption" sx={{ opacity: 0.8 }}>

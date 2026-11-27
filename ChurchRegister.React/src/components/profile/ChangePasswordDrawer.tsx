@@ -218,14 +218,13 @@ export const ChangePasswordDrawer: React.FC<ChangePasswordDrawerProps> = ({
         {/* Header */}
         <Stack
           direction="row"
-          alignItems="center"
-          justifyContent="space-between"
           sx={{
+            alignItems: "center",
+            justifyContent: "space-between",
             p: 2,
             borderBottom: 1,
-            borderColor: 'divider',
-          }}
-        >
+            borderColor: 'divider'
+          }}>
           <Typography variant="h6">Change Password</Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -259,21 +258,23 @@ export const ChangePasswordDrawer: React.FC<ChangePasswordDrawerProps> = ({
                   helperText={errors.currentPassword?.message}
                   fullWidth
                   autoComplete="current-password"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => togglePasswordVisibility('current')}
-                          edge="end"
-                        >
-                          {showPasswords.current ? (
-                            <VisibilityOffRounded />
-                          ) : (
-                            <VisibilityRounded />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => togglePasswordVisibility('current')}
+                            edge="end"
+                          >
+                            {showPasswords.current ? (
+                              <VisibilityOffRounded />
+                            ) : (
+                              <VisibilityRounded />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }
                   }}
                 />
               )}
@@ -296,21 +297,23 @@ export const ChangePasswordDrawer: React.FC<ChangePasswordDrawerProps> = ({
                   helperText={errors.newPassword?.message}
                   fullWidth
                   autoComplete="new-password"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => togglePasswordVisibility('new')}
-                          edge="end"
-                        >
-                          {showPasswords.new ? (
-                            <VisibilityOffRounded />
-                          ) : (
-                            <VisibilityRounded />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => togglePasswordVisibility('new')}
+                            edge="end"
+                          >
+                            {showPasswords.new ? (
+                              <VisibilityOffRounded />
+                            ) : (
+                              <VisibilityRounded />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }
                   }}
                 />
               )}
@@ -334,21 +337,23 @@ export const ChangePasswordDrawer: React.FC<ChangePasswordDrawerProps> = ({
                   helperText={errors.confirmPassword?.message}
                   fullWidth
                   autoComplete="new-password"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => togglePasswordVisibility('confirm')}
-                          edge="end"
-                        >
-                          {showPasswords.confirm ? (
-                            <VisibilityOffRounded />
-                          ) : (
-                            <VisibilityRounded />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => togglePasswordVisibility('confirm')}
+                            edge="end"
+                          >
+                            {showPasswords.confirm ? (
+                              <VisibilityOffRounded />
+                            ) : (
+                              <VisibilityRounded />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }
                   }}
                 />
               )}

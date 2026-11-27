@@ -33,7 +33,9 @@ export const ProtectedTrainingRoute: React.FC<ProtectedTrainingRouteProps> = ({
           <Typography variant="h6" gutterBottom>
             Verifying Access...
           </Typography>
-          <Typography color="text.secondary">
+          <Typography sx={{
+            color: "text.secondary"
+          }}>
             Please wait while we verify your permissions.
           </Typography>
         </Paper>
@@ -66,11 +68,18 @@ export const ProtectedTrainingRoute: React.FC<ProtectedTrainingRouteProps> = ({
             />
           </Box>
 
-          <Typography variant="h4" gutterBottom fontWeight={700}>
+          <Typography variant="h4" gutterBottom sx={{
+            fontWeight: 700
+          }}>
             Access Denied
           </Typography>
 
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "text.secondary",
+              mb: 4
+            }}>
             You do not have permission to access {featureName}.
           </Typography>
 
@@ -100,7 +109,9 @@ export const ProtectedTrainingRoute: React.FC<ProtectedTrainingRouteProps> = ({
               borderRadius: 1,
             }}
           >
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               Required Permission: <strong>{requiredPermission}</strong>
             </Typography>
           </Box>

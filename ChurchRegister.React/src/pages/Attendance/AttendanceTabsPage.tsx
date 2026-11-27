@@ -102,7 +102,9 @@ export const AttendanceTabsPage: React.FC = () => {
   if (tabDefs.length === 0) {
     return (
       <Box sx={{ py: 3, px: 2 }}>
-        <Typography variant="h6" color="text.secondary">
+        <Typography variant="h6" sx={{
+          color: "text.secondary"
+        }}>
           You don't have permission to access any attendance features.
         </Typography>
       </Box>
@@ -120,25 +122,40 @@ export const AttendanceTabsPage: React.FC = () => {
     >
       {/* Page Header */}
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Box display="flex" alignItems="center" gap={2}>
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2
+        }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2
+          }}>
           <AttendanceIcon sx={{ fontSize: 32, color: 'primary.main' }} />
           <Box>
-            <Typography variant="h4" component="h1" fontWeight={700}>
+            <Typography variant="h4" component="h1" sx={{
+              fontWeight: 700
+            }}>
               Attendance Management
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Manage church attendance records, analytics, and events
             </Typography>
           </Box>
         </Box>
 
         {/* Tab-contextual header buttons */}
-        <Box display="flex" gap={2} alignItems="center">
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            alignItems: "center"
+          }}>
           {value === analyticsIndex && analyticsShareVisible && (
             <Button
               ref={shareButtonRef}

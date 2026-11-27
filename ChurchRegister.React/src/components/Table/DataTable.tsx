@@ -192,7 +192,9 @@ function DataTable<T = Record<string, unknown>>({
   if (error) {
     return (
       <Paper sx={sx}>
-        <Box p={2}>
+        <Box sx={{
+          p: 2
+        }}>
           <Alert severity="error">{error}</Alert>
         </Box>
       </Paper>
@@ -203,13 +205,19 @@ function DataTable<T = Record<string, unknown>>({
     <Paper sx={{ width: '100%', overflow: 'hidden', ...sx }}>
       {/* Header */}
       {(title || searchable) && (
-        <Box p={2} borderBottom={1} borderColor="divider">
+        <Box
+          sx={{
+            p: 2,
+            borderBottom: 1,
+            borderColor: "divider"
+          }}>
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            gap={2}
-          >
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 2
+            }}>
             {title && (
               <Typography variant="h6" component="h2">
                 {title}
@@ -222,27 +230,31 @@ function DataTable<T = Record<string, unknown>>({
                 placeholder={searchPlaceholder}
                 value={searchTerm}
                 onChange={handleSearchChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                  endAdornment: searchTerm && (
-                    <InputAdornment position="end">
-                      <IconButton size="small" onClick={clearSearch}>
-                        <ClearIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
                 sx={{ minWidth: 200, maxWidth: 300 }}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                    endAdornment: searchTerm && (
+                      <InputAdornment position="end">
+                        <IconButton size="small" onClick={clearSearch}>
+                          <ClearIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }
+                }}
               />
             )}
           </Box>
 
           {searchTerm && (
-            <Box mt={1}>
+            <Box sx={{
+              mt: 1
+            }}>
               <Chip
                 label={`Searching: "${searchTerm}" (${filteredData.length} results)`}
                 size="small"
@@ -311,8 +323,12 @@ function DataTable<T = Record<string, unknown>>({
               // Empty state
               <TableRow>
                 <TableCell colSpan={columns.length} align="center">
-                  <Box py={4}>
-                    <Typography variant="body1" color="text.secondary">
+                  <Box sx={{
+                    py: 4
+                  }}>
+                    <Typography variant="body1" sx={{
+                      color: "text.secondary"
+                    }}>
                       {emptyMessage}
                     </Typography>
                   </Box>

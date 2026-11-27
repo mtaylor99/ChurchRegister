@@ -170,7 +170,9 @@ export const UnauthorizedPage: React.FC<UnauthorizedPageProps> = ({
                 <Typography variant="body2" sx={{ mb: 1 }}>
                   <strong>Your Roles:</strong>
                 </Typography>
-                <Stack direction="row" spacing={1} flexWrap="wrap">
+                <Stack direction="row" spacing={1} sx={{
+                  flexWrap: "wrap"
+                }}>
                   {user.roles.map((role) => (
                     <Chip
                       key={role}
@@ -220,9 +222,11 @@ export const UnauthorizedPage: React.FC<UnauthorizedPageProps> = ({
                       </ListItemIcon>
                       <ListItemText
                         primary={role}
-                        primaryTypographyProps={{
-                          variant: 'body2',
-                          color: hasRole ? 'success.main' : 'text.primary',
+                        slotProps={{
+                          primary: {
+                            variant: 'body2',
+                            color: hasRole ? 'success.main' : 'text.primary',
+                          }
                         }}
                       />
                     </ListItem>
@@ -251,11 +255,13 @@ export const UnauthorizedPage: React.FC<UnauthorizedPageProps> = ({
                       </ListItemIcon>
                       <ListItemText
                         primary={permission}
-                        primaryTypographyProps={{
-                          variant: 'body2',
-                          color: hasPermission
-                            ? 'success.main'
-                            : 'text.primary',
+                        slotProps={{
+                          primary: {
+                            variant: 'body2',
+                            color: hasPermission
+                              ? 'success.main'
+                              : 'text.primary',
+                          }
                         }}
                       />
                     </ListItem>

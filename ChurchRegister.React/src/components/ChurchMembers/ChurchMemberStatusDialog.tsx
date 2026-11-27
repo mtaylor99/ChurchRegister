@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNotification } from '../../hooks/useNotification';
 import { LoadingButton } from '../Administration/LoadingButton';
 import { churchMembersApi } from '@services/api';
 import { getErrorMessage } from '../../utils/errorUtils';
@@ -40,6 +41,7 @@ export const ChurchMemberStatusDialog: React.FC<
   ChurchMemberStatusDialogProps
 > = ({ open, onClose, member, onSuccess }) => {
   const queryClient = useQueryClient();
+  const { showSuccess } = useNotification();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -73,6 +75,7 @@ export const ChurchMemberStatusDialog: React.FC<
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['churchMembers'] });
       reset();
+      showSuccess('Church member status updated successfully');
       onSuccess?.();
       onClose();
     },
@@ -110,7 +113,9 @@ export const ChurchMemberStatusDialog: React.FC<
         <DialogTitle>Change Member Status</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ pt: 1 }}>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Change the status for{' '}
               <strong>{member?.fullName || 'this member'}</strong>
             </Typography>

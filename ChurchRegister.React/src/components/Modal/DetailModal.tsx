@@ -81,12 +81,14 @@ const DetailModal = forwardRef<HTMLDivElement, DetailModalProps>(
         fullWidth={fullWidth}
         fullScreen={fullScreen}
         scroll="paper"
-        PaperProps={{
-          sx: {
-            borderRadius: fullScreen ? 0 : 2,
-            maxHeight: fullScreen ? '100vh' : 'calc(100vh - 64px)',
-            ...sx,
-          },
+        slotProps={{
+          paper: {
+            sx: {
+              borderRadius: fullScreen ? 0 : 2,
+              maxHeight: fullScreen ? '100vh' : 'calc(100vh - 64px)',
+              ...sx,
+            },
+          }
         }}
       >
         {(title || subtitle) && (
@@ -112,13 +114,16 @@ const DetailModal = forwardRef<HTMLDivElement, DetailModalProps>(
                   variant="h5"
                   component="h2"
                   gutterBottom={!!subtitle}
-                  color="primary.main"
-                  fontWeight="bold"
-                >
+                  sx={{
+                    color: "primary.main",
+                    fontWeight: "bold"
+                  }}>
                   {title}
                 </Typography>
                 {subtitle && (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     {subtitle}
                   </Typography>
                 )}

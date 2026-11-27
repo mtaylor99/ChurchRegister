@@ -51,10 +51,11 @@ export function ViewRiskAssessmentDrawer({
           {/* Header */}
           <Stack
             direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={3}
-          >
+            sx={{
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 3
+            }}>
             <Typography variant="h5">Risk Assessment Details</Typography>
             <IconButton onClick={onClose} aria-label="Close">
               <CloseIcon />
@@ -66,12 +67,16 @@ export function ViewRiskAssessmentDrawer({
             <Box>
               <Typography
                 variant="subtitle2"
-                color="text.secondary"
                 gutterBottom
+                sx={{
+                  color: "text.secondary"
+                }}
               >
                 Category
               </Typography>
-              <Typography variant="body1" fontWeight={500}>
+              <Typography variant="body1" sx={{
+                fontWeight: 500
+              }}>
                 {riskAssessment.categoryName}
               </Typography>
             </Box>
@@ -82,8 +87,10 @@ export function ViewRiskAssessmentDrawer({
             <Box>
               <Typography
                 variant="subtitle2"
-                color="text.secondary"
                 gutterBottom
+                sx={{
+                  color: "text.secondary"
+                }}
               >
                 Items covered by this assessment:
               </Typography>
@@ -104,16 +111,19 @@ export function ViewRiskAssessmentDrawer({
               <Box>
                 <Typography
                   variant="subtitle2"
-                  color="text.secondary"
                   gutterBottom
+                  sx={{
+                    color: "text.secondary"
+                  }}
                 >
                   Assessment Notes
                 </Typography>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ whiteSpace: 'pre-wrap' }}
-                >
+                  sx={{
+                    color: "text.secondary",
+                    whiteSpace: 'pre-wrap'
+                  }}>
                   {riskAssessment.description}
                 </Typography>
               </Box>
@@ -125,14 +135,18 @@ export function ViewRiskAssessmentDrawer({
             <Box>
               <Typography
                 variant="subtitle2"
-                color="text.secondary"
                 gutterBottom
+                sx={{
+                  color: "text.secondary"
+                }}
               >
                 Review Information
               </Typography>
               <Stack spacing={1}>
                 <Box>
-                  <Typography variant="body2" fontWeight={500}>
+                  <Typography variant="body2" sx={{
+                    fontWeight: 500
+                  }}>
                     Review Interval:
                   </Typography>
                   <Typography variant="body2">
@@ -141,7 +155,9 @@ export function ViewRiskAssessmentDrawer({
                   </Typography>
                 </Box>
                 <Box>
-                  <Typography variant="body2" fontWeight={500}>
+                  <Typography variant="body2" sx={{
+                    fontWeight: 500
+                  }}>
                     Last Review Date:
                   </Typography>
                   <Typography variant="body2">
@@ -154,10 +170,14 @@ export function ViewRiskAssessmentDrawer({
                   </Typography>
                 </Box>
                 <Box>
-                  <Typography variant="body2" fontWeight={500}>
+                  <Typography variant="body2" sx={{
+                    fontWeight: 500
+                  }}>
                     Next Review Date:
                   </Typography>
-                  <Stack direction="row" alignItems="center">
+                  <Stack direction="row" sx={{
+                    alignItems: "center"
+                  }}>
                     {getAlertIcon()}
                     <Typography variant="body2">
                       {format(
@@ -176,8 +196,10 @@ export function ViewRiskAssessmentDrawer({
             <Box>
               <Typography
                 variant="subtitle2"
-                color="text.secondary"
                 gutterBottom
+                sx={{
+                  color: "text.secondary"
+                }}
               >
                 Status
               </Typography>
@@ -199,8 +221,10 @@ export function ViewRiskAssessmentDrawer({
               <Box>
                 <Typography
                   variant="subtitle2"
-                  color="text.secondary"
                   gutterBottom
+                  sx={{
+                    color: "text.secondary"
+                  }}
                 >
                   Scope
                 </Typography>
@@ -215,8 +239,10 @@ export function ViewRiskAssessmentDrawer({
               <Box>
                 <Typography
                   variant="subtitle2"
-                  color="text.secondary"
                   gutterBottom
+                  sx={{
+                    color: "text.secondary"
+                  }}
                 >
                   Notes
                 </Typography>
@@ -232,8 +258,10 @@ export function ViewRiskAssessmentDrawer({
             <Box>
               <Typography
                 variant="subtitle2"
-                color="text.secondary"
                 gutterBottom
+                sx={{
+                  color: "text.secondary"
+                }}
               >
                 Approvals ({riskAssessment.approvalCount} of{' '}
                 {riskAssessment.minimumApprovalsRequired})

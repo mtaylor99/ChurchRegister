@@ -74,7 +74,9 @@ export const FinancialActionsHeader: React.FC<FinancialActionsHeaderProps> = ({
 
   return (
     <Box>
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack direction="row" spacing={2} sx={{
+        alignItems: "center"
+      }}>
         {/* Upload HSBC Statement — primary action */}
         {showUploadAndEntry && (
           <Button

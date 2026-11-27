@@ -116,7 +116,9 @@ export const BankStatementImportWidget: React.FC<
               Import Bank Statement
             </Typography>
           </Box>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             Upload HSBC bank statement CSV files to import credit transactions
             with automatic duplicate detection.
           </Typography>
@@ -265,7 +267,12 @@ export const EnvelopeBatchHistory: React.FC<EnvelopeBatchHistoryProps> = () => {
         )}
       </Stack>
 
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+      <Typography
+        variant="body2"
+        sx={{
+          color: "text.secondary",
+          mb: 1
+        }}>
         Total Batches: {totalCount}
       </Typography>
 
@@ -374,7 +381,12 @@ export const EnvelopeBatchDetailsModal: React.FC<
             borderRadius: '4px 4px 0 0',
           }}
         >
-          <Typography variant="h5" color="primary.main" fontWeight="bold">
+          <Typography
+            variant="h5"
+            sx={{
+              color: "primary.main",
+              fontWeight: "bold"
+            }}>
             Envelope Batch Details
             {batchDetails &&
               ` - ${new Date(batchDetails.batchDate).toLocaleDateString('en-GB')}`}
@@ -404,7 +416,12 @@ export const EnvelopeBatchDetailsModal: React.FC<
                   color="primary"
                 />
               </Box>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  mt: 1
+                }}>
                 Submitted by {batchDetails.submittedBy} on{' '}
                 {new Date(batchDetails.submittedDateTime).toLocaleString(
                   'en-GB'
@@ -569,13 +586,20 @@ export const EnvelopeContributionWidget: React.FC<
   return (
     <Card sx={{ height: '100%' }}>
       <CardContent>
-        <Box display="flex" alignItems="center" mb={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 2
+          }}>
           <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
             <ReceiptIcon />
           </Avatar>
           <Box>
             <Typography variant="h6">Envelope Contributions</Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{
+              color: "text.secondary"
+            }}>
               Weekly cash contributions
             </Typography>
           </Box>
@@ -587,13 +611,19 @@ export const EnvelopeContributionWidget: React.FC<
           <>
             {/* Stats */}
             <Box sx={{ mb: 2 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Last Batch: {stats.lastBatchDate || 'No batches'}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 This Year: {stats.totalEnvelopesThisYear} envelopes
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{
+                color: "text.secondary"
+              }}>
                 Total Amount: £{stats.totalAmountThisYear.toFixed(2)}
               </Typography>
             </Box>

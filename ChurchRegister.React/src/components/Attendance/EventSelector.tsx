@@ -156,9 +156,7 @@ export const EventSelector: React.FC<EventSelectorProps> = ({
         onChange={(e) => handleChange(e.target.value)}
         label={label}
         MenuProps={{
-          PaperProps: {
-            sx: { maxHeight: 400 },
-          },
+          slotProps: { paper: { sx: { maxHeight: 400 } } },
         }}
       >
         {/* Search input */}
@@ -174,12 +172,14 @@ export const EventSelector: React.FC<EventSelectorProps> = ({
                 e.stopPropagation();
               }
             }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              }
             }}
           />
         </ListSubheader>
@@ -210,7 +210,9 @@ export const EventSelector: React.FC<EventSelectorProps> = ({
           ))
         ) : filteredEvents.length === 0 ? (
           <MenuItem disabled>
-            <Typography color="text.secondary">
+            <Typography sx={{
+              color: "text.secondary"
+            }}>
               {searchTerm
                 ? 'No events match your search'
                 : 'No events available'}
@@ -243,7 +245,9 @@ export const EventSelector: React.FC<EventSelectorProps> = ({
                       <Box sx={{ flexGrow: 1 }}>
                         <Typography variant="body2">{event.name}</Typography>
                         {showDescriptions && event.description && (
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                          }}>
                             {event.description}
                           </Typography>
                         )}
@@ -281,7 +285,9 @@ export const EventSelector: React.FC<EventSelectorProps> = ({
                       <Box sx={{ flexGrow: 1 }}>
                         <Typography variant="body2">{event.name}</Typography>
                         {showDescriptions && event.description && (
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                          }}>
                             {event.description}
                           </Typography>
                         )}

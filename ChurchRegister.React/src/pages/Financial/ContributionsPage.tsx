@@ -324,13 +324,22 @@ export const ContributionsPage: React.FC = () => {
         }}
       >
         {/* Header Left: Title and Subtitle */}
-        <Box display="flex" alignItems="center" gap={2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2
+          }}>
           <AccountBalanceIcon sx={{ fontSize: 32, color: 'primary.main' }} />
           <Box>
-            <Typography variant="h4" component="h1" fontWeight={700}>
+            <Typography variant="h4" component="h1" sx={{
+              fontWeight: 700
+            }}>
               Church Member Contributions
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               View contribution records, manage financial data, and process
               transactions
             </Typography>
@@ -440,7 +449,12 @@ export const ContributionsPage: React.FC = () => {
               borderRadius: 1,
             }}
           >
-            <Typography variant="h5" color="primary.main" fontWeight="bold">
+            <Typography
+              variant="h5"
+              sx={{
+                color: "primary.main",
+                fontWeight: "bold"
+              }}>
               Envelopes Upload History
             </Typography>
             <IconButton
@@ -487,7 +501,12 @@ export const ContributionsPage: React.FC = () => {
               borderRadius: '4px 4px 0 0',
             }}
           >
-            <Typography variant="h5" color="primary.main" fontWeight="bold">
+            <Typography
+              variant="h5"
+              sx={{
+                color: "primary.main",
+                fontWeight: "bold"
+              }}>
               Upload Envelopes
             </Typography>
             <IconButton

@@ -147,13 +147,16 @@ const FormDialog = forwardRef<HTMLDivElement, FormDialogProps>(
                   variant="h5"
                   component="h2"
                   gutterBottom={!!subtitle}
-                  color="primary.main"
-                  fontWeight="bold"
-                >
+                  sx={{
+                    color: "primary.main",
+                    fontWeight: "bold"
+                  }}>
                   {title}
                 </Typography>
                 {subtitle && (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                  }}>
                     {subtitle}
                   </Typography>
                 )}
@@ -221,13 +224,15 @@ const FormDialog = forwardRef<HTMLDivElement, FormDialogProps>(
         maxWidth={maxWidth}
         fullWidth={fullWidth}
         fullScreen={fullScreen}
-        PaperProps={{
-          component: onSubmit ? 'form' : 'div',
-          onSubmit: onSubmit ? handleSubmit : undefined,
-          sx: {
-            borderRadius: fullScreen ? 0 : 2,
-            ...sx,
-          },
+        slotProps={{
+          paper: {
+            component: onSubmit ? 'form' : 'div',
+            onSubmit: onSubmit ? handleSubmit : undefined,
+            sx: {
+              borderRadius: fullScreen ? 0 : 2,
+              ...sx,
+            },
+          }
         }}
       >
         {content}

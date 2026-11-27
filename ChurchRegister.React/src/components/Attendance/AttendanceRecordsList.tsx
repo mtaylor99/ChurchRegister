@@ -210,12 +210,14 @@ export const AttendanceRecordsList: React.FC<AttendanceRecordsListProps> = ({
                 placeholder="Search records..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }
                 }}
               />
             </Box>
@@ -288,7 +290,11 @@ export const AttendanceRecordsList: React.FC<AttendanceRecordsListProps> = ({
                     colSpan={canRecordAttendance ? 5 : 4}
                     align="center"
                   >
-                    <Typography color="text.secondary" sx={{ py: 2 }}>
+                    <Typography
+                      sx={{
+                        color: "text.secondary",
+                        py: 2
+                      }}>
                       {searchTerm
                         ? 'No records match your search.'
                         : 'No attendance records found.'}
@@ -300,7 +306,9 @@ export const AttendanceRecordsList: React.FC<AttendanceRecordsListProps> = ({
                   <TableRow key={record.id} hover>
                     <TableCell>
                       <Box>
-                        <Typography variant="body2" fontWeight="medium">
+                        <Typography variant="body2" sx={{
+                          fontWeight: "medium"
+                        }}>
                           {record.eventName}
                         </Typography>
                       </Box>
@@ -309,7 +317,9 @@ export const AttendanceRecordsList: React.FC<AttendanceRecordsListProps> = ({
                       <Typography variant="body2">
                         {format(new Date(record.date), 'PP')}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         {format(new Date(record.date), 'EEEE')}
                       </Typography>
                     </TableCell>
@@ -326,7 +336,9 @@ export const AttendanceRecordsList: React.FC<AttendanceRecordsListProps> = ({
                           ? format(new Date(record.modifiedDateTime), 'PP p')
                           : format(new Date(record.createdDateTime), 'PP p')}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                      }}>
                         by {record.modifiedBy || record.createdBy}
                       </Typography>
                     </TableCell>

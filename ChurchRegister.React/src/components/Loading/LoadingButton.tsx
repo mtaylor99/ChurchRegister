@@ -63,14 +63,24 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
       switch (loadingPosition) {
         case 'start':
           return (
-            <Box display="flex" alignItems="center" gap={1}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1
+              }}>
               {spinner}
               {displayText}
             </Box>
           );
         case 'end':
           return (
-            <Box display="flex" alignItems="center" gap={1}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1
+              }}>
               {displayText}
               {spinner}
             </Box>
@@ -79,11 +89,12 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
         default:
           return (
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              gap={1}
-            >
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1
+              }}>
               {spinner}
               {displayText}
             </Box>

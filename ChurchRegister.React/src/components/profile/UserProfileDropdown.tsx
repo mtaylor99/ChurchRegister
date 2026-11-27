@@ -157,7 +157,6 @@ export const UserProfileDropdown: React.FC = () => {
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
-          TransitionComponent={Fade}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -166,38 +165,43 @@ export const UserProfileDropdown: React.FC = () => {
             vertical: 'top',
             horizontal: 'right',
           }}
-          PaperProps={{
-            elevation: 8,
-            sx: {
-              minWidth: 220,
-              mt: 1,
-              borderRadius: 2,
-              overflow: 'visible',
-              backdropFilter: 'blur(10px)',
-              backgroundColor: 'background.paper',
-              border: '1px solid',
-              borderColor: 'divider',
-              '&::before': {
-                content: '""',
-                display: 'block',
-                position: 'absolute',
-                top: -6,
-                right: 16,
-                width: 12,
-                height: 12,
-                bgcolor: 'background.paper',
+          slotProps={{
+            paper: {
+              elevation: 8,
+              sx: {
+                minWidth: 220,
+                mt: 1,
+                borderRadius: 2,
+                overflow: 'visible',
+                backdropFilter: 'blur(10px)',
+                backgroundColor: 'background.paper',
                 border: '1px solid',
                 borderColor: 'divider',
-                borderBottom: 'none',
-                borderRight: 'none',
-                transform: 'rotate(45deg)',
-                zIndex: 0,
+                '&::before': {
+                  content: '""',
+                  display: 'block',
+                  position: 'absolute',
+                  top: -6,
+                  right: 16,
+                  width: 12,
+                  height: 12,
+                  bgcolor: 'background.paper',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  borderBottom: 'none',
+                  borderRight: 'none',
+                  transform: 'rotate(45deg)',
+                  zIndex: 0,
+                },
               },
             },
+            list: {
+              'aria-labelledby': 'user-profile-button',
+              sx: { py: 1 },
+            }
           }}
-          MenuListProps={{
-            'aria-labelledby': 'user-profile-button',
-            sx: { py: 1 },
+          slots={{
+            transition: Fade
           }}
         >
           {/* User info header */}

@@ -200,25 +200,39 @@ export const TrainingCertificatesPage: React.FC = () => {
     >
       {/* Page Header */}
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Box display="flex" alignItems="center" gap={2}>
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2
+        }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2
+          }}>
           <SchoolIcon sx={{ fontSize: 32, color: 'primary.main' }} />
           <Box>
-            <Typography variant="h4" component="h1" fontWeight={700}>
+            <Typography variant="h4" component="h1" sx={{
+              fontWeight: 700
+            }}>
               Training & Certifications
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Manage training certificates and checks for church members
             </Typography>
           </Box>
         </Box>
 
         {/* Actions - Show different buttons based on active tab */}
-        <Box display="flex" gap={2}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2
+          }}>
           {tabValue === 0 && (
             <>
               <Button

@@ -197,14 +197,13 @@ export const ErrorPageLayout: React.FC<ErrorPageLayoutProps> = ({
           {/* Description */}
           <Typography
             variant="body1"
-            color="text.secondary"
             sx={{
+              color: "text.secondary",
               mb: 4,
               maxWidth: '600px',
               mx: 'auto',
-              lineHeight: 1.6,
-            }}
-          >
+              lineHeight: 1.6
+            }}>
             {description}
           </Typography>
 
@@ -215,10 +214,11 @@ export const ErrorPageLayout: React.FC<ErrorPageLayoutProps> = ({
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
             spacing={2}
-            justifyContent="center"
-            alignItems="center"
-            sx={{ mt: 4 }}
-          >
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              mt: 4
+            }}>
             {showBackButton && (
               <Button
                 variant="outlined"

@@ -97,7 +97,12 @@ export const AssignDistrictOfficerDialog: React.FC<
       aria-labelledby="assign-officer-dialog-title"
     >
       <DialogTitle id="assign-officer-dialog-title">
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}>
           <Typography variant="h6">
             Assign District Officer - District {district?.name}
           </Typography>
@@ -122,15 +127,24 @@ export const AssignDistrictOfficerDialog: React.FC<
         )}
 
         {district?.deaconName && (
-          <Box mb={2}>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            mb: 2
+          }}>
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Current Deacon: <strong>{district.deaconName}</strong>
             </Typography>
           </Box>
         )}
 
         {isLoadingOfficers ? (
-          <Box display="flex" justifyContent="center" py={3}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              py: 3
+            }}>
             <CircularProgress />
           </Box>
         ) : (
@@ -160,8 +174,12 @@ export const AssignDistrictOfficerDialog: React.FC<
         )}
 
         {district?.districtOfficerName && (
-          <Box mt={2}>
-            <Typography variant="body2" color="text.secondary">
+          <Box sx={{
+            mt: 2
+          }}>
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Current District Officer:{' '}
               <strong>{district.districtOfficerName}</strong>
             </Typography>

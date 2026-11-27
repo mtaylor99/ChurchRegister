@@ -30,7 +30,12 @@ export const MonthlyAttendanceChart: React.FC<MonthlyAttendanceChartProps> =
     if (!monthlyData || monthlyData.length === 0) {
       return (
         <Paper sx={{ p: 2, height: 380 }}>
-          <Box display="flex" alignItems="center" mb={2}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 2
+            }}>
             <CalendarIcon sx={{ mr: 1, color: 'primary.main' }} />
             <Typography variant="h6" component="h3">
               {event.name}
@@ -69,12 +74,19 @@ export const MonthlyAttendanceChart: React.FC<MonthlyAttendanceChartProps> =
       >
         {/* Header */}
         <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          mb={2}
-        >
-          <Box display="flex" alignItems="center" flex={1} minWidth={0}>
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 2
+          }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              flex: 1,
+              minWidth: 0
+            }}>
             <CalendarIcon
               sx={{ mr: 1, color: 'primary.main', flexShrink: 0 }}
             />
@@ -92,7 +104,11 @@ export const MonthlyAttendanceChart: React.FC<MonthlyAttendanceChartProps> =
         </Box>
 
         {/* Chart */}
-        <Box flex={1} sx={{ minHeight: 0 }}>
+        <Box
+          sx={{
+            flex: 1,
+            minHeight: 0
+          }}>
           <AttendanceChart
             data={[]} // Not used for monthly charts
             type="monthlyAverage"
@@ -106,14 +122,22 @@ export const MonthlyAttendanceChart: React.FC<MonthlyAttendanceChartProps> =
 
         {/* Stats Footer */}
         <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mt={2}
-          pt={2}
-          sx={{ borderTop: 1, borderColor: 'divider' }}
-        >
-          <Box display="flex" alignItems="center" minWidth={0} flex={1}>
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 2,
+            pt: 2,
+            borderTop: 1,
+            borderColor: 'divider'
+          }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              minWidth: 0,
+              flex: 1
+            }}>
             <TrendingUpIcon
               sx={{
                 mr: 0.5,
@@ -133,10 +157,11 @@ export const MonthlyAttendanceChart: React.FC<MonthlyAttendanceChartProps> =
           <Typography
             variant="caption"
             color="textSecondary"
-            textAlign="right"
-            minWidth={0}
-            flex={1}
-          >
+            sx={{
+              textAlign: "right",
+              minWidth: 0,
+              flex: 1
+            }}>
             Low: {Math.round(lowestMonth.averageAttendance)} (
             {lowestMonth.month})
           </Typography>

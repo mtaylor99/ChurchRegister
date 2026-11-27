@@ -55,14 +55,22 @@ const SkeletonLoader = forwardRef<HTMLDivElement, SkeletonLoaderProps>(
         {Array.from({ length: count }).map((_, index) => (
           <Card key={index}>
             <CardContent>
-              <Box display="flex" alignItems="center" gap={2} mb={2}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  mb: 2
+                }}>
                 <Skeleton
                   variant="circular"
                   width={40}
                   height={40}
                   animation={animation}
                 />
-                <Box flex={1}>
+                <Box sx={{
+                  flex: 1
+                }}>
                   <Skeleton
                     variant="text"
                     height={20}
@@ -106,7 +114,14 @@ const SkeletonLoader = forwardRef<HTMLDivElement, SkeletonLoaderProps>(
     const renderTableSkeleton = () => (
       <Box ref={ref} sx={sx}>
         {/* Table Header */}
-        <Box display="flex" gap={2} mb={2} p={2} bgcolor="action.hover">
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            mb: 2,
+            p: 2,
+            bgcolor: "action.hover"
+          }}>
           <Skeleton
             variant="text"
             height={20}
@@ -137,12 +152,13 @@ const SkeletonLoader = forwardRef<HTMLDivElement, SkeletonLoaderProps>(
         {Array.from({ length: count }).map((_, index) => (
           <Box
             key={index}
-            display="flex"
-            gap={2}
-            p={2}
-            borderBottom={1}
-            borderColor="divider"
-          >
+            sx={{
+              display: "flex",
+              gap: 2,
+              p: 2,
+              borderBottom: 1,
+              borderColor: "divider"
+            }}>
             <Skeleton
               variant="text"
               height={20}
@@ -177,20 +193,23 @@ const SkeletonLoader = forwardRef<HTMLDivElement, SkeletonLoaderProps>(
         {Array.from({ length: count }).map((_, index) => (
           <Box
             key={index}
-            display="flex"
-            alignItems="center"
-            gap={2}
-            py={2}
-            borderBottom={1}
-            borderColor="divider"
-          >
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              py: 2,
+              borderBottom: 1,
+              borderColor: "divider"
+            }}>
             <Skeleton
               variant="circular"
               width={32}
               height={32}
               animation={animation}
             />
-            <Box flex={1}>
+            <Box sx={{
+              flex: 1
+            }}>
               <Skeleton
                 variant="text"
                 height={18}
@@ -221,14 +240,22 @@ const SkeletonLoader = forwardRef<HTMLDivElement, SkeletonLoaderProps>(
           <Card key={index} sx={{ mb: index < count - 1 ? 2 : 0 }}>
             <CardContent>
               {/* Profile Header */}
-              <Box display="flex" alignItems="center" gap={2} mb={3}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  mb: 3
+                }}>
                 <Skeleton
                   variant="circular"
                   width={64}
                   height={64}
                   animation={animation}
                 />
-                <Box flex={1}>
+                <Box sx={{
+                  flex: 1
+                }}>
                   <Skeleton
                     variant="text"
                     height={24}
@@ -252,10 +279,11 @@ const SkeletonLoader = forwardRef<HTMLDivElement, SkeletonLoaderProps>(
 
               {/* Profile Details */}
               <Box
-                display="grid"
-                gridTemplateColumns="repeat(auto-fit, minmax(200px, 1fr))"
-                gap={2}
-              >
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                  gap: 2
+                }}>
                 <Box>
                   <Skeleton
                     variant="text"

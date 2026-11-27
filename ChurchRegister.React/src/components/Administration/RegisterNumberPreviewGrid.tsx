@@ -96,7 +96,9 @@ function MiniGrid({
           gap: 1,
         }}
       >
-        <Typography variant="subtitle1" fontWeight="bold">
+        <Typography variant="subtitle1" sx={{
+          fontWeight: "bold"
+        }}>
           {title}
         </Typography>
         <Chip label={rows.length} size="small" color={color} />

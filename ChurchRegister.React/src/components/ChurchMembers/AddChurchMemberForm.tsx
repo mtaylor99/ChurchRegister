@@ -23,6 +23,7 @@ import {
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNotification } from '../../hooks/useNotification';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -46,6 +47,7 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
   onCancel,
 }) => {
   const queryClient = useQueryClient();
+  const { showSuccess } = useNotification();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Form setup with react-hook-form
@@ -131,6 +133,7 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
         exact: false,
       });
       reset();
+      showSuccess('Church member created successfully');
       onSuccess(newMember);
     },
     onError: (error: unknown) => {
@@ -592,7 +595,9 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
                           Other Roles
                         </Typography>
                         <FormGroup>
-                          <Stack direction="row" flexWrap="wrap" spacing={1}>
+                          <Stack direction="row" spacing={1} sx={{
+                            flexWrap: "wrap"
+                          }}>
                             {otherRoles.map((role) => (
                               <FormControlLabel
                                 key={role.id}
@@ -781,9 +786,10 @@ export const AddChurchMemberForm: React.FC<AddChurchMemberFormProps> = ({
           <Stack
             direction="row"
             spacing={2}
-            justifyContent="flex-end"
-            sx={{ pt: 2 }}
-          >
+            sx={{
+              justifyContent: "flex-end",
+              pt: 2
+            }}>
             <LoadingButton
               variant="outlined"
               onClick={onCancel}

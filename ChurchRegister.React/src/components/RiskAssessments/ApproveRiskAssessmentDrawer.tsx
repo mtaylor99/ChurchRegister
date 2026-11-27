@@ -137,10 +137,11 @@ export function ApproveRiskAssessmentDrawer({
         {/* Header */}
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={3}
-        >
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3
+          }}>
           <Typography variant="h5">Record Approval</Typography>
           <IconButton onClick={onClose} aria-label="Close">
             <CloseIcon />
@@ -157,13 +158,21 @@ export function ApproveRiskAssessmentDrawer({
 
           {/* Assessment Summary */}
           <Box>
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+            <Typography variant="subtitle2" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               Assessment
             </Typography>
             <Typography variant="h6" gutterBottom>
               {riskAssessment.title}
             </Typography>
-            <Stack direction="row" spacing={1} alignItems="center" mt={1}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                alignItems: "center",
+                mt: 1
+              }}>
               <Chip
                 label={riskAssessment.categoryName}
                 size="small"
@@ -177,7 +186,9 @@ export function ApproveRiskAssessmentDrawer({
           </Box>
 
           <Box>
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+            <Typography variant="subtitle2" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               Next Review Date
             </Typography>
             <Typography variant="body2">
@@ -189,7 +200,9 @@ export function ApproveRiskAssessmentDrawer({
 
           {/* Current Approvals */}
           <Box>
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+            <Typography variant="subtitle2" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               Approvals Progress ({riskAssessment.approvalCount} of{' '}
               {riskAssessment.minimumApprovalsRequired})
             </Typography>
@@ -216,8 +229,10 @@ export function ApproveRiskAssessmentDrawer({
             <Box>
               <Typography
                 variant="subtitle2"
-                color="text.secondary"
                 gutterBottom
+                sx={{
+                  color: "text.secondary"
+                }}
               >
                 Current Approvals
               </Typography>
@@ -261,24 +276,28 @@ export function ApproveRiskAssessmentDrawer({
                   selectedDeacons.length > 0 &&
                   selectedDeacons.length < requiredApprovers
                 }
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <>
-                      {isLoadingDeacons ? (
-                        <CircularProgress color="inherit" size={20} />
-                      ) : null}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
+                slotProps={{
+                  ...params.slotProps,
+
+                  input: {
+                    ...params.slotProps.input,
+                    endAdornment: (
+                      <>
+                        {isLoadingDeacons ? (
+                          <CircularProgress color="inherit" size={20} />
+                        ) : null}
+                        {params.slotProps.input.endAdornment}
+                      </>
+                    ),
+                  }
                 }}
               />
             )}
-            renderTags={(value, getTagProps) =>
+            renderValue={(value, getItemProps) =>
               value.map((option, index) => (
                 <Chip
                   label={option.fullName}
-                  {...getTagProps({ index })}
+                  {...getItemProps({ index })}
                   size="small"
                   icon={<CheckCircleIcon />}
                 />
@@ -314,8 +333,10 @@ export function ApproveRiskAssessmentDrawer({
             rows={4}
             fullWidth
             disabled={isApproving}
-            inputProps={{ maxLength: 500 }}
             helperText={`Document any important details from the meeting. ${notes.length}/500 characters`}
+            slotProps={{
+              htmlInput: { maxLength: 500 }
+            }}
           />
 
           {/* Footer Actions */}

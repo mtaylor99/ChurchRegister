@@ -241,25 +241,39 @@ export function RiskAssessmentsPage() {
     >
       {/* Page Header */}
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Box display="flex" alignItems="center" gap={2}>
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2
+        }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2
+          }}>
           <ShieldIcon sx={{ fontSize: 32, color: 'primary.main' }} />
           <Box>
-            <Typography variant="h4" component="h1" fontWeight={700}>
+            <Typography variant="h4" component="h1" sx={{
+              fontWeight: 700
+            }}>
               Risk Assessments
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{
+              color: "text.secondary"
+            }}>
               Church compliance risk assessment register and review tracking
             </Typography>
           </Box>
         </Box>
 
         {/* Toolbar - Buttons based on active tab */}
-        <Box display="flex" gap={2}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2
+          }}>
           {tabValue === 0 && (
             <>
               <Button
@@ -340,11 +354,12 @@ export function RiskAssessmentsPage() {
         {/* Risk Assessments Grid */}
         {isLoading ? (
           <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            py={8}
-          >
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              py: 8
+            }}>
             <CircularProgress />
           </Box>
         ) : (

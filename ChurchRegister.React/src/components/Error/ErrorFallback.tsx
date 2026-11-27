@@ -164,7 +164,12 @@ export const ErrorFallback: React.FC<ErrorFallbackVariantProps> = ({
 
           {/* Auto-retry indicator */}
           {enableAutoRetry && hasError && (
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mb: 2
+              }}>
               Automatically retrying in {retryInterval} seconds...
             </Typography>
           )}
@@ -179,7 +184,9 @@ export const ErrorFallback: React.FC<ErrorFallbackVariantProps> = ({
                   aria-controls="error-details-content"
                   id="error-details-header"
                 >
-                  <Typography variant="subtitle2" color="text.secondary">
+                  <Typography variant="subtitle2" sx={{
+                    color: "text.secondary"
+                  }}>
                     Technical Details
                   </Typography>
                 </AccordionSummary>
@@ -230,7 +237,12 @@ export const ErrorFallback: React.FC<ErrorFallbackVariantProps> = ({
           )}
 
           {/* Additional Help Text */}
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 3 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mt: 3
+            }}>
             If this problem persists, please contact support or try refreshing
             the page.
           </Typography>
@@ -275,7 +287,9 @@ export const InlineErrorFallback: React.FC<
   >
     <Typography
       variant={compact ? 'caption' : 'body2'}
-      color="error.contrastText"
+      sx={{
+        color: "error.contrastText"
+      }}
     >
       {error?.message || 'Error loading content'}
     </Typography>

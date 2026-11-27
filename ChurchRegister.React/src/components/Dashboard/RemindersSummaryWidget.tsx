@@ -94,7 +94,9 @@ export const RemindersSummaryWidget: React.FC = () => {
                 gap: 0.5,
               }}
             >
-              <Typography variant="body2" fontWeight="medium">
+              <Typography variant="body2" sx={{
+                fontWeight: "medium"
+              }}>
                 {upcomingCount > 0 ? 'Upcoming' : 'All Clear'}
               </Typography>
             </Box>
@@ -103,10 +105,12 @@ export const RemindersSummaryWidget: React.FC = () => {
           {/* Title */}
           <Typography
             variant="h6"
-            color="text.secondary"
             gutterBottom
-            sx={{ fontSize: '0.875rem', fontWeight: 500 }}
-          >
+            sx={{
+              color: "text.secondary",
+              fontSize: '0.875rem',
+              fontWeight: 500
+            }}>
             Upcoming Reminders
           </Typography>
 
@@ -125,12 +129,16 @@ export const RemindersSummaryWidget: React.FC = () => {
               </MetricValue>
               <Typography
                 variant="body2"
-                color="text.secondary"
-                sx={{ mt: 1, mb: 2 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  mt: 1,
+                  mb: 2
+                }}>
                 {upcomingCount === 1 ? 'reminder' : 'reminders'} due soon
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 Due within 30 days
               </Typography>
             </>
@@ -148,12 +156,16 @@ export const RemindersSummaryWidget: React.FC = () => {
               </MetricValue>
               <Typography
                 variant="body2"
-                color="text.secondary"
-                sx={{ mt: 1, mb: 2 }}
-              >
+                sx={{
+                  color: "text.secondary",
+                  mt: 1,
+                  mb: 2
+                }}>
                 All reminders handled
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" sx={{
+                color: "text.secondary"
+              }}>
                 No reminders due in 30 days
               </Typography>
             </>

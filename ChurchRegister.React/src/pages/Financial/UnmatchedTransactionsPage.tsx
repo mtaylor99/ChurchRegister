@@ -34,6 +34,7 @@ import type {
   AssignTransactionRequest,
 } from '../../types/contributions';
 import { extractErrorMessage } from '../../utils/typeGuards';
+import { useNotification } from '../../hooks/useNotification';
 
 // ─── Assign Dialog ────────────────────────────────────────────────────────────
 
@@ -50,6 +51,7 @@ const AssignTransactionDialog: React.FC<AssignDialogProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const { showSuccess } = useNotification();
   const [selectedMember, setSelectedMember] = useState<{
     id: number;
     fullName: string;
@@ -115,6 +117,7 @@ const AssignTransactionDialog: React.FC<AssignDialogProps> = ({
       setSecondaryMember(null);
       setMemberSearchTerm('');
       setSecondarySearchTerm('');
+      showSuccess('Transaction assigned successfully');
       onSuccess();
     },
     onError: (err: unknown) => {
@@ -157,19 +160,27 @@ const AssignTransactionDialog: React.FC<AssignDialogProps> = ({
       <DialogTitle>Assign Transaction to Member</DialogTitle>
       <DialogContent>
         <Box sx={{ mb: 2 }}>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
+          <Typography variant="body2" gutterBottom sx={{
+            color: "text.secondary"
+          }}>
             <strong>Date:</strong>{' '}
             {new Date(transaction.date).toLocaleDateString()}
           </Typography>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
+          <Typography variant="body2" gutterBottom sx={{
+            color: "text.secondary"
+          }}>
             <strong>Reference:</strong> {transaction.reference}
           </Typography>
           {transaction.description && (
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography variant="body2" gutterBottom sx={{
+              color: "text.secondary"
+            }}>
               <strong>Description:</strong> {transaction.description}
             </Typography>
           )}
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             <strong>Amount:</strong> £{transaction.amount.toFixed(2)}
           </Typography>
         </Box>
@@ -276,12 +287,14 @@ const ExcludeReferenceDialog: React.FC<ExcludeDialogProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const { showSuccess } = useNotification();
   const [error, setError] = useState<string | null>(null);
 
   const excludeMutation = useMutation({
     mutationFn: () => contributionsApi.excludeReference(transaction!.id),
     onSuccess: () => {
       setError(null);
+      showSuccess('Reference excluded successfully');
       onSuccess();
     },
     onError: (err: unknown) => {
@@ -383,7 +396,9 @@ export const UnmatchedTransactionsPage: React.FC = () => {
           <Typography variant="h6" gutterBottom>
             All transactions matched!
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{
+            color: "text.secondary"
+          }}>
             There are no unmatched HSBC transactions to resolve.
           </Typography>
         </Paper>
@@ -391,7 +406,12 @@ export const UnmatchedTransactionsPage: React.FC = () => {
 
       {/* Transaction count */}
       {!isLoading && !isError && data && data.totalCount > 0 && (
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "text.secondary",
+            mb: 1
+          }}>
           {data.totalCount} transaction{data.totalCount !== 1 ? 's' : ''}{' '}
           awaiting resolution
         </Typography>
@@ -417,7 +437,9 @@ export const UnmatchedTransactionsPage: React.FC = () => {
                     {new Date(tx.date).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" fontFamily="monospace">
+                    <Typography variant="body2" sx={{
+                      fontFamily: "monospace"
+                    }}>
                       {tx.reference}
                     </Typography>
                   </TableCell>

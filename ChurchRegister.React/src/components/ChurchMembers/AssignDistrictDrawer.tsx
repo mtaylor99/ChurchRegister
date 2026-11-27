@@ -150,7 +150,12 @@ export const AssignDistrictDrawer: React.FC<AssignDistrictDrawerProps> = ({
               </Select>
             </FormControl>
 
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                mt: 2
+              }}>
               Select a district (A-L) to assign to this member, or choose
               "Unassigned" to remove the district assignment.
             </Typography>

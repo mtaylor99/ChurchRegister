@@ -122,7 +122,9 @@ export const EditUserForm: React.FC<EditUserFormProps> = ({
             />
 
             <Box>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
+              <Typography variant="body2" gutterBottom sx={{
+                color: "text.secondary"
+              }}>
                 Account Status
               </Typography>
               <Chip
@@ -176,8 +178,10 @@ export const EditUserForm: React.FC<EditUserFormProps> = ({
                     disabled={isLoading || mode === 'view'}
                     required
                     fullWidth
-                    InputProps={{
-                      readOnly: mode === 'view',
+                    slotProps={{
+                      input: {
+                        readOnly: mode === 'view',
+                      }
                     }}
                   />
                 )}
@@ -195,8 +199,10 @@ export const EditUserForm: React.FC<EditUserFormProps> = ({
                     disabled={isLoading || mode === 'view'}
                     required
                     fullWidth
-                    InputProps={{
-                      readOnly: mode === 'view',
+                    slotProps={{
+                      input: {
+                        readOnly: mode === 'view',
+                      }
                     }}
                   />
                 )}
@@ -214,8 +220,10 @@ export const EditUserForm: React.FC<EditUserFormProps> = ({
                   helperText={errors.jobTitle?.message}
                   disabled={isLoading || mode === 'view'}
                   fullWidth
-                  InputProps={{
-                    readOnly: mode === 'view',
+                  slotProps={{
+                    input: {
+                      readOnly: mode === 'view',
+                    }
                   }}
                 />
               )}
@@ -232,8 +240,10 @@ export const EditUserForm: React.FC<EditUserFormProps> = ({
                   helperText={errors.phoneNumber?.message}
                   disabled={isLoading || mode === 'view'}
                   fullWidth
-                  InputProps={{
-                    readOnly: mode === 'view',
+                  slotProps={{
+                    input: {
+                      readOnly: mode === 'view',
+                    }
                   }}
                 />
               )}
@@ -276,9 +286,10 @@ export const EditUserForm: React.FC<EditUserFormProps> = ({
         <Stack
           direction="row"
           spacing={2}
-          justifyContent="flex-end"
-          sx={{ pt: 2 }}
-        >
+          sx={{
+            justifyContent: "flex-end",
+            pt: 2
+          }}>
           <LoadingButton
             variant="outlined"
             onClick={onCancel}

@@ -25,6 +25,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckIcon from '@mui/icons-material/Check';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNotification } from '../../hooks/useNotification';
 import { LoadingButton } from '../Administration/LoadingButton';
 import { churchMembersApi } from '@services/api';
 import { getErrorMessage } from '../../utils/errorUtils';
@@ -47,6 +48,7 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
   onCancel,
 }) => {
   const queryClient = useQueryClient();
+  const { showSuccess } = useNotification();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [bankReferenceClearedWarning, setBankReferenceClearedWarning] =
     useState(false);
@@ -170,6 +172,7 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
       churchMembersApi.updateChurchMember(data.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['churchMembers'] });
+      showSuccess('Church member updated successfully');
       onSuccess?.();
     },
     onError: (error: unknown) => {
@@ -391,11 +394,13 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
                     type="date"
                     label="Member Since"
                     required={!isViewMode}
-                    InputLabelProps={{ shrink: true }}
                     error={!!errors.memberSince}
                     helperText={errors.memberSince?.message}
                     disabled={isLoading || isViewMode}
                     fullWidth
+                    slotProps={{
+                      inputLabel: { shrink: true }
+                    }}
                   />
                 )}
               />
@@ -623,7 +628,9 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
                         Other Roles
                       </Typography>
                       <FormGroup>
-                        <Stack direction="row" flexWrap="wrap" spacing={1}>
+                        <Stack direction="row" spacing={1} sx={{
+                          flexWrap: "wrap"
+                        }}>
                           {otherRoles.map((role) => (
                             <FormControlLabel
                               key={role.id}
@@ -805,9 +812,10 @@ export const EditChurchMemberForm: React.FC<EditChurchMemberFormProps> = ({
         <Stack
           direction="row"
           spacing={2}
-          justifyContent="flex-end"
-          sx={{ pt: 2 }}
-        >
+          sx={{
+            justifyContent: "flex-end",
+            pt: 2
+          }}>
           <LoadingButton
             variant="outlined"
             onClick={onCancel}

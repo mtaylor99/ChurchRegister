@@ -194,7 +194,9 @@ export const TrainingCertificateTypeGrid = React.memo(
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
             spacing={2}
-            alignItems="center"
+            sx={{
+              alignItems: "center"
+            }}
           >
             <TextField
               label="Search by Name"
@@ -290,9 +292,10 @@ export const TrainingCertificateTypeGrid = React.memo(
           <DialogTitle>
             <Stack
               direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
+              sx={{
+                alignItems: "center",
+                justifyContent: "space-between"
+              }}>
               {dialogMode === 'add'
                 ? 'Add New Training/Check Type'
                 : 'Edit Training/Check Type'}

@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { ErrorAlert } from '../ErrorAlert';
 import { extractErrorMessage } from '../../utils/typeGuards';
+import { useNotification } from '../../hooks/useNotification';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -38,6 +39,7 @@ export const TrainingCertificateForm: React.FC<
   TrainingCertificateFormProps
 > = ({ certificate, mode, onSuccess, onCancel }) => {
   const queryClient = useQueryClient();
+  const { showSuccess } = useNotification();
   const isViewMode = mode === 'view';
   const isEditMode = mode === 'edit';
 
@@ -90,6 +92,7 @@ export const TrainingCertificateForm: React.FC<
       trainingCertificatesApi.createTrainingCertificate(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainingCertificates'] });
+      showSuccess('Training certificate created successfully');
       onSuccess();
     },
     onError: (error: unknown) => {
@@ -110,6 +113,7 @@ export const TrainingCertificateForm: React.FC<
     }) => trainingCertificatesApi.updateTrainingCertificate(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainingCertificates'] });
+      showSuccess('Training certificate updated successfully');
       onSuccess();
     },
     onError: (error: unknown) => {
@@ -313,12 +317,16 @@ export const TrainingCertificateForm: React.FC<
           fullWidth
           multiline
           rows={4}
-          inputProps={{ maxLength: 500 }}
+          slotProps={{
+            htmlInput: { maxLength: 500 }
+          }}
         />
 
         {/* Actions */}
         {!isViewMode && (
-          <Stack direction="row" spacing={2} justifyContent="flex-end">
+          <Stack direction="row" spacing={2} sx={{
+            justifyContent: "flex-end"
+          }}>
             <Button onClick={onCancel} variant="outlined">
               Cancel
             </Button>
