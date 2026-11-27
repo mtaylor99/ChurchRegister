@@ -125,7 +125,15 @@ export const AttendanceChart: React.FC<AttendanceChartProps> = React.memo(
     const chartData = isMonthlyChart ? monthlyData : data;
 
     // Process data for chart display
-    const processedData = useMemo(() => {
+    const processedData = useMemo<
+      Array<{
+        displayDate: string;
+        attendance: number;
+        date: string;
+        monthYear?: string;
+        recordCount?: number;
+      }>
+    >(() => {
       if (isMonthlyChart && monthlyData) {
         // Process monthly data
         return [...monthlyData].reverse().map((point) => ({

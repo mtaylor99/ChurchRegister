@@ -22,7 +22,7 @@ export const worker = setupWorker(...handlers);
 if (import.meta.env.DEV && import.meta.env.VITE_ENABLE_MSW === 'true') {
   worker
     .start({
-      onUnhandledRequest: 'warn',
+      onUnhandledFrame: 'warn',
     })
     .catch((error) => {
       console.error('[MSW] Failed to start service worker:', error);
